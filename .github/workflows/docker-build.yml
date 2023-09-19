@@ -25,14 +25,14 @@ jobs:
         with:
           username: dannicool
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Generate changelog
+        run: npm run release
 
       - name: Build and Push Docker Image
         run: |
           docker build . -t dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version")
           docker push dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version")
-
-      - name: Generate changelog
-        run: npm run release
 
       - name: commit and tag release
         run: |

@@ -4,6 +4,10 @@
 
 在微信群和webhook机器人之间架一座桥梁，从此微信里也可以有自己的webhook机器人了，快用它集成到自己的自动化工作流中吧, 推荐 [n8n](https://github.com/n8n-io/n8n)
 
+![Docker Image Version (latest semver)](https://img.shields.io/docker/v/dannicool/docker-wechat-roombot) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechat-roomBot/docker-build.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechat-roombot) 
+
+
+
 # API 说明
 ## 消息推送 webhook 推送到群消息 √
 

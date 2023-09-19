@@ -31,6 +31,9 @@ jobs:
           docker build . -t dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version")
           docker push dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version")
 
+      - name: Generate changelog
+        run: npm run release
+
       - name: commit and tag release
         run: |
           git config --global user.email "contact@danni.cool"

@@ -1,30 +1,33 @@
-const fetch = require('node-fetch-commonjs');
+const { FileBox } = require('file-box') // bugfix: dependency of wechaty but can't not require from wechaty
 
-const downloadImage = async function(imageUrl) {
-  try {
-    const response = await fetch(imageUrl);
-    if (response.ok) {
-      return await response.buffer();
-    }
-    return null;
-  } catch (error) {
-    console.error('Error downloading image:', error);
-    return null;
-  }
-} 
-
-const convertMsg = async function({type, content}) {
-  switch(type) {
+const formatAndSendMsg = async function ({ type, content, msgInstance }) {
+  switch (type) {
     // 纯文本
     case 'text':
-      return content;
-    case 'richText':
-      return 
+      await msgInstance.say(content);
+      return true
+
+    // 图片
+    case 'img':
+      const imgArr = content.split(',')
+      // 逗号分割的多张图的情况
+      if (imgArr.length > 0) {
+        // 只有一张图
+        imgArr.length === 1 ?
+          await msgInstance.say(FileBox.fromUrl(imgArr[0])) : 
+          // 多张图的情况
+         await (async () => {
+            for(let i=0; i< imgArr.length; i++){
+              await msgInstance.say(FileBox.fromUrl(imgArr[i])) 
+            }
+          })()
+      }
+
+      return true
   }
 }
 
 module.exports = {
-  downloadImage,
-  convertMsg
+  formatAndSendMsg
 }
 

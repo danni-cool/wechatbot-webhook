@@ -11,8 +11,7 @@ module.exports = function registerRoomHook({ app, bot }) {
       const targetRoom = await bot.Room.find({ topic: to });
 
       if (targetRoom) {
-        const msg = await Utils.convertMsg({ type, content })
-        targetRoom.say(msg);
+        await Utils.formatAndSendMsg({type, content, msgInstance: targetRoom})
 
         res.status(200).json({ success: true, message: 'Message sent successfully.' });
       } else {

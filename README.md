@@ -13,7 +13,7 @@
 - PayloadType: `application/json`
 - Body:
   - to:  "Technical Committee 39" // 群名
-  - type: "text" // 消息类型  text 纯文本
+  - type: "text" // 消息类型  text 纯文本 |  img 图片url,支持多张，英文逗号分割
   - content: "都别臊皮了，学习吧。🤡"
 
-# 2. 群消息的接收
+# 2. 群消息的接收 TODO

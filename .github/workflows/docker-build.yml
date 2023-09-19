@@ -1,0 +1,40 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    if: contains(github.event.head_commit.message, '[skip ci]') == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1 
+        with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t docker build . -t dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version") .
+          docker push docker build . -t dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version")
+
+      - name: commit and tag release
+        run: |
+          git config --global user.email "contact@danni.cool"
+          git config --global user.name "gitHubCi"
+          git add .
+          git commit -m "Commit changes for release"
+          git push origin main
+          git tag v$(node -p "require('./package.json').version")
+          git push --tags

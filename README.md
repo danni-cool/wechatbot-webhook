@@ -6,7 +6,7 @@
 
 ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/dannicool/docker-wechat-roombot) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechat-roomBot/docker-build.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechat-roombot)
 
-[view this project in docker hub](https://hub.docker.com/repository/docker/dannicool/docker-wechat-roombot/general)
+[view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechat-roombot/general)
 
 # 一、开始
 

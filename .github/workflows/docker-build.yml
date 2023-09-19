@@ -26,6 +26,9 @@ jobs:
           username: dannicool
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
+      - name: Install devDependencies
+        run: npm install --only=dev
+      
       - name: Generate changelog
         run: npm run release
 

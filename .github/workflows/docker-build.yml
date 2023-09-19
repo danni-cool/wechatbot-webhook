@@ -28,8 +28,8 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t docker build . -t dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version") .
-          docker push docker build . -t dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version")
+          docker build . -t dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version") .
+          docker push dannicool/docker-wechat-roombot:v$(node -p "require('./package.json').version")
 
       - name: commit and tag release
         run: |

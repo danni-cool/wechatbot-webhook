@@ -13,7 +13,7 @@
 ## 1. 拉取镜像
 
 ```bash
-docker pull dannicool/docker-wechat-roombot:v1.0.1
+docker pull dannicool/docker-wechat-roombot
 ```
 
 ## 2. 启动容器(后台常驻)
@@ -22,7 +22,7 @@ docker pull dannicool/docker-wechat-roombot:v1.0.1
  docker run -d \
 --name wcRoomBot \
 -p 3001:3001 \
-dannicool/docker-wechat-roombot:v1.0.1
+dannicool/docker-wechat-roombot
 ```
 
 ## 3. 登录wx
@@ -49,13 +49,13 @@ docker logs -f wcRoomBot
 
 ### Body 参数说明
 
-> 如果希望发多张图，type指定为img，content里的url以英文逗号分隔
-
 | 参数 |  说明 | 数据类型 | 可选值 | 可否为空 | 例子 |
 |--|--|--|--|--|--|
-| to | 群名 | String |  |  N | 这是群名 |
+| to | 群名 | String | any |  N | Test Group |
 | type | 发送消息类型 | String | <ul><li>text</li><li>img</li></ul>| N | text |
-| content | 发送的消息 | String | | N | 这是一条群消息 |
+| content | 发送的消息 | String | any | N | 这是一条群消息 |
+
+> 如果希望发多张图，type 指定为 img，content 里填 url 以英文逗号分隔
 
 # Changelog
 

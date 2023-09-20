@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3001
 
 # 启动应用程序
-CMD ["node", "main.js"]
+CMD ["npm", "start"]

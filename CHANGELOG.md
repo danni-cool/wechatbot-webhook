@@ -1,4 +1,13 @@
 
+## 1.1.1 (2023-09-21)
+
+
+### Bug Fixes
+
+* 🐛 修复发送图片来自cloudflare 托管的url 返回 http状态码301图片发送不成功的问题 ([44550a0](https://github.com/danni-cool/docker-wechat-roomBot/commit/44550a030273a6dcc1b8b296ec8fcdf4f9202849))
+
+
+
 # 1.1.0 (2023-09-20)
 
 

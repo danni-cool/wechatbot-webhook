@@ -9,7 +9,15 @@ jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
+    
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get Package Version
+        id: get_version
+        run: echo "::set-output name=package_version::$(node -p "require('./package.json').version")"
+
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Create Release
@@ -18,8 +26,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.get_version.outputs.package_version }}
+          release_name: Release ${{ steps.get_version.outputs.package_version }}
           body: |
             更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechatbot-webhook/blob/main/CHANGELOG.md)
           draft: false

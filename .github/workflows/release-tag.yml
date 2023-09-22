@@ -16,8 +16,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v$(node -p "require('./package.json').version")
-          release_name: Release v$(node -p "require('./package.json').version")
-          body: 更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechat-roomBot/blob/main/CHANGELOG.md)
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: 更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechatbot-webhook/blob/main/CHANGELOG.md)
           draft: false
           prerelease: false

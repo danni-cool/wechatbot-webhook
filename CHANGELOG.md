@@ -1,7 +1,21 @@
 
+<<<<<<< Updated upstream
 ## 1.1.2 (2023-09-22)
 
 
+=======
+# [2.0.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.1.1...v2.0.0) (2023-09-22)
+
+
+### Features
+
+* 🎸 🎸 api地址修改，支持webhook推送到个人，文档优化，workflow优化 ([87bbb5e](https://github.com/danni-cool/docker-wechatbot-webhook/commit/87bbb5e42c48745b3a8a3001817c6391f3af9387)), closes [#1](https://github.com/danni-cool/docker-wechatbot-webhook/issues/1)
+
+
+### BREAKING CHANGES
+
+* 🧨 docker 项目地址修改 和 api修改
+>>>>>>> Stashed changes
 
 ## 1.1.1 (2023-09-21)
 

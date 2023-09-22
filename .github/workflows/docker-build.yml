@@ -25,17 +25,17 @@ jobs:
         with:
           username: dannicool
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
+
       - name: Install devDependencies
         run: npm install --only=dev
-      
+
       - name: Generate changelog
         run: npm run release
 
       - name: Build and Push Docker Image
         run: |
-          docker build . -t dannicool/docker-wechat-roombot:latest
-          docker push dannicool/docker-wechat-roombot:latest
+          docker build . -t dannicool/docker-wechatbot-webhook:latest
+          docker push dannicool/docker-wechatbot-webhook:latest
 
       - name: commit and tag release
         run: |
@@ -46,3 +46,14 @@ jobs:
           git push origin main
           git tag v$(node -p "require('./package.json').version")
           git push --tags
+
+      - name: 创建GitHub Release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v$(node -p "require('./package.json').version")
+          release_name: Release v$(node -p "require('./package.json').version")
+          body: 更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechat-roomBot/blob/main/CHANGELOG.md)
+          draft: false
+          prerelease: false

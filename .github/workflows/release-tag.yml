@@ -7,17 +7,28 @@ on:
 
 jobs:
   build:
-    if: contains(github.event.head_commit.message, '[release tag]') == true
+    name: Create Release
     runs-on: ubuntu-latest
-
     steps:
-      - name: 创建GitHub Release
-        uses: actions/create-release@latest
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: 更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechatbot-webhook/blob/main/CHANGELOG.md)
+          body: |
+            更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechatbot-webhook/blob/main/CHANGELOG.md)
           draft: false
           prerelease: false
+
+    # steps:
+    # - name: Create GitHub Release
+    #   id: create_release
+    #   uses: actions/create-release@latest
+    #   token: ${{ secrets.GITHUB_TOKEN }}
+    #   tag_name: v$(node -p "require('./package.json').version")
+    #   release_name: Release v$(node -p "require('./package.json').version")

@@ -20,22 +20,11 @@ jobs:
           node-version: 18
           registry-url: https://registry.npmjs.org/
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: dannicool
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Install devDependencies
         run: npm install --only=dev
 
       - name: Generate changelog
         run: npm run release
-
-      - name: Build and Push Docker Image
-        run: |
-          docker build . -t dannicool/docker-wechatbot-webhook:latest
-          docker push dannicool/docker-wechatbot-webhook:latest
 
       - name: commit and tag release
         run: |
@@ -46,3 +35,31 @@ jobs:
           git push origin main
           git tag v$(node -p "require('./package.json').version")
           git push --tags
+
+      - name: Get Package Version
+        id: get_version
+        run: echo "::set-output name=package_version::$(node -p "require('./package.json').version")"
+
+      - name: Create Github Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ steps.get_version.outputs.package_version }}
+          release_name: Release ${{ steps.get_version.outputs.package_version }}
+          body: |
+            更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechatbot-webhook/blob/main/CHANGELOG.md)
+          draft: false
+          prerelease: false
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: dannicool
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build . -t dannicool/docker-wechatbot-webhook:latest
+          docker push dannicool/docker-wechatbot-webhook:latest

@@ -1,14 +1,20 @@
 {
-  "name": "bot",
+  "name": "docker-wechatbot-webhook",
   "version": "1.1.1",
-  "description": "",
+  "description": "给微信里加个 webhook 机器人，支持docker部署",
   "main": "index.js",
   "scripts": {
     "start": "node main",
-    "postrelease": "node ./script/changelog2readme.js",
     "release": "standard-version"
   },
-  "author": "Daniel",
+  "author": {
+    "name": "danni-cool",
+    "email": "contact@danni.cool"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danni-cool/docker-wechatbot-webhook.git"
+  },
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.3.1",

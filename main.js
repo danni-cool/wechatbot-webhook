@@ -2,19 +2,15 @@ require('dotenv').config()
 const { PORT } = process.env
 const express = require('express');
 const wechatBotInit = require('./src/wechaty/init')
-const registerExpressWebhook = require('./src/webhook')
+const registerRoute = require('./src/route')
 const app = express();
 const bot = wechatBotInit()
 
 app.use(express.json());
 
 // 注册webhook
-registerExpressWebhook({app, bot})
-
-
-
-
+registerRoute({app, bot})
 
 app.listen(PORT, () => {
-  console.log(`Express server is running on http://localhost:${PORT}`);
+  console.log(`service is running on http://localhost:${PORT}`);
 });

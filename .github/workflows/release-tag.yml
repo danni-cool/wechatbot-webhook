@@ -24,11 +24,3 @@ jobs:
             更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechatbot-webhook/blob/main/CHANGELOG.md)
           draft: false
           prerelease: false
-
-    # steps:
-    # - name: Create GitHub Release
-    #   id: create_release
-    #   uses: actions/create-release@latest
-    #   token: ${{ secrets.GITHUB_TOKEN }}
-    #   tag_name: v$(node -p "require('./package.json').version")
-    #   release_name: Release v$(node -p "require('./package.json').version")

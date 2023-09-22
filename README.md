@@ -4,9 +4,9 @@
 
 在微信和webhook机器人之间架一座桥梁，从此微信里也可以有自己的webhook机器人了，快用它集成到自己的自动化工作流中（ 推荐 [n8n](https://github.com/n8n-io/n8n)）吧
 
-![Docker Image Version (latest semver)](https://img.shields.io/docker/v/dannicool/docker-wechat-roombot) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechat-roomBot/docker-build.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechat-roombot)
+![Docker Image Version (latest semver)](https://img.shields.io/docker/v/dannicool/docker-wechatbot-webhook) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/docker-build.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook)
 
-[view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechat-roombot/general)
+[view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
 ## 一、开始
 

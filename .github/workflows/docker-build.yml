@@ -44,8 +44,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.get_version.outputs.package_version }}
-          release_name: Release ${{ steps.get_version.outputs.package_version }}
+          tag_name: v${{ steps.get_version.outputs.package_version }}
+          release_name: Release v${{ steps.get_version.outputs.package_version }}
           body: |
             更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechatbot-webhook/blob/main/CHANGELOG.md)
           draft: false

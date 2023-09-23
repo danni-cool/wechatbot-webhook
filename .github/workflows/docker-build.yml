@@ -33,8 +33,6 @@ jobs:
           git add .
           git commit -m "Commit changes for release"
           git push origin main
-          git tag v$(node -p "require('./package.json').version")
-          git push --tags
 
       - name: Get Package Version
         id: get_version
@@ -44,7 +42,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.get_version.outputs.package_version }}
           release_name: Release ${{ steps.get_version.outputs.package_version }}

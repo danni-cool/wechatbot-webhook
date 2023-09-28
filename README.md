@@ -41,7 +41,7 @@ docker logs -f wcRoomBot
 
 找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
 
-![](https://cdn.jsdelivr.net/gh/danni-cool/blog.danni.cool/cdn/image/docker-login-wechat.png)
+![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/docker-login-wechat.png)
 
 ## 二、给机器人推送消息
 

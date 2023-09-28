@@ -8,7 +8,7 @@
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
-## 一、开始
+## 一、启动
 
 ### 1. 本地调试
 
@@ -16,7 +16,7 @@
 npm start
 ```
 
-### 2. docker 启动
+### 2. docker 部署
 
 #### 拉取镜像
 
@@ -26,10 +26,13 @@ docker pull dannicool/docker-wechatbot-webhook
 
 #### 启动容器(后台常驻)
 
+>  -e RECVD_MSG_WEBHOOK 环境变量可以不填，如果你还想收消息, 可以传入
+
 ```bash
  docker run -d \
 --name wcRoomBot \
 -p 3001:3001 \
+-e RECVD_MSG_WEBHOOK="https://example.com/your/url" \
 dannicool/docker-wechatbot-webhook
 ```
 
@@ -41,13 +44,11 @@ docker logs -f wcRoomBot
 
 找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
 
-![](https://cdn.jsdelivr.net/gh/danni-cool/blog.danni.cool/cdn/image/docker-login-wechat.png)
+![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/docker-login-wechat.png)
 
-## 二、给机器人推送消息
+## 二、webhook
 
-目前只支持 **文字** 和 **图片**，消息不支持图文自动拆分，请手动调多次
-
-### webhook格式
+### 1. 推消息
 
 - Url：<http://localhost:3001/webhook/msg>
 - Methods: `POST`
@@ -60,14 +61,12 @@ docker logs -f wcRoomBot
 |--|--|--|--|--|--|--|
 | to | 会话名 | String |  |  N  |  | 发群消息填群名，发给个人填昵称 |
 | isRoom | 是否发的群消息 | Boolean | false  | Y  |  <ul><li>true</li><li>false</li></ul>  |  |
-| type | 发送消息类型 | String || N |  <ul><li>text</li><li>img</li></ul> |  |
+| type | 发送消息类型 | String || N |  <ul><li>text</li><li>img</li></ul> | 目前只支持 **文字** 和 **图片**，消息不支持图文自动拆分，请手动调多次  |
 | content | 发送的消息 | String |  | N |  | 如果希望发多张图，type 指定为 img 同时，content 里填 url 以英文逗号分隔 |
 
-<!-- ## 三、机器人收到消息
+### 2. 收消息
 
-> 目前收到消息也是使用webhook，逻辑单独放到外部流程去处理，如果觉得麻烦，想自己定制，欢迎 folk
-
-### 1. 配置收消息 webhook
+格式
 
 #### 本地调试
 
@@ -79,11 +78,7 @@ PORT=3001
 RECVD_MSG_WEBHOOK=https://xxxx.com/web-hook/roomBot-msg-received
 ```
 
-### 2. 在群里 `@微信名` + 要说的话 
 
 ## 四、更新日志
--->
-
-## 三、更新日志
 
 更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechat-roomBot/blob/main/CHANGELOG.md)

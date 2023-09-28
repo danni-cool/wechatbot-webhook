@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # 如果收消息想接入webhook
-# ENV RECVD_MSG_WEBHOOK=
+ENV RECVD_MSG_API=
 
 # 暴露端口（你的 Express 应用程序监听的端口）
 EXPOSE 3001

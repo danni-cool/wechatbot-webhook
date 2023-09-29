@@ -5,6 +5,7 @@ const wechatBotInit = require('./src/wechaty/init')
 const registerRoute = require('./src/route')
 const app = express();
 const bot = wechatBotInit()
+const chalk = require('chalk')
 
 app.use(express.json());
 
@@ -12,5 +13,5 @@ app.use(express.json());
 registerRoute({app, bot})
 
 app.listen(PORT, () => {
-  console.log(`service is running on http://localhost:${PORT}`);
+  console.log(`service is running on ${chalk.cyan('http://localhost:'+ PORT)}\n`);
 });

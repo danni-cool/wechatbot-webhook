@@ -1,3 +1,8 @@
+
+## 1.1.3 (2023-09-29)
+
+
+
 ## [1.1.2](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.1.1...v1.1.2) (2023-09-22)
 
 

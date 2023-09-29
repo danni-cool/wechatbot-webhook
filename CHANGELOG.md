@@ -1,5 +1,16 @@
 
-## 1.1.3 (2023-09-29)
+## [1.1.3](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.1.2...v1.1.3) (2023-09-29)
+
+
+### Features
+
+* 🎸 增加对入参的严格校验 ([5537a95](https://github.com/danni-cool/docker-wechatbot-webhook/commit/5537a955fd1b747ef3c486beffac89b0a1c3d304))
+* 🎸 支持收消息钩子，以及文档优化 ([3638ff7](https://github.com/danni-cool/docker-wechatbot-webhook/commit/3638ff7feb9de02fab5dfe4d90f7079bc884a387))
+
+
+### Reverts
+
+* Revert "[skip ci]: change cdn address" ([0b0ec7a](https://github.com/danni-cool/docker-wechatbot-webhook/commit/0b0ec7a32ad1f26498b6d7bd8b390d8260f8d69e))
 
 
 

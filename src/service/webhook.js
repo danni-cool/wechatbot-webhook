@@ -54,14 +54,14 @@ const sendMsg2RecvdAPI = async function (msg, webhookUrl) {
 // 得到收消息api，并做格式检查
 const getValidRecvdApi = () => {
   let webhookUrl = ''
-  let errorText = (key, value) =>  console.error(chalk.red(`配置参数 ${key}: ${chalk.cyan(value)} <- 不符合 URL 规范, 该 API 将不会收到请求\n`))
+  let errorText = (key, value) => console.error(chalk.red(`配置参数 ${key}: ${chalk.cyan(value)} <- 不符合 URL 规范, 该 API 将不会收到请求\n`))
 
   // 外部传入了以外部为准
-  if (RECVD_MSG_API !== '') {
+  if (!['', undefined].includes(RECVD_MSG_API)) {
     webhookUrl = ('' + RECVD_MSG_API).startsWith('http') ? RECVD_MSG_API : ''
     !webhookUrl && errorText('RECVD_MSG_API', RECVD_MSG_API)
     // 无外部则用本地
-  } else if (LOCAL_RECVD_MSG_API !== '') {
+  } else if (!['', undefined].includes(LOCAL_RECVD_MSG_API)) {
     webhookUrl = ('' + LOCAL_RECVD_MSG_API).startsWith('http') ? LOCAL_RECVD_MSG_API : ''
     !webhookUrl && errorText('LOCAL_RECVD_MSG_API', LOCAL_RECVD_MSG_API)
   }

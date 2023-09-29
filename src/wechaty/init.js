@@ -12,12 +12,17 @@ module.exports = function init() {
     .on('login', async user => {
       console.log(`User ${user} logged in`)
     })
+    // .on('room-topic', async (room, topic, oldTopic, changer) => {
+    //   console.log(`Room ${await room.topic()} topic changed from ${oldTopic} to ${topic} by ${changer.name()}`)
+    // })
     .on('message', async message => {
       console.log(`Message: ${message}`)
-
       //收到消息二次转发特殊处理
       webhookUrl && await sendMsg2RecvdAPI(message, webhookUrl)
 
+    })
+    .on('error', (error) => {
+      console.error(`\n${chalk.red(error)}\n`)
     })
 
   bot.start()

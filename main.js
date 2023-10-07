@@ -13,5 +13,5 @@ app.use(express.json());
 registerRoute({app, bot})
 
 app.listen(PORT, () => {
-  console.log(`service is running on ${chalk.cyan('http://localhost:'+ PORT)}\n`);
+  console.log(`service is running, Port is ${PORT}`);
 });

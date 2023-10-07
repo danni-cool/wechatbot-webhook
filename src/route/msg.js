@@ -21,12 +21,12 @@ module.exports = function registerPushHook({ app, bot }) {
         return res.status(200).json({ success: false, message: `[${unValidParamsStr}] params  is not valid, please checkout the api reference (https://github.com/danni-cool/docker-wechat-roomBot#body-%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E)` });
       }
 
-      const targetMsgReceiver = isRoom ?
+      const msgReceiver = isRoom ?
         await bot.Room.find({ topic: to }) :
         await bot.Contact.find({ name: to })
 
-      if (targetMsgReceiver) {
-        const sendStatus = await formatAndSendMsg({ type, content, msgInstance: targetMsgReceiver, res })
+      if (msgReceiver) {
+        const sendStatus = await formatAndSendMsg({ type, content, msgInstance: msgReceiver, res })
         res.status(200).json({ success: sendStatus, message: `Message sent ${sendStatus ? 'successfully' : 'failed'}.` });
       } else {
         res.status(200).json({ success: false, message: `${isRoom ? 'Room' : 'User'} is not found` });

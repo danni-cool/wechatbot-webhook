@@ -1,9 +1,15 @@
 const fetch = require('node-fetch-commonjs')
 const FormData = require('form-data')
 const chalk = require('chalk')
-const { LOCAL_RECVD_MSG_API, RECVD_MSG_API } = process.env
+const { generateToken } = require('../utils/index')
+const {
+  LOCAL_RECVD_MSG_API,
+  RECVD_MSG_API,
+  LOGIN_API_TOKEN,
+  LOCAL_LOGIN_API_TOKEN
+} = process.env
 
-const sendMsg2RecvdAPI = async function (msg, webhookUrl) {
+const sendMsg2RecvdApi = async function (msg, webhookUrl) {
   const source = {
     room: msg.room() || '',
     to: msg.to() || '',
@@ -69,8 +75,19 @@ const getValidRecvdApi = () => {
   return webhookUrl
 }
 
+//得到 loginAPIToken
+const getLoginApiToken = () => {
+  if(!process.env.globalLoginToken) {
+    process.env.globalLoginToken = LOGIN_API_TOKEN || LOCAL_LOGIN_API_TOKEN || generateToken()
+  }
+  
+  return process.env.globalLoginToken
+}
+
+
 
 module.exports = {
-  sendMsg2RecvdAPI,
-  getValidRecvdApi
+  sendMsg2RecvdApi,
+  getValidRecvdApi,
+  getLoginApiToken
 }

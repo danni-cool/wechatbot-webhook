@@ -9,7 +9,7 @@
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
 ## News (2023.10.8)
-> 目前已知的是登录2天左右会掉，应该是网页微信风控的问题（长时间无消息），目前解决方案是触发了掉线或者异常通知后，通知你配置的 `RECVD_MSG_API`，去处理扫码登录逻辑，比如访问暴露到外网的登录 api  http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN。
+> 目前已知的是登录几天有几率会掉，应该是网页微信风控的问题（长时间无消息），目前解决方案是触发了掉线或者异常通知后，通知你配置的 `RECVD_MSG_API`，去处理扫码登录逻辑，比如访问暴露到外网的登录 api  http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN。
 如果有更好的方案可以和我交流 : )
 
 

@@ -1,3 +1,6 @@
+const { sendMsg2RecvdApi } = require('../service/webhook')
+const { TextMsg } = require('../utils/msg')
+
 // 登录
 module.exports = function registerLoginCheck({ app, bot }) {
   let message,
@@ -15,6 +18,18 @@ module.exports = function registerLoginCheck({ app, bot }) {
     .on('logout', user => {
       message = ''
       success = false
+      // 登出时给接收消息api发送特殊文本
+      sendMsg2RecvdApi(new TextMsg({
+        text: JSON.stringify({ event: 'logout', user }),
+        isSystemEvent: true
+      }))
+    })
+    .on('error', error => {
+      // 报错时接收特殊文本
+      sendMsg2RecvdApi(new TextMsg({
+        text: JSON.stringify({ event: 'error', error }),
+        isSystemEvent: true
+      }))
     })
 
   // 处理 POST 请求

@@ -1,7 +1,6 @@
 const fetch = require('node-fetch-commonjs')
 const FormData = require('form-data')
 const chalk = require('chalk')
-const { generateToken } = require('../utils/index')
 const {
   LOCAL_RECVD_MSG_API,
   RECVD_MSG_API,
@@ -9,16 +8,34 @@ const {
   LOCAL_LOGIN_API_TOKEN
 } = process.env
 
-const sendMsg2RecvdApi = async function (msg, webhookUrl) {
+const sendMsg2RecvdApi = async function (msg) {
+  // 检测是否配置了webhookurl
+  let webhookUrl
+  let errorText = (key, value) => console.error(chalk.red(`配置参数 ${key}: ${chalk.cyan(value)} <- 不符合 URL 规范, 该 API 将不会收到请求\n`))
+
+  // 外部传入了以外部为准
+  if (!['', undefined].includes(RECVD_MSG_API)) {
+    webhookUrl = ('' + RECVD_MSG_API).startsWith('http') ? RECVD_MSG_API : ''
+    !webhookUrl && errorText('RECVD_MSG_API', RECVD_MSG_API)
+    // 无外部则用本地
+  } else if (!['', undefined].includes(LOCAL_RECVD_MSG_API)) {
+    webhookUrl = ('' + LOCAL_RECVD_MSG_API).startsWith('http') ? LOCAL_RECVD_MSG_API : ''
+    !webhookUrl && errorText('LOCAL_RECVD_MSG_API', LOCAL_RECVD_MSG_API)
+  }
+  // 有webhookurl才发送
+  if (!webhookUrl) return
+
   const source = {
     room: msg.room() || '',
     to: msg.to() || '',
     from: msg.talker() || '',
   }
 
-  const formData = new FormData();
   let passed = true
+  const formData = new FormData();
+
   formData.append('source', JSON.stringify(source))
+  formData.append('isSystemEvent', msg.isSystemEvent ? '1' : '0')
 
   switch (msg.type()) {
     // 图片
@@ -57,30 +74,12 @@ const sendMsg2RecvdApi = async function (msg, webhookUrl) {
   })
 }
 
-// 得到收消息api，并做格式检查
-const getValidRecvdApi = () => {
-  let webhookUrl = ''
-  let errorText = (key, value) => console.error(chalk.red(`配置参数 ${key}: ${chalk.cyan(value)} <- 不符合 URL 规范, 该 API 将不会收到请求\n`))
-
-  // 外部传入了以外部为准
-  if (!['', undefined].includes(RECVD_MSG_API)) {
-    webhookUrl = ('' + RECVD_MSG_API).startsWith('http') ? RECVD_MSG_API : ''
-    !webhookUrl && errorText('RECVD_MSG_API', RECVD_MSG_API)
-    // 无外部则用本地
-  } else if (!['', undefined].includes(LOCAL_RECVD_MSG_API)) {
-    webhookUrl = ('' + LOCAL_RECVD_MSG_API).startsWith('http') ? LOCAL_RECVD_MSG_API : ''
-    !webhookUrl && errorText('LOCAL_RECVD_MSG_API', LOCAL_RECVD_MSG_API)
-  }
-
-  return webhookUrl
-}
-
 //得到 loginAPIToken
 const getLoginApiToken = () => {
-  if(!process.env.globalLoginToken) {
-    process.env.globalLoginToken = LOGIN_API_TOKEN || LOCAL_LOGIN_API_TOKEN || generateToken()
+  if (!process.env.globalLoginToken) {
+    process.env.globalLoginToken = LOGIN_API_TOKEN || LOCAL_LOGIN_API_TOKEN
   }
-  
+
   return process.env.globalLoginToken
 }
 
@@ -88,6 +87,5 @@ const getLoginApiToken = () => {
 
 module.exports = {
   sendMsg2RecvdApi,
-  getValidRecvdApi,
   getLoginApiToken
 }

@@ -4,6 +4,7 @@
   "description": "给微信里加个 webhook 机器人，支持docker部署",
   "main": "index.js",
   "scripts": {
+    "prestart": "node ./scripts/writeLoginApiToken",
     "start": "node main",
     "release": "standard-version"
   },

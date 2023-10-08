@@ -8,6 +8,11 @@
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
+## News (2023.10.8)
+> 目前已知的是登录2天左右会掉，应该是网页微信风控的问题（长时间无消息），目前解决方案是触发了掉线或者异常通知后，通知你配置的 `RECVD_MSG_API`，去处理扫码登录逻辑，比如访问暴露到外网的登录 api  http://localhost:3001/loginCheck?token=[your token]。
+如果有更好的方案可以和我交流 : )
+
+
 ## 一、启动
 
 ### 1. 本地调试
@@ -33,18 +38,31 @@ LOCAL_RECVD_MSG_API=https://example.com/your/url
 docker pull dannicool/docker-wechatbot-webhook
 ```
 
-#### 启动容器(后台常驻)
+#### 启动容器
+
+该方法会在后台启动一个 **只能给微信推消息** 的容器
 
 ```bash
 docker run -d \
 --name wxBotWebhook \
 -p 3001:3001 \
--e RECVD_MSG_API="https://example.com/your/url" \
 dannicool/docker-wechatbot-webhook
 ```
-收消息钩子
->  -e RECVD_MSG_API  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑url，该行可以省略
 
+####  容器参数（可选）
+
+我还想收消息
+>  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略
+
+```
+-e RECVD_MSG_API="https://example.com/your/url" \
+```
+
+我想自定义登录 API 令牌
+> 容器启动后支持通过api 形式获得 登录状态 / 扫码登录 url，你也可以自定义一个自己的令牌，不配置的话，默认会生成一个
+```
+-e LOGIN_API_TOKEN="<YOUR PERSONAL TOKEN>" \
+```
 ## 二、登录wx
 
 以下只展示 docker 启动，本地调试可以直接在控制台找到链接
@@ -55,7 +73,7 @@ docker logs -f wxBotWebhook
 
 找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
 
-![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/docker-wechat-login-demo.png)
+![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatlogindemo.png)
 
 ## 三、API
 
@@ -88,8 +106,9 @@ docker logs -f wxBotWebhook
 | formData |  说明 | 数据类型 | 可选值 |
 |--|--|--|--|
 | type | 表单类型 | `String` | `text` / `img` |
-| content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer | `String` / `Binary`  |  |
+| content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 `JSON String` | `String` / `Binary`  |  |
 | source | 消息的相关发送方数据, JSON String | `String` | |
+| isSystemEvent | 是否是来自系统消息事件（比如 掉线、异常事件）| `String` | 1 / 0
 
 source 字段示例
 
@@ -160,6 +179,30 @@ source 字段示例
   }
 ```
 
+### 3. 通过 API 获得登录状态
+
+example: 访问登录shell 的 `http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN`, 你将得到当前的登录态
+
+token 是必填项，无需配置，初次启动项目会自动生成一个，当然你也可以配置一个简单好记的个人 token, 有两种方式
+
+1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
+2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN
+
+> 如果都配置，docker 配置将覆盖本地配置
+
+**请求体**
+
+- Methods: `GET`
+- URL: http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN
+
+**返回体**
+
+
+
+| Json |  说明 | 数据类型 | 可选值 |
+|--|--|--|--|
+| success | 登录成功与否 | `Boolean` | `true` / `false` |
+| content |  | `String` / `Binary`  |  |
 
 
 ## 四、更新日志

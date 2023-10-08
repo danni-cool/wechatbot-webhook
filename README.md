@@ -197,12 +197,10 @@ token 是必填项，无需配置，初次启动项目会自动生成一个，�
 
 **返回体**
 
-
-
-| Json |  说明 | 数据类型 | 可选值 |
+| JSON |  说明 | 数据类型 | 可选值 |
 |--|--|--|--|
 | success | 登录成功与否 | `Boolean` | `true` / `false` |
-| content |  | `String` / `Binary`  |  |
+| message | 当前登录用户名，登录失败将返回扫码登录URL  | `String`  |  |
 
 
 ## 四、更新日志

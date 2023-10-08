@@ -112,7 +112,7 @@ docker logs -f wxBotWebhook
 
 source 字段示例
 
-```json
+```js
   {
     // 消息来自群，会有以下对象，否则为空字符串
     "room": {

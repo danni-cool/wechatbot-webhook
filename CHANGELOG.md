@@ -1,3 +1,14 @@
+
+# [1.2.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.1.3...v1.2.0) (2023-10-08)
+
+
+### Features
+
+* 🎸 增加checklogin api接口和token生成机制 ([1b64d1e](https://github.com/danni-cool/docker-wechatbot-webhook/commit/1b64d1e16eeb2c42697efb2137939d56ab605836))
+* 🎸 支持掉线或者异常时的通知机制 ([6008271](https://github.com/danni-cool/docker-wechatbot-webhook/commit/6008271c983df75bbbdf326b3958f9264c708459)), closes [#9](https://github.com/danni-cool/docker-wechatbot-webhook/issues/9)
+
+
+
 ## [1.1.3](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.1.2...v1.1.3) (2023-09-29)
 
 

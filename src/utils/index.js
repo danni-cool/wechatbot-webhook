@@ -21,6 +21,10 @@ const getFileNameFromUrl = url => url.match(/.*\/([^/?]*)/)?.[1] || ''
 const getMediaFromUrl = async url =>
   FileBox.fromBuffer(await downloadImage(url), getFileNameFromUrl(url))
 
+// 首字母大写
+const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
+
+
 /**
  * @example
  *       const checkList = [
@@ -38,7 +42,7 @@ const getUnvalidParamsList = arr => {
           item.unValidReason = `${item.key} 不能为空`
         }
         else if (typeof item.val !== item.type) {
-          item.unValidReason = `${item.key} 的参数类型不是 ${item.type}`
+          item.unValidReason = `${item.key} 的参数类型不是 ${capitalizeFirstLetter(item.type)}`
         }
       } else {
         item.unValidReason = typeof item.val !== item.type ? `${item.key} 的参数类型不是 ${item.type}` : ''

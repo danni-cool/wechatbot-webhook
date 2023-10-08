@@ -18,7 +18,7 @@ module.exports = function registerPushHook({ app, bot }) {
         .map(({ unValidReason }) => unValidReason).join('，')
 
       if (unValidParamsStr) {
-        return res.status(200).json({ success: false, message: `[${unValidParamsStr}] params  is not valid, please checkout the api reference (https://github.com/danni-cool/docker-wechat-roomBot#body-%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E)` });
+        return res.status(200).json({ success: false, message: `[${unValidParamsStr}] params  is not valid, please checkout the api reference (https://github.com/danni-cool/docker-wechatbot-webhook#body-%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E)` });
       }
 
       const msgReceiver = isRoom ?

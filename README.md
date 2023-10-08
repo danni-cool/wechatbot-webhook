@@ -26,6 +26,7 @@ npm start
 ```
 # 如果想换端口
 PORT=3001
+
 # 如果想自己处理收到消息的逻辑，比如根据消息联动，在下面填上你的 API 地址, 默认为空
 LOCAL_RECVD_MSG_API=https://example.com/your/url
 ```
@@ -49,20 +50,15 @@ docker run -d \
 dannicool/docker-wechatbot-webhook
 ```
 
-####  容器参数（可选）
+####  可选参数
 
-我还想收消息
->  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略
+> Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="https://example.com/your/url" \
 
-```
--e RECVD_MSG_API="https://example.com/your/url" \
-```
+| 功能 | 环境变量 | 案例 | 备注 |
+|--|--|--|--|
+|  收消息 API |   RECVD_MSG_API  |   RECVD_MSG_API="https://example.com/your/url"   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
+| 自定义登录 API 令牌 | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123 | 容器启动后支持通过api 形式获得 登录状态 / 扫码登录 url，你也可以自定义一个自己的令牌，不配置的话，默认会生成一个 |
 
-我想自定义登录 API 令牌
-> 容器启动后支持通过api 形式获得 登录状态 / 扫码登录 url，你也可以自定义一个自己的令牌，不配置的话，默认会生成一个
-```
--e LOGIN_API_TOKEN="<YOUR PERSONAL TOKEN>" \
-```
 ## 二、登录wx
 
 以下只展示 docker 启动，本地调试可以直接在控制台找到链接
@@ -93,6 +89,18 @@ docker logs -f wxBotWebhook
 | type | 发送消息类型 | `String` | | N | `text` / `img` | 目前只支持 **文字** 和 **图片**，消息不支持图文自动拆分，请手动调多次  |
 | content | 发送的消息 | `String` |  | N |  | 如果希望发多张图，type 指定为 img 同时，content 里填 url 以英文逗号分隔 |
 
+#### Example（curl）
+```bash
+curl --location --request POST 'http://localhost:3001/webhook/msg' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "to": "testUser",
+    "type": "text",
+    "content": "Hello World!",
+    "isRoom": false
+}'
+```
+
 ### 2. 收消息
 
 > 收消息接口使用 `form` 传递参数，因为要兼容有文件的情况，文件目前也只兼容了**图片**
@@ -108,7 +116,7 @@ docker logs -f wxBotWebhook
 | type | 表单类型 | `String` | `text` / `img` |
 | content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 `JSON String` | `String` / `Binary`  |  |
 | source | 消息的相关发送方数据, JSON String | `String` | |
-| isSystemEvent | 是否是来自系统消息事件（比如 掉线、异常事件）| `String` | 1 / 0
+| isSystemEvent | 是否是来自系统消息事件（比如 上线 login，掉线 logout、异常事件 error）| `String` | 1 / 0
 
 source 字段示例
 
@@ -181,9 +189,7 @@ source 字段示例
 
 ### 3. 通过 API 获得登录状态
 
-example: 访问登录shell 的 `http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN`, 你将得到当前的登录态
-
-token 是必填项，无需配置，初次启动项目会自动生成一个，当然你也可以配置一个简单好记的个人 token, 有两种方式
+example: 访问登录shell 的 `http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN`, 你将得到当前的登录态，token 是必填项，初次启动项目会自动生成一个，当然你也可以配置一个简单好记的token, 有两种方式
 
 1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
 2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN

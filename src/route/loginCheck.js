@@ -14,6 +14,10 @@ module.exports = function registerLoginCheck({ app, bot }) {
     .on('login', user => {
       message = user + 'is already login'
       success = true
+      sendMsg2RecvdApi(new TextMsg({
+        text: JSON.stringify({ event: 'login', user }),
+        isSystemEvent: true
+      }))
     })
     .on('logout', user => {
       message = ''

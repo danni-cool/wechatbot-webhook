@@ -1,4 +1,13 @@
 
+# [1.3.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.2.0...v1.3.0) (2023-10-08)
+
+
+### Features
+
+* 🎸 login事件也增加通知 ([cb56a4e](https://github.com/danni-cool/docker-wechatbot-webhook/commit/cb56a4e1e44ccaefec1c03a277c1e496321f7098))
+
+
+
 # [1.2.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.1.3...v1.2.0) (2023-10-08)
 
 

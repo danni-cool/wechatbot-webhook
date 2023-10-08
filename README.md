@@ -50,7 +50,7 @@ docker run -d \
 dannicool/docker-wechatbot-webhook
 ```
 
-####  启动容器可选参数
+####  可选参数
 
 > Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="https://example.com/your/url" \
 
@@ -189,9 +189,7 @@ source 字段示例
 
 ### 3. 通过 API 获得登录状态
 
-example: 访问登录shell 的 `http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN`, 你将得到当前的登录态
-
-token 是必填项，无需配置，初次启动项目会自动生成一个，当然你也可以配置一个简单好记的个人 token, 有两种方式
+example: 访问登录shell 的 `http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN`, 你将得到当前的登录态，token 是必填项，初次启动项目会自动生成一个，当然你也可以配置一个简单好记的token, 有两种方式
 
 1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
 2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN

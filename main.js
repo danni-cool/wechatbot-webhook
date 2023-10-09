@@ -5,7 +5,6 @@ const wechatBotInit = require('./src/wechaty/init')
 const registerRoute = require('./src/route')
 const app = express();
 const bot = wechatBotInit()
-const chalk = require('chalk')
 
 app.use(express.json());
 

@@ -1,7 +1,17 @@
 // 给 shell 调用使用
 const fs = require('fs');
 const dotenv = require('dotenv');
+const path = require('path');
 const { generateToken } = require('../src/utils/index')
+const sourceFile = path.join(__dirname,  '../.env.example');
+const destFile = path.join(__dirname,  '../.env');
+
+// 根据env.example 生成 .env 文件
+if (!fs.existsSync(destFile)) {
+    // 如果不存在，则从 env.example 复制
+    fs.copyFileSync(sourceFile, destFile);
+    console.log('.env file created from .env.example');
+} 
 
 // 读取 .env 文件内容
 const envContent = fs.readFileSync('.env', 'utf-8').split('\n');
@@ -11,6 +21,7 @@ const envConfig = dotenv.parse(envContent.join('\n'));
 
 // 无配置token，会默认生成一个token
 if(envConfig.LOCAL_LOGIN_API_TOKEN) return
+
 const token = generateToken()
 console.log(`检测未配置 LOGIN_API_TOKEN, 写入初始化值 LOCAL_LOGIN_API_TOKEN=${token}  => .env \n`)
 

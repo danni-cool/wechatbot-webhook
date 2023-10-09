@@ -1,5 +1,24 @@
 
-## [1.3.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.3.0...v1.3.1) (2023-10-09)
+# [1.4.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.3.0...v1.4.0) (2023-10-09)
+
+
+### Bug Fixes
+
+* 🐛 修复登录Api user 值为undefined的问题 ([9711eb8](https://github.com/danni-cool/docker-wechatbot-webhook/commit/9711eb8da3a1cb4fa4dfd23792bb989013040a5b))
+
+
+### Features
+
+* 🎸 增加登录后可能登出的时间上报 ([ef3539f](https://github.com/danni-cool/docker-wechatbot-webhook/commit/ef3539f6652124434d54d86a67796acee307ca28))
+* 🎸 推消息api支持文件和文件Url ([350af6a](https://github.com/danni-cool/docker-wechatbot-webhook/commit/350af6a3a8591163f1d2fd8a33c2f56769b215b5))
+
+
+### Performance Improvements
+
+* ⚡️ 参数错误时，校验优化，更正项目地址 ([dafafea](https://github.com/danni-cool/docker-wechatbot-webhook/commit/dafafea1519b790c4db1eafe43f1193e78b2aea7))
+* ⚡️ 精简无用代码&增加运行调试模式 ([e3d8bad](https://github.com/danni-cool/docker-wechatbot-webhook/commit/e3d8bad6427105a6f27d246a63840888547c0700))
+
+# [1.3.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.3.0...v1.3.1) (2023-10-09)
 
 
 ### Performance Improvements

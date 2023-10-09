@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "prestart": "node ./scripts/preStart",
-    "start": "node main"
+    "start": "node main",
+    "debug": "node --inspect main"
   },
   "author": {
     "name": "danni-cool",

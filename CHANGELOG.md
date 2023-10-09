@@ -1,4 +1,13 @@
 
+## [1.3.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.3.0...v1.3.1) (2023-10-09)
+
+
+### Performance Improvements
+
+* ⚡️ 参数错误时，校验优化，更正项目地址 ([dafafea](https://github.com/danni-cool/docker-wechatbot-webhook/commit/dafafea1519b790c4db1eafe43f1193e78b2aea7))
+
+
+
 # [1.3.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.2.0...v1.3.0) (2023-10-08)
 
 

@@ -111,81 +111,12 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 - ContentType: `multipart/form-data`
 - Form格式如下
 
-| formData |  说明 | 数据类型 | 可选值 |
-|--|--|--|--|
-| type | 表单类型 | `String` | `text` / `img` |
-| content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 `JSON String` | `String` / `Binary`  |  |
-| source | 消息的相关发送方数据, JSON String | `String` | |
-| isSystemEvent | 是否是来自系统消息事件（比如 上线 login，掉线 logout、异常事件 error）| `String` | 1 / 0
-
-source 字段示例
-
-```js
-  {
-    // 消息来自群，会有以下对象，否则为空字符串
-    "room": {
-      "id": "@@xxx",
-      "topic": "abc" // 群名
-      "payload": {
-        "id": "@@xxxx",
-        "adminIdList": [],
-        "avatar": "xxxx", // 相对路径，应该要配合解密
-        "memberIdList": [ //群里人的id
-          "@xxxx",
-          "@xxxx"
-        ],
-      },
-      //以下暂不清楚什么用途，如有兴趣，请查阅 wechaty 官网文档
-      "_events": {},
-      "_eventsCount": 0,
-    },
-
-
-    // 消息来自个人，会有以下对象，否则为空字符串
-    "to": {
-        "id": "@xxx",
-
-        "payload": {
-            "alias": "", //备注名
-            "avatar": "xxx",
-            "friend": false,
-            "gender": 1,
-            "id": "@xxx",
-            "name": "xxx",
-            "phone": [],
-            "signature": "hard mode",
-            "star": false,
-            "type": 1
-        },
-
-        "_events": {},
-        "_eventsCount": 0,
-      },
-
-    // 消息发送方
-    "from": {
-      "id": "@xxx",
-
-      "payload": {
-        "alias": "",
-        "avatar": "xxx",
-        "city": "北京",
-        "friend": true,
-        "gender": 1,
-        "id": "@xxxx",
-        "name": "abc", //昵称
-        "phone": [],
-        "province": "北京",
-        "star": false,
-        "type": 1
-      },
-
-      "_events": {},
-      "_eventsCount": 0,
-    }
-
-  }
-```
+| formData |  说明 | 数据类型 | 可选值 | 示例 |
+|--|--|--|--|-- |
+| type | 表单类型 | `String` | `text` / `img` | |
+| content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 `JSON String` | `String` / `Binary`  |  | |
+| source | 消息的相关发送方数据, JSON String | `String` | | [示例](./docs/source.example.md) |
+| isSystemEvent | 是否是来自系统消息事件（比如 上线 login，掉线 logout、异常事件 error）| `String` | 1 / 0 | |
 
 ### 3. 通过 API 获得登录状态
 

@@ -4,6 +4,7 @@ const { TextMsg } = require('../utils/msg')
 // 登录
 module.exports = function registerLoginCheck({ app, bot }) {
   let message,
+    logOutWhenError = false,
     success = false
 
   bot
@@ -14,6 +15,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
     .on('login', user => {
       message = user + 'is already login'
       success = true
+      logOutWhenError = false
       sendMsg2RecvdApi(new TextMsg({
         text: JSON.stringify({ event: 'login', user }),
         isSystemEvent: true
@@ -34,6 +36,17 @@ module.exports = function registerLoginCheck({ app, bot }) {
         text: JSON.stringify({ event: 'error', error }),
         isSystemEvent: true
       }))
+
+      // 处理异常错误后的登出上报，每次登录成功后掉线只上报一次
+      if (!logOutWhenError && !bot.isLoggedIn) {
+        logOutWhenError = true
+        success = false
+        message = ''
+        sendMsg2RecvdApi(new TextMsg({
+          text: JSON.stringify({ event: 'logout', user }),
+          isSystemEvent: true
+        }))
+      }
     })
 
   // 处理 POST 请求

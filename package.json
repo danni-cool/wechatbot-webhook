@@ -7,7 +7,7 @@
     "prestart": "node ./scripts/preStart",
     "predebug": "node ./scripts/preStart",
     "start": "node main",
-    "debug": "node --inspect main"
+    "debug": "node --inspect='0.0.0.0:9229' main"
   },
   "author": {
     "name": "danni-cool",

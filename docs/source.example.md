@@ -1,4 +1,6 @@
-# RECVD_MSG_API Source 字段示例
+# RECVD_MSG_API  JSON 示例
+
+## `formData.source`
 
 ```js
   {

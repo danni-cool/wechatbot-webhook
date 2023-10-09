@@ -114,7 +114,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 | formData |  说明 | 数据类型 | 可选值 | 示例 |
 |--|--|--|--|-- |
 | type | 表单类型 | `String` | `text` / `img` | |
-| content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 `JSON String` | `String` / `Binary`  |  | |
+| content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 JSON String | `String` / `Binary`  |  | |
 | source | 消息的相关发送方数据, JSON String | `String` | | [示例](./docs/source.example.md) |
 | isSystemEvent | 是否是来自系统消息事件（比如 上线 login，掉线 logout、异常事件 error）| `String` | 1 / 0 | |
 

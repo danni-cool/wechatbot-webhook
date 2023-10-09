@@ -16,7 +16,7 @@ const formatAndSendMsg = async function ({ bot, type, content, msgInstance }) {
       // 逗号分割的多个文件Url的情况
 
       if(type === 'img') {
-        console.log(`\n⚠️ ${ chalk.yellow(" Waring: 请求中参数 type: 'img' 在下个版本将不受支持，请更换为 type: 'fileUrl'，具体可以参考：")}⚠️\n`)
+        console.log(`\n⚠️ ${ chalk.yellow(" Waring: 请求中参数 type: 'img' 在下个版本将不受支持，请更换为 type: 'fileUrl'，具体可以参考：https://github.com/danni-cool/docker-wechatbot-webhook#case1-%E5%8F%91%E7%BA%AF%E6%96%87%E5%AD%97%E6%88%96%E6%96%87%E4%BB%B6%E9%93%BE%E6%8E%A5json")}⚠️\n`)
       }
 
       const fileUrlArr = content.split(',')

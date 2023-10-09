@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "node ./scripts/preStart",
+    "predebug": "node ./scripts/preStart",
     "start": "node main",
     "debug": "node --inspect main"
   },

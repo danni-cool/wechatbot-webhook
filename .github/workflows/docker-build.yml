@@ -22,17 +22,16 @@ jobs:
           node-version: 18
           registry-url: https://registry.npmjs.org/
 
-      # - name: Install devDependencies
-      #   run: npm install --only=dev
+      - name: Install devDependencies
+        run: npm install --only=dev
 
       - name: Generate changelog and push changes
         run: | 
-            # npm run release
+            npm run release
             git config --global user.email "contact@danni.cool"
             git config --global user.name "gitHubCi"
-            npx standard-version
-            # git add .
-            # git commit -m "Commit changes for release"
+            git add .
+            git commit -m "Commit changes for release"
             git push origin main
 
       - name: Get Package Version

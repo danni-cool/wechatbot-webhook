@@ -4,9 +4,8 @@
   "description": "给微信里加个 webhook 机器人，支持docker部署",
   "main": "index.js",
   "scripts": {
-    "prestart": "node ./scripts/writeLoginApiToken",
-    "start": "node main",
-    "release": "standard-version"
+    "prestart": "node ./scripts/preStart",
+    "start": "node main"
   },
   "author": {
     "name": "danni-cool",
@@ -24,8 +23,5 @@
     "form-data": "^4.0.0",
     "node-fetch-commonjs": "^3.3.2",
     "wechaty": "^1.20.2"
-  },
-  "devDependencies": {
-    "standard-version": "^9.5.0"
   }
 }

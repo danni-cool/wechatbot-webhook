@@ -8,9 +8,7 @@
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
-## News (2023.10.8)
-> 目前已知的是登录几天有几率会掉，应该是网页微信风控的问题（长时间无消息），目前解决方案是触发了掉线或者异常通知后，通知你配置的 `RECVD_MSG_API`，去处理扫码登录逻辑，比如访问暴露到外网的登录 api  http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN。
-如果有更好的方案可以和我交流 : )
+
 
 
 ## 一、启动
@@ -77,28 +75,58 @@ docker logs -f wxBotWebhook
 
 - Url：<http://localhost:3001/webhook/msg>
 - Methods: `POST`
+
+#### Case1. 发纯文字或文件链接（json）
 - ContentType: `application/json`
 - Body: 格式见下面表格
 
-#### Body 参数说明
-
-| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选值 | 备注 |
-|--|--|--|--|--|--|--|
-| to | 会话名 | `String` |  |  N  |  | 发群消息填群名，发给个人填昵称 |
-| isRoom | 是否发的群消息 | `Boolean` | `false`  | Y  |  `true` / `false`  | 这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上  |
-| type | 发送消息类型 | `String` | | N | `text` / `img` | 目前只支持 **文字** 和 **图片**，消息不支持图文自动拆分，请手动调多次  |
-| content | 发送的消息 | `String` |  | N |  | 如果希望发多张图，type 指定为 img 同时，content 里填 url 以英文逗号分隔 |
+| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选值 |
+|--|--|--|--|--|--|
+| to | **会话名**，发群消息填群名，发给个人填昵称 | `String` | -  |  N  | - |
+| isRoom | **是否发的群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
+| type | **消息类型**，消息不支持自动拆分，请手动调多次，发送的文件 Url 在微信里长啥样，是文件后缀决定的。请使用 `fileUrl` 替代 `img`, `img` 类型将在后面版本废弃， | `String`  | - | N | `text`  `img`  `fileUrl` | 支持 **文字** 和 **文件**，  |
+| content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
 
 #### Example（curl）
-```bash
+##### 发段文字
+```bash 
 curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "to": "testUser",
     "type": "text",
     "content": "Hello World!",
-    "isRoom": false
 }'
+```
+
+##### 发个文件
+```bash 
+curl --location --request POST 'http://localhost:3001/webhook/msg' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "to": "testGroup",
+    "type": "fileUrl",
+    "content": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3",
+    "isRoom": true
+}'
+```
+
+#### Case2. 读文件发送（formData)
+- ContentType: `multipart/form-data`
+- FormData: 格式见下面表格
+
+| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选值 |
+|--|--|--|--|--|--|
+| to | **会话名**，发群消息填群名，发给个人填昵称 | `String` | -  |  N  | - |
+| isRoom | **是否发的群消息**，formData纯文本只能使用 `String` 类型，`1`代表是，`0`代表否， | `String` | `0`  | Y  |  `1`  `0`  |
+| content | **文件**，本地文件一次只能发一个，多个文件手动调用多次 | `Binary` | - | N | - |
+
+##### 发个本地文件
+```bash
+curl --location --request POST 'http://localhost:3001/webhook/msg' \
+--form 'to=testGroup' \
+--form content=@"$HOME/demo.jpg" \
+--form 'isRoom=1'
 ```
 
 ### 2. 收消息
@@ -118,27 +146,36 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 | source | 消息的相关发送方数据, JSON String | `String` | | [示例](./docs/source.example.md) |
 | isSystemEvent | 是否是来自系统消息事件（比如 上线 login，掉线 logout、异常事件 error）| `String` | 1 / 0 | |
 
-### 3. 通过 API 获得登录状态
+### 3. 登录APi
 
-example: 访问登录shell 的 `http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN`, 你将得到当前的登录态，token 是必填项，初次启动项目会自动生成一个，当然你也可以配置一个简单好记的token, 有两种方式
+> 已知的是登录几天有几率会掉，应该是网页微信风控的问题（长时间无消息）。
+
+#### 解决方案：
+
+1. 在异常或者掉线事件触发后，通知你配置的 `RECVD_MSG_API`，
+2. 在收到通知后，访问登录 Api 处理扫码登录逻辑，外网映射
+访问 http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN。
+
+ps: 有更好的方案欢迎和我交流 :)
+
+#### 自定义token
+
+token 初次启动项目会自动生成一个，当然你也可以配置一个简单好记的token， 如果都配置，docker 配置将覆盖本地配置
 
 1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
 2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN
 
-> 如果都配置，docker 配置将覆盖本地配置
-
-**请求体**
+#### 请求体
 
 - Methods: `GET`
 - URL: http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN
 
-**返回体**
+#### 返回体
 
 | JSON |  说明 | 数据类型 | 可选值 |
 |--|--|--|--|
 | success | 登录成功与否 | `Boolean` | `true` / `false` |
 | message | 当前登录用户名，登录失败将返回扫码登录URL  | `String`  |  |
-
 
 ## 四、更新日志
 

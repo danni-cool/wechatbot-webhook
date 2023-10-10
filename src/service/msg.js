@@ -20,7 +20,7 @@ const formatAndSendMsg = async function ({ bot, type, content, msgInstance }) {
       }
 
       const fileUrlArr = content.split(',')
-      // 只有一张图
+      // 单文件
       if (fileUrlArr.length === 1) {
         const file = await Utils.getMediaFromUrl(content)
         await msgInstance.say(file)

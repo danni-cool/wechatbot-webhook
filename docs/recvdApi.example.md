@@ -1,6 +1,39 @@
+
 # RECVD_MSG_API  JSON 示例
 
-## `formData.source`
+## formData.content  `String` | `Binary`
+
+特殊结构说明：
+`formData.isSystemEvent` === '1' 时，`formData.content` 为以下结构 json string
+
+### login/logout/error 事件
+
+```js
+{
+  "event": "login", // login | logout | error
+
+  "user": { // 当前的用户信息
+    "_events": {},
+    "_eventsCount": 0,
+    "id": "@xxxasdfsf",
+    "payload": {
+      "alias": "",
+      "avatar": "",
+      "friend": false,
+      "gender": 1,
+      "id": "@xxx",
+      "name": "somebody",
+      "phone": [],
+      "star": false,
+      "type": 1
+    }
+
+    "error": ''// js 报错的错误栈信息
+  }
+}
+```
+
+## formData.source `String`
 
 ```js
   {

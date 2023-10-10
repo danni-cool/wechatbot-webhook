@@ -6,12 +6,13 @@
 
 ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/dannicool/docker-wechatbot-webhook) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/docker-build.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook)
 
-[view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
+[view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general) 
+
+✅[Todo & Discussion](https://github.com/danni-cool/docker-wechatbot-webhook/issues/11)
 
 
 
-
-## 一、启动
+## 🚀 启动
 
 ### 1. 本地调试
 
@@ -57,7 +58,7 @@ dannicool/docker-wechatbot-webhook
 |  收消息 API |   RECVD_MSG_API  |   RECVD_MSG_API="https://example.com/your/url"   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
 | 自定义登录 API 令牌 | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123 | 容器启动后支持通过api 形式获得 登录状态 / 扫码登录 url，你也可以自定义一个自己的令牌，不配置的话，默认会生成一个 |
 
-## 二、登录wx
+## 👨🏻‍💻 登录wx
 
 以下只展示 docker 启动，本地调试可以直接在控制台找到链接
 
@@ -69,16 +70,18 @@ docker logs -f wxBotWebhook
 
 ![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatlogindemo.png)
 
-## 三、API
+## 🛠️ API
 
 ### 1. 推消息
 
 - Url：<http://localhost:3001/webhook/msg>
 - Methods: `POST`
 
-#### Case1. 发纯文字或文件链接（json）
+#### Case1. 发文字或文件（json）
 - ContentType: `application/json`
 - Body: 格式见下面表格
+
+> json 请求发送文件只支持外链
 
 | 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选值 |
 |--|--|--|--|--|--|
@@ -88,7 +91,7 @@ docker logs -f wxBotWebhook
 | content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
 
 #### Example（curl）
-##### 发段文字
+##### Curl (发文字)
 ```bash 
 curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
@@ -99,7 +102,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 }'
 ```
 
-##### 发个文件
+##### Curl（发文件，解析url）
 ```bash 
 curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
@@ -121,7 +124,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 | isRoom | **是否发的群消息**，formData纯文本只能使用 `String` 类型，`1`代表是，`0`代表否， | `String` | `0`  | Y  |  `1`  `0`  |
 | content | **文件**，本地文件一次只能发一个，多个文件手动调用多次 | `Binary` | - | N | - |
 
-##### 发个本地文件
+##### Curl
 ```bash
 curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --form 'to=testGroup' \
@@ -142,9 +145,9 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 | formData |  说明 | 数据类型 | 可选值 | 示例 |
 |--|--|--|--|-- |
 | type | 表单类型 | `String` | `text` / `img` | |
-| content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 JSON String | `String` / `Binary`  |  | |
-| source | 消息的相关发送方数据, JSON String | `String` | | [示例](./docs/source.example.md) |
-| isSystemEvent | 是否是来自系统消息事件（比如 上线 login，掉线 logout、异常事件 error）| `String` | 1 / 0 | |
+| content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 JSON String | `String` / `Binary`  |  | [示例](docs/recvdApi.example.md#formdatacontent) |
+| source | 消息的相关发送方数据, JSON String | `String` | | [示例](docs/recvdApi.example.md#formdatasource) |
+| isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）| `String` | 1 / 0 | |
 
 ### 3. 登录APi
 
@@ -156,11 +159,11 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 2. 在收到通知后，访问登录 Api 处理扫码登录逻辑，外网映射
 访问 http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN。
 
-ps: 有更好的方案欢迎和我交流 :)
+ps: 有更好的方案 ✨[欢迎交流](https://github.com/danni-cool/docker-wechatbot-webhook/issues/22)
 
 #### 自定义token
 
-token 初次启动项目会自动生成一个，当然你也可以配置一个简单好记的token， 如果都配置，docker 配置将覆盖本地配置
+token 初次启动项目会自动生成，你也可以配置一个简单好记的token， 如果都配置，docker 配置将覆盖本地配置
 
 1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
 2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN
@@ -177,6 +180,6 @@ token 初次启动项目会自动生成一个，当然你也可以配置一个�
 | success | 登录成功与否 | `Boolean` | `true` / `false` |
 | message | 当前登录用户名，登录失败将返回扫码登录URL  | `String`  |  |
 
-## 四、更新日志
+## ⏫ 更新日志
 
 更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechat-roomBot/blob/main/CHANGELOG.md)

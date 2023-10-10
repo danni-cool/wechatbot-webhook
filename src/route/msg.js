@@ -1,11 +1,11 @@
-const { formatAndSendMsg } = require('../service/msg')
+const Service = require('../service')
+const Middleware = require('../middleware')
 const { getUnvalidParamsList } = require('../utils/index')
-const { dynamicStorageMiddleware } = require('../middleware/fileUpload')
 
 module.exports = function registerPushHook({ app, bot }) {
 
   // 处理 POST 请求
-  app.post('/webhook/msg', dynamicStorageMiddleware, async (req, res) => {
+  app.post('/webhook/msg', Middleware.dynamicStorageMiddleware, async (req, res) => {
     try {
       let to, isRoom, content, type
       let unValidParamsStr = ''
@@ -52,7 +52,7 @@ module.exports = function registerPushHook({ app, bot }) {
         await bot.Contact.find({ name: to })
 
       if (msgReceiver) {
-        const sendStatus = await formatAndSendMsg({ bot, type, content, msgInstance: msgReceiver, res })
+        const sendStatus = await Service.formatAndSendMsg({ bot, type, content, msgInstance: msgReceiver, res })
         res.status(200).json({ success: sendStatus, message: `Message sent ${sendStatus ? 'successfully' : 'failed'}.` });
       } else {
         res.status(200).json({ success: false, message: `${isRoom ? 'Room' : 'User'} is not found` });

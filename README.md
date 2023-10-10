@@ -147,7 +147,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 | type | 表单类型 | `String` | `text` / `img` | |
 | content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 JSON String | `String` / `Binary`  |  | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source | 消息的相关发送方数据, JSON String | `String` | | [示例](docs/recvdApi.example.md#formdatasource) |
-| isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）| `String` | 1 / 0 | |
+| isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）| `String` | `1` `0` | |
 
 ### 3. 登录APi
 
@@ -156,8 +156,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 #### 解决方案：
 
 1. 在异常或者掉线事件触发后，通知你配置的 `RECVD_MSG_API`，
-2. 在收到通知后，访问登录 Api 处理扫码登录逻辑，外网映射
-访问 http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN。
+2. 在收到通知后，访问登录 Api 扫码登录 http://localhost:3001/login?token=YOUR_PERSONAL_TOKEN。
 
 ps: 有更好的方案 ✨[欢迎交流](https://github.com/danni-cool/docker-wechatbot-webhook/issues/22)
 
@@ -168,13 +167,13 @@ token 初次启动项目会自动生成，你也可以配置一个简单好记�
 1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
 2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN
 
-#### 请求体
 
-- Methods: `GET`
-- URL: http://localhost:3001/loginCheck?token=YOUR_PERSONAL_TOKEN
+| API 路径 | Query Params | Methods |  描述  |
+|--|--|--|--|
+| /login | token | `GET` |  登录成功，返回及当前用户。登录态掉了，跳转最新的登录二维码  |
+| /loginCheck  | token | `GET` | 获取登录状态 API，始终返回 json 格式，登录二维码在登录失败会放在 `message` 中 | 
 
-#### 返回体
-
+##### /loginCheck 返回体
 | JSON |  说明 | 数据类型 | 可选值 |
 |--|--|--|--|
 | success | 登录成功与否 | `Boolean` | `true` / `false` |

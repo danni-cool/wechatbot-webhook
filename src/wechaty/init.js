@@ -1,5 +1,5 @@
 const { WechatyBuilder } = require('wechaty')
-const { sendMsg2RecvdApi, getLoginApiToken } = require('../service/webhook')
+const Service = require('../service')
 const bot = WechatyBuilder.build() // get a Wechaty instance
 const chalk = require('chalk')
 const { PORT } = process.env
@@ -10,7 +10,7 @@ module.exports = function init() {
     .on('scan', (qrcode) =>
       console.log([
         `\nAccess the URL to login: ${chalk.cyan('https://wechaty.js.org/qrcode/' + encodeURIComponent(qrcode))}`,
-        'You can also check login by API: ' + chalk.cyan(`http://localhost:${PORT}/loginCheck?token=${getLoginApiToken()}`)
+        'You can also login by API: ' + chalk.cyan(`http://localhost:${PORT}/login?token=${Service.getLoginApiToken()}`)
       ].join('\n')))
     .on('login', async user => console.log(chalk.green(`User ${user} logged in`)))
     .on('logout', async user => console.log(chalk.red(`User ${user} logout`)))
@@ -20,7 +20,7 @@ module.exports = function init() {
     .on('message', async message => {
       console.log(`Message: ${message}`)
       //收到消息二次转发特殊处理
-      sendMsg2RecvdApi(message)
+      Service.sendMsg2RecvdApi(message)
 
     })
     .on('error', (error) => {

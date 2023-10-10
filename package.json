@@ -1,6 +1,6 @@
 {
   "name": "docker-wechatbot-webhook",
-  "version": "1.4.1",
+  "version": "1.4.0",
   "description": "给微信里加个 webhook 机器人，支持docker部署",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,6 @@
     "predebug": "node ./scripts/preStart",
     "start": "node main",
     "debug": "node --inspect='0.0.0.0:9229' main",
-    "release": "standard-version"
   },
   "author": {
     "name": "danni-cool",
@@ -26,7 +25,6 @@
     "form-data": "^4.0.0",
     "multer": "^1.4.5-lts.1",
     "node-fetch-commonjs": "^3.3.2",
-    "standard-version": "^9.5.0",
     "wechaty": "^1.20.2"
   }
 }

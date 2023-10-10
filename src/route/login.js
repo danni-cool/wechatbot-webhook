@@ -1,4 +1,5 @@
-const { sendMsg2RecvdApi } = require('../service/webhook')
+const Service = require('../service')
+const Middleware = require('../middleware')
 const { TextMsg } = require('../utils/msg')
 
 // 登录
@@ -19,7 +20,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
       success = true
       currentUser = user
       logOutWhenError = false
-      sendMsg2RecvdApi(new TextMsg({
+      Service.sendMsg2RecvdApi(new TextMsg({
         text: JSON.stringify({ event: 'login', user }),
         isSystemEvent: true
       }))
@@ -29,21 +30,21 @@ module.exports = function registerLoginCheck({ app, bot }) {
       currentUser = null
       success = false
       // 登出时给接收消息api发送特殊文本
-      sendMsg2RecvdApi(new TextMsg({
+      Service.sendMsg2RecvdApi(new TextMsg({
         text: JSON.stringify({ event: 'logout', user }),
         isSystemEvent: true
       }))
     })
     .on('error', error => {
       // 报错时接收特殊文本
-      sendMsg2RecvdApi(new TextMsg({
+      Service.sendMsg2RecvdApi(new TextMsg({
         text: JSON.stringify({ event: 'error', error, user: currentUser }),
         isSystemEvent: true
       }))
 
       // 处理异常错误后的登出上报，每次登录成功后掉线只上报一次
       if (!logOutWhenError && !bot.isLoggedIn) {
-        sendMsg2RecvdApi(new TextMsg({
+        Service.sendMsg2RecvdApi(new TextMsg({
           text: JSON.stringify({ event: 'logout', user: currentUser }),
           isSystemEvent: true
         }))
@@ -54,28 +55,24 @@ module.exports = function registerLoginCheck({ app, bot }) {
       }
     })
 
-  // 处理 POST 请求
-  app.get('/loginCheck', async (req, res) => {
-
-    // getLoginApiToken
-    const { token } = req.query
-
-    if (token !== process.env.globalLoginToken) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized: Access is denied due to invalid credentials.'
-      });
-    }
-
-    try {
+  app.get('/login', Middleware.verifyToken, Service.handleError(async (req, res) => {
+    // 登录成功的话，返回登录信息
+    if (success) {
       res.status(200).json({
         success,
         message
       })
-
-    } catch (error) {
-      console.error('Error handling POST request:', error);
-      res.status(500).json({ success: false, message: 'Internal server error.' });
+    } else {
+      res.redirect(301, message);
     }
-  });
+
+  }));
+
+
+  app.get('/loginCheck', Middleware.verifyToken, Service.handleError(async (req, res) => {
+    res.status(200).json({
+      success,
+      message
+    })
+  }));
 } 

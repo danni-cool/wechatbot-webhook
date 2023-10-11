@@ -5,7 +5,8 @@ FROM node:18-alpine
 WORKDIR /app
 
 # 将 package.json 和 package-lock.json 复制到工作目录
-COPY package*.json ./
+COPY package*.json patches/ ./
+
 
 # 安装应用程序依赖项
 RUN npm install

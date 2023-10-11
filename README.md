@@ -6,31 +6,11 @@
 
 ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/dannicool/docker-wechatbot-webhook) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/release.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook)
 
-[view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general) 
+[view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
 ✅[Todo & Discussion](https://github.com/danni-cool/docker-wechatbot-webhook/issues/11)
 
-
-
 ## 🚀 启动
-
-### 1. 本地调试
-
-```
-npm start
-```
-
-其他配置可以在 .env 文件中设置
-
-```
-# 如果想换端口
-PORT=3001
-
-# 如果想自己处理收到消息的逻辑，比如根据消息联动，在下面填上你的 API 地址, 默认为空
-LOCAL_RECVD_MSG_API=https://example.com/your/url
-```
-
-### 2. Docker 部署
 
 #### 拉取镜像
 
@@ -49,14 +29,14 @@ docker run -d \
 dannicool/docker-wechatbot-webhook
 ```
 
-####  可选参数
+#### 可选参数
 
-> Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="https://example.com/your/url" \
+> Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="<https://example.com/your/url>" \
 
 | 功能 | 环境变量 | 案例 | 备注 |
 |--|--|--|--|
-|  收消息 API |   RECVD_MSG_API  |   RECVD_MSG_API="https://example.com/your/url"   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
-| 自定义登录 API 令牌 | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123 | 容器启动后支持通过api 形式获得 登录状态 / 扫码登录 url，你也可以自定义一个自己的令牌，不配置的话，默认会生成一个 |
+|  收消息 |   RECVD_MSG_API  |   RECVD_MSG_API="<https://example.com/your/url>"   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
+| 自定义登录 API token | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123 | 你也可以自定义一个自己的登录令牌，不配置的话，默认会生成一个 |
 
 ## 👨🏻‍💻 登录wx
 
@@ -68,7 +48,7 @@ docker logs -f wxBotWebhook
 
 2.找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
 
-https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN
+<https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN>
 
 ## 🛠️ API
 
@@ -78,6 +58,7 @@ https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN
 - Methods: `POST`
 
 #### Case1. 发文字或文件(外链)
+
 - ContentType: `application/json`
 - Body: 格式见下面表格
 
@@ -91,8 +72,10 @@ https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN
 | content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
 
 #### Example（curl）
+
 ##### Curl (发文字)
-```bash 
+
+```bash
 curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -103,7 +86,8 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 ```
 
 ##### Curl（发文件，解析url）
-```bash 
+
+```bash
 curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -115,6 +99,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 ```
 
 #### Case2. 读文件发送
+
 - ContentType: `multipart/form-data`
 - FormData: 格式见下面表格
 
@@ -125,6 +110,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 | content | **文件**，本地文件一次只能发一个，多个文件手动调用多次 | `Binary` | - | N | - |
 
 ##### Curl
+
 ```bash
 curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --form 'to=testGroup' \
@@ -153,10 +139,10 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 > 已知的是登录几天有几率会掉，应该是网页微信风控的问题（长时间无消息）。
 
-#### 解决方案：
+#### 解决方案
 
 1. 在异常或者掉线事件触发后，通知你配置的 `RECVD_MSG_API`，
-2. 在收到通知后，访问登录 Api 扫码登录 http://localhost:3001/login?token=YOUR_PERSONAL_TOKEN。
+2. 在收到通知后，访问登录 Api 扫码登录 <http://localhost:3001/login?token=YOUR_PERSONAL_TOKEN。>
 
 ps: 有更好的方案 ✨[欢迎交流](https://github.com/danni-cool/docker-wechatbot-webhook/issues/22)
 
@@ -167,13 +153,13 @@ token 初次启动项目会自动生成，你也可以配置一个简单好记�
 1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
 2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN
 
-
 | API 路径 | Query Params | Methods |  描述  |
 |--|--|--|--|
 | /login | token | `GET` |  登录成功，返回及当前用户。登录态掉了，跳转最新的登录二维码  |
-| /loginCheck  | token | `GET` | 获取登录状态 API，始终返回 json 格式，登录二维码在登录失败会放在 `message` 中 | 
+| /loginCheck  | token | `GET` | 获取登录状态 API，始终返回 json 格式，登录二维码在登录失败会放在 `message` 中 |
 
 ##### /loginCheck 返回体
+
 | JSON |  说明 | 数据类型 | 可选值 |
 |--|--|--|--|
 | success | 登录成功与否 | `Boolean` | `true` / `false` |

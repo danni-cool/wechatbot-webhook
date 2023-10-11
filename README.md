@@ -77,7 +77,7 @@ docker logs -f wxBotWebhook
 - Url：<http://localhost:3001/webhook/msg>
 - Methods: `POST`
 
-#### Case1. 发文字或文件（json）
+#### Case1. 发文字或文件(外链)
 - ContentType: `application/json`
 - Body: 格式见下面表格
 
@@ -87,7 +87,7 @@ docker logs -f wxBotWebhook
 |--|--|--|--|--|--|
 | to | **会话名**，发群消息填群名，发给个人填昵称 | `String` | -  |  N  | - |
 | isRoom | **是否发的群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
-| type | **消息类型**，消息不支持自动拆分，请手动调多次，发送的文件 Url 在微信里长啥样，是文件后缀决定的。请使用 `fileUrl` 替代 `img`, `img` 类型将在后面版本废弃， | `String`  | - | N | `text`  `img`  `fileUrl` | 支持 **文字** 和 **文件**，  |
+| type | **消息类型**，消息不支持自动拆分，请手动调多次，发送的文件 Url 在微信里长啥样，是文件后缀决定的。| `String`  | - | N | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
 | content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
 
 #### Example（curl）
@@ -114,7 +114,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 }'
 ```
 
-#### Case2. 读文件发送（formData)
+#### Case2. 读文件发送
 - ContentType: `multipart/form-data`
 - FormData: 格式见下面表格
 

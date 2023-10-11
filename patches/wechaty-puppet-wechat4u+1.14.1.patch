@@ -1,0 +1,14 @@
+diff --git a/node_modules/wechaty-puppet-wechat4u/dist/cjs/src/puppet-wechat4u.js b/node_modules/wechaty-puppet-wechat4u/dist/cjs/src/puppet-wechat4u.js
+index cd9bc20..1924988 100644
+--- a/node_modules/wechaty-puppet-wechat4u/dist/cjs/src/puppet-wechat4u.js
++++ b/node_modules/wechaty-puppet-wechat4u/dist/cjs/src/puppet-wechat4u.js
+@@ -556,7 +556,8 @@ class PuppetWechat4u extends PUPPET.Puppet {
+                     ignoreAttributes: false,
+                 };
+                 const msgXmlObj = XMLParser.parse(rawPayload.Content, options);
+-                const voiceLength = parseInt(msgXmlObj.msg.voicemsg.$.voicelength, 10);
++                //bugfix：msgXmlObj is '' when send voice
++                const voiceLength = rawPayload.VoiceLength || parseInt(msgXmlObj.msg.voicemsg.$.voicelength, 10);
+                 audioFileBox.metadata = {
+                     voiceLength,
+                 };

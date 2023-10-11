@@ -1,10 +1,10 @@
-<div style="text-align:center">
+<div align="center">
 <img src="https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-webhook.png" width="500" height="251"/>
 
 
 ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/dannicool/docker-wechatbot-webhook) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/release.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook)
 
-4 步即可完成从 http 请求到推送微信消息，快用它集成到自己的自动化工作流中吧
+使用 http 请求即可给微信发消息，简化了使用 [Wechaty](https://github.com/wechaty/wechaty) 的过程，快用它集成到自己的自动化工作流中吧
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
@@ -121,7 +121,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 ### 2. 收消息
 
-> 收消息接口使用 `form` 传递参数，因为要兼容有文件的情况，文件目前也只兼容了**图片**
+> 收消息接口使用 form 表单传递参数
 
 入参：
 
@@ -131,10 +131,10 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 | formData |  说明 | 数据类型 | 可选值 | 示例 |
 |--|--|--|--|-- |
-| type | 表单类型 | `String` | `text` / `img` | |
-| content | 传输的内容,文件也放在这个字段，如果是图片收到的就是二进制buffer, 如果 `isSystemEvent` 为 '1', 将收到 JSON String | `String` / `Binary`  |  | [示例](docs/recvdApi.example.md#formdatacontent) |
+| type | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> 不支持的类型<ul><li>❌ 自定义表情</li><li>❌ 视频号</li><li>❌ 小程序</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String` | `text`  `file` `urlLink` | - |
+| content | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例 | `String`  `Binary`  |  | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source | 消息的相关发送方数据, JSON String | `String` | | [示例](docs/recvdApi.example.md#formdatasource) |
-| isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）| `String` | `1` `0` | |
+| isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）| `String` | `1` `0` | - |
 
 ### 3. 登录APi
 

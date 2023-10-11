@@ -7,6 +7,11 @@ const {
   LOGIN_API_TOKEN,
   LOCAL_LOGIN_API_TOKEN
 } = process.env
+let fileTypeFromBuffer
+
+import('file-type').then(res => {
+  fileTypeFromBuffer = res.fileTypeFromBuffer
+})
 
 const sendMsg2RecvdApi = async function (msg) {
   // 检测是否配置了webhookurl
@@ -38,17 +43,44 @@ const sendMsg2RecvdApi = async function (msg) {
   formData.append('isSystemEvent', msg.isSystemEvent ? '1' : '0')
 
   switch (msg.type()) {
-    // 图片
-    case 6:
-      formData.append('type', 'img')
+    
+    case 1: // 附件
+    case 2: // 语音
+    case 6: // 图片
+    case 15: // 视频
+      formData.append('type', 'file')
       const steamFile = await msg.toFileBox()
-      formData.append('content', steamFile.buffer/** 发送一张新图 */ || steamFile.stream/** 同一张图转发 */,
+      const type = await fileTypeFromBuffer(steamFile.buffer/** 发送一张新图 */ || steamFile.stream)
+      let fileInfo = { ext: '', mime: '' }
+
+      //文件类型尝试解析
+      if (type) {
+        fileInfo = {
+          filename: steamFile._name || `${Date.now()}.${type.ext}`,
+          ext: type.ext,
+          mime: type.mime
+        }
+        // 解析不出来尝试用文件后缀名
+      } else {
+        fileInfo = {
+          filename: steamFile._name || 'UnknownFile',
+          ext: steamFile._name.split('.').pop(),
+          mime: steamFile._mediaType
+        }
+      }
+
+      formData.append('content', steamFile.buffer/** 发送一个文件*/ || steamFile.stream/** 同一个文件转发 */,
         {
-          filename: 'image.jpg',
-          contentType: steamFile._mediaType.includes("text/plain") /** 复制后再发送得到的 mediaType 不正确，需要指定一个默认值，有可能会是png 用 jpeg 解析，暂时没有啥好的办法 */
-            ? 'image/jpeg' :
-            steamFile._mediaType
+          filename: fileInfo.filename,
+          contentType: fileInfo.mime
         })
+      break;
+
+    // 分享的Url
+    case 14:
+      const { payload } = await msg.toUrlLink()
+      formData.append('type', 'urlLink')
+      formData.append('content', JSON.stringify(payload))
       break;
 
     // 纯文本
@@ -58,7 +90,7 @@ const sendMsg2RecvdApi = async function (msg) {
       break;
 
     // 其他统一暂不处理
-    case 5: //表情
+    case 5: //自定义表情
     default:
       passed = false
       break;

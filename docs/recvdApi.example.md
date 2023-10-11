@@ -3,16 +3,20 @@
 
 ## formData.content  `String` | `Binary`
 
-特殊结构说明：
-`formData.isSystemEvent` === '1' 时，`formData.content` 为以下结构 json string
+`formData` 内的字段和 `formData.content` 映射如下：
 
-### login/logout/error 事件
+<table>
+  <thead>
+    <tr><th>字段条件</th> <th>字段类型说明</th> <th>formData.content 数据结构</th></tr>
+  </thead>
+  <tbody>
+      <tr><td><code>formData.isSystemEvent</code> === '1'</td><td> <code>json string</code></td><td>
 
 ```js
 {
   "event": "login", // login | logout | error
 
-  "user": { // 当前的用户信息
+  "user": { // 当前的用户信息，没有则为null
     "_events": {},
     "_eventsCount": 0,
     "id": "@xxxasdfsf",
@@ -32,6 +36,30 @@
   }
 }
 ```
+
+</td></tr>
+<tr>
+<td><code>formData.type</code> === 'urlLink'</td>
+<td>
+<code>json string</code>
+</td>
+<td>
+
+```js
+{
+  description: "AI技术逐渐成为设计师的灵感库",
+  thumbnailUrl: "",
+  title: "AI神器帮助你从小白秒变设计师",
+  url: "http://example.url",
+}
+```
+
+</td>
+</tr>
+  </tbody>
+</table>
+
+### 时，返回 json string 如下
 
 ## formData.source `String`
 

@@ -5,7 +5,7 @@ const { TextMsg } = require('../utils/msg')
 // 登录
 module.exports = function registerLoginCheck({ app, bot }) {
   let message,
-    lastLoginUser = null,
+    currentUser = null,
     logOutWhenError = false,
     success = false
 
@@ -17,7 +17,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
     .on('login', user => {
       message = user + 'is already login'
       success = true
-      lastLoginUser = user
+      currentUser = user
       logOutWhenError = false
       Service.sendMsg2RecvdApi(new TextMsg({
         text: JSON.stringify({ event: 'login', user }),
@@ -26,6 +26,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
     })
     .on('logout', user => {
       message = ''
+      currentUser = null
       success = false
       // 登出时给接收消息api发送特殊文本
       Service.sendMsg2RecvdApi(new TextMsg({
@@ -36,20 +37,20 @@ module.exports = function registerLoginCheck({ app, bot }) {
     .on('error', error => {
       // 报错时接收特殊文本
       Service.sendMsg2RecvdApi(new TextMsg({
-        text: JSON.stringify({ event: 'error', error, user: lastLoginUser }),
+        text: JSON.stringify({ event: 'error', error, user: currentUser }),
         isSystemEvent: true
       }))
 
       // 处理异常错误后的登出上报，每次登录成功后掉线只上报一次
       if (!logOutWhenError && !bot.isLoggedIn) {
         Service.sendMsg2RecvdApi(new TextMsg({
-          text: JSON.stringify({ event: 'logout', user: lastLoginUser }),
+          text: JSON.stringify({ event: 'logout', user: currentUser }),
           isSystemEvent: true
         }))
         success = false
         message = ''
         logOutWhenError = true
-        lastLoginUser = null
+        currentUser = null
       }
     })
 

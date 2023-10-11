@@ -1,3 +1,20 @@
+# [2.0.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.5.0...v2.0.0) (2023-10-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* 🧨 收消息 api 现在支持语音、视频、附件，原只有文件和图片，上报type:img 已移除，会和历史不兼容
+
+### Features
+
+* 🎸 扩展收消息 api 支持的类型 ([4f4af46](https://github.com/danni-cool/docker-wechatbot-webhook/commit/4f4af46a4c6bd46107d61cb970d9b3c2222036c5)), closes [#10](https://github.com/danni-cool/docker-wechatbot-webhook/issues/10)
+
+
+### Bug Fixes
+
+* 🐛 修复docker copy层定义不正确导致的npm补丁缺失问题 ([e5cba02](https://github.com/danni-cool/docker-wechatbot-webhook/commit/e5cba021e120199a9bcc5622718de44bcb0fc9c2))
+* 🐛 修复docker构建时遗漏了patches文件夹的补丁 ([9189426](https://github.com/danni-cool/docker-wechatbot-webhook/commit/9189426704a2288e2e7d4b2649fc3781fa2b2c77))
+
 # [1.4.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.3.0...v1.4.0) (2023-10-09)
 
 

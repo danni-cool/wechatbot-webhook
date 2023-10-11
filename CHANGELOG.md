@@ -63,6 +63,34 @@
 
 
 
+## [2.0.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.5.0...v2.0.0) (2023-10-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* 🧨 收消息 api 现在支持语音、视频、附件，原只有文件和图片，上报type:img 已移除，会和历史不兼容
+
+### Features
+
+* 🎸 扩展收消息 api 支持的类型 ([4f4af46](https://github.com/danni-cool/docker-wechatbot-webhook/commit/4f4af46a4c6bd46107d61cb970d9b3c2222036c5))
+
+## [1.5.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.4.0...v1.5.0) (2023-10-11)
+
+
+### Features
+
+* 🎸 增加 /login api，并作为默认推荐登录api & 代码和文案优化 ([b3012e4](https://github.com/danni-cool/docker-wechatbot-webhook/commit/b3012e41bacf6369f4d6b017a8126919d199801d))
+
+
+### Bug Fixes
+
+* 🐛 login api redirect 301 改为 302，解决二维码失效问题 ([c9b6708](https://github.com/danni-cool/docker-wechatbot-webhook/commit/c9b670864dcc8c8b31b7116c722ed50f69fe2b81))
+
+
+### Performance Improvements
+
+* ⚡️ 不再需要两套登录api，合二为一 ([9968d66](https://github.com/danni-cool/docker-wechatbot-webhook/commit/9968d6689cbb4d68a7dbb08eda74a2b954e22455))
+
 ## [1.1.3](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.1.2...v1.1.3) (2023-09-29)
 
 

@@ -1,4 +1,4 @@
-<div style="text-align:center">
+<div align="center">
 <img src="https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-webhook.png" width="500" height="251"/>
 
 

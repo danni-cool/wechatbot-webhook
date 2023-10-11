@@ -4,7 +4,7 @@
 
 ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/dannicool/docker-wechatbot-webhook) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/release.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook)
 
-4 步即可完成从 http 请求到推送微信消息，快用它集成到自己的自动化工作流中吧
+使用 http 请求即可给微信发消息，简化了使用 [Wechaty](https://github.com/wechaty/wechaty) 的过程，快用它集成到自己的自动化工作流中吧
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 

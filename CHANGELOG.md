@@ -45,6 +45,46 @@
 
 
 
+## [3.0.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.0.0...v3.0.0) (2023-10-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* 🧨 收消息 api 现在支持语音、视频、附件，原只有文件和图片，上报type:img 已移除，会和历史不兼容
+* 🧨 docker 项目地址修改 和 api修改
+
+### Features
+
+* 🎸 🎸 api地址修改，支持webhook推送到个人，文档优化，workflow优化 ([87bbb5e](https://github.com/danni-cool/docker-wechatbot-webhook/commit/87bbb5e42c48745b3a8a3001817c6391f3af9387))
+* 🎸 login事件也增加通知 ([cb56a4e](https://github.com/danni-cool/docker-wechatbot-webhook/commit/cb56a4e1e44ccaefec1c03a277c1e496321f7098))
+* 🎸 增加 /login api，并作为默认推荐登录api & 代码和文案优化 ([b3012e4](https://github.com/danni-cool/docker-wechatbot-webhook/commit/b3012e41bacf6369f4d6b017a8126919d199801d))
+* 🎸 增加checklogin api接口和token生成机制 ([1b64d1e](https://github.com/danni-cool/docker-wechatbot-webhook/commit/1b64d1e16eeb2c42697efb2137939d56ab605836))
+* 🎸 增加了参数校验，docker tag 改为latest，更新部分注释 ([61ddd8a](https://github.com/danni-cool/docker-wechatbot-webhook/commit/61ddd8a163ac37f8383fe62c757724f393f87e45))
+* 🎸 增加对入参的严格校验 ([5537a95](https://github.com/danni-cool/docker-wechatbot-webhook/commit/5537a955fd1b747ef3c486beffac89b0a1c3d304))
+* 🎸 增加推送支持多图推送 ([9c659ad](https://github.com/danni-cool/docker-wechatbot-webhook/commit/9c659ad15e1365194df1a02560ef4307ed2ecae5))
+* 🎸 增加登录后可能登出的时间上报 ([ef3539f](https://github.com/danni-cool/docker-wechatbot-webhook/commit/ef3539f6652124434d54d86a67796acee307ca28))
+* 🎸 扩展收消息 api 支持的类型 ([4f4af46](https://github.com/danni-cool/docker-wechatbot-webhook/commit/4f4af46a4c6bd46107d61cb970d9b3c2222036c5))
+* 🎸 推消息api支持文件和文件Url ([350af6a](https://github.com/danni-cool/docker-wechatbot-webhook/commit/350af6a3a8591163f1d2fd8a33c2f56769b215b5))
+* 🎸 支持掉线或者异常时的通知机制 ([6008271](https://github.com/danni-cool/docker-wechatbot-webhook/commit/6008271c983df75bbbdf326b3958f9264c708459))
+* 🎸 支持收消息钩子，以及文档优化 ([3638ff7](https://github.com/danni-cool/docker-wechatbot-webhook/commit/3638ff7feb9de02fab5dfe4d90f7079bc884a387))
+
+
+### Bug Fixes
+
+* 🐛 login api redirect 301 改为 302，解决二维码失效问题 ([c9b6708](https://github.com/danni-cool/docker-wechatbot-webhook/commit/c9b670864dcc8c8b31b7116c722ed50f69fe2b81))
+* 🐛 修复docker copy层定义不正确导致的npm补丁缺失问题 ([e5cba02](https://github.com/danni-cool/docker-wechatbot-webhook/commit/e5cba021e120199a9bcc5622718de44bcb0fc9c2))
+* 🐛 修复docker构建时遗漏了patches文件夹的补丁 ([9189426](https://github.com/danni-cool/docker-wechatbot-webhook/commit/9189426704a2288e2e7d4b2649fc3781fa2b2c77))
+* 🐛 修复发送图片来自cloudflare 托管的url 返回 http状态码301图片发送不成功的问题 ([44550a0](https://github.com/danni-cool/docker-wechatbot-webhook/commit/44550a030273a6dcc1b8b296ec8fcdf4f9202849))
+* 🐛 修复登录Api user 值为undefined的问题 ([9711eb8](https://github.com/danni-cool/docker-wechatbot-webhook/commit/9711eb8da3a1cb4fa4dfd23792bb989013040a5b))
+
+
+### Performance Improvements
+
+* ⚡️ 不再需要两套登录api，合二为一 ([9968d66](https://github.com/danni-cool/docker-wechatbot-webhook/commit/9968d6689cbb4d68a7dbb08eda74a2b954e22455))
+* ⚡️ 参数错误时，校验优化，更正项目地址 ([dafafea](https://github.com/danni-cool/docker-wechatbot-webhook/commit/dafafea1519b790c4db1eafe43f1193e78b2aea7))
+* ⚡️ 精简无用代码&增加运行调试模式 ([e3d8bad](https://github.com/danni-cool/docker-wechatbot-webhook/commit/e3d8bad6427105a6f27d246a63840888547c0700))
+* ⚡️ 精简无用代码&增加运行调试模式 ([a0a5819](https://github.com/danni-cool/docker-wechatbot-webhook/commit/a0a5819bfe22090cff0213102419c66c084cb2e5))
+
 ## [2.0.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.5.0...v2.0.0) (2023-10-11)
 
 

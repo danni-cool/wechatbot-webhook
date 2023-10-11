@@ -60,15 +60,15 @@ dannicool/docker-wechatbot-webhook
 
 ## 👨🏻‍💻 登录wx
 
-以下只展示 docker 启动，本地调试可以直接在控制台找到链接
+1.以下只展示 docker 启动，本地调试可以直接在控制台找到链接
 
 ```bash
 docker logs -f wxBotWebhook
 ```
 
-找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
+2.找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
 
-![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatlogindemo.png)
+https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN
 
 ## 🛠️ API
 

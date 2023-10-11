@@ -5,7 +5,7 @@ const { TextMsg } = require('../utils/msg')
 // 登录
 module.exports = function registerLoginCheck({ app, bot }) {
   let message,
-    currentUser = null,
+    lastLoginUser = null,
     logOutWhenError = false,
     success = false
 
@@ -13,12 +13,11 @@ module.exports = function registerLoginCheck({ app, bot }) {
     .on('scan', qrcode => {
       message = 'https://wechaty.js.org/qrcode/' + encodeURIComponent(qrcode)
       success = false
-      currentUser = null
     })
     .on('login', user => {
       message = user + 'is already login'
       success = true
-      currentUser = user
+      lastLoginUser = user
       logOutWhenError = false
       Service.sendMsg2RecvdApi(new TextMsg({
         text: JSON.stringify({ event: 'login', user }),
@@ -27,7 +26,6 @@ module.exports = function registerLoginCheck({ app, bot }) {
     })
     .on('logout', user => {
       message = ''
-      currentUser = null
       success = false
       // 登出时给接收消息api发送特殊文本
       Service.sendMsg2RecvdApi(new TextMsg({
@@ -38,20 +36,20 @@ module.exports = function registerLoginCheck({ app, bot }) {
     .on('error', error => {
       // 报错时接收特殊文本
       Service.sendMsg2RecvdApi(new TextMsg({
-        text: JSON.stringify({ event: 'error', error, user: currentUser }),
+        text: JSON.stringify({ event: 'error', error, user: lastLoginUser }),
         isSystemEvent: true
       }))
 
       // 处理异常错误后的登出上报，每次登录成功后掉线只上报一次
       if (!logOutWhenError && !bot.isLoggedIn) {
         Service.sendMsg2RecvdApi(new TextMsg({
-          text: JSON.stringify({ event: 'logout', user: currentUser }),
+          text: JSON.stringify({ event: 'logout', user: lastLoginUser }),
           isSystemEvent: true
         }))
         success = false
         message = ''
         logOutWhenError = true
-        currentUser = null
+        lastLoginUser = null
       }
     })
 

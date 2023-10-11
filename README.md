@@ -1,8 +1,6 @@
 # docker-wechatbot-webhook
 
-基于 [wechaty](https://github.com/wechaty/wechaty#readme) 和 [Express](https://github.com/expressjs/express) 开发
-
-在微信和webhook机器人之间架一座桥梁，从此微信里也可以有自己的webhook机器人了，快用它集成到自己的自动化工作流中吧，推荐 [n8n](https://github.com/n8n-io/n8n)
+4 步即可完成从 http 请求到推送微信消息，快用它集成到自己的自动化工作流中吧
 
 ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/dannicool/docker-wechatbot-webhook) ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/release.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook)
 

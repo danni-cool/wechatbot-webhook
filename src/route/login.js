@@ -62,7 +62,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
         message
       })
     } else {
-      res.redirect(301, message);
+      res.redirect(302, message);
     }
 
   }));

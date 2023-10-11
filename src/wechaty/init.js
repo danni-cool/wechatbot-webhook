@@ -9,8 +9,7 @@ module.exports = function init() {
   bot
     .on('scan', (qrcode) =>
       console.log([
-        `\nAccess the URL to login: ${chalk.cyan('https://wechaty.js.org/qrcode/' + encodeURIComponent(qrcode))}`,
-        'You can also login by API: ' + chalk.cyan(`http://localhost:${PORT}/login?token=${Service.getLoginApiToken()}`)
+        'Access the URL to login: ' + chalk.cyan(`http://localhost:${PORT}/login?token=${Service.getLoginApiToken()}`)
       ].join('\n')))
     .on('login', async user => console.log(chalk.green(`User ${user} logged in`)))
     .on('logout', async user => console.log(chalk.red(`User ${user} logout`)))

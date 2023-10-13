@@ -73,10 +73,9 @@
         "id": "@@xxxx",
         "adminIdList": [],
         "avatar": "xxxx", // 相对路径，应该要配合解密
-        "memberIdList": [ //群里人的id
-          "@xxxx",
-          "@xxxx"
-        ],
+        "memberList": [
+          {id: '@xxxx', name:'昵称', alias: '备注名' }
+        ]
       },
       //以下暂不清楚什么用途，如有兴趣，请查阅 wechaty 官网文档
       "_events": {},

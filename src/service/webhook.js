@@ -14,6 +14,9 @@ import('file-type').then(res => {
 })
 
 const sendMsg2RecvdApi = async function (msg) {
+  // 自己发的消息没有必要转发
+  if(msg.self()) return
+
   // 检测是否配置了webhookurl
   let webhookUrl
   let errorText = (key, value) => console.error(chalk.red(`配置参数 ${key}: ${chalk.cyan(value)} <- 不符合 URL 规范, 该 API 将不会收到请求\n`))
@@ -27,11 +30,26 @@ const sendMsg2RecvdApi = async function (msg) {
     webhookUrl = ('' + LOCAL_RECVD_MSG_API).startsWith('http') ? LOCAL_RECVD_MSG_API : ''
     !webhookUrl && errorText('LOCAL_RECVD_MSG_API', LOCAL_RECVD_MSG_API)
   }
+
   // 有webhookurl才发送
   if (!webhookUrl) return
 
+  const roomInfo = msg.room()
+
+  if (roomInfo) {
+    const roomMemberInfo = await msg.room().memberAll()
+    roomInfo.payload.memberList = roomMemberInfo.map(item => ({
+      id: item.payload.id,
+      name: item.payload.name,
+      alias: item.payload.alias
+    }))
+    // we have memberList already
+    delete roomInfo.payload.memberIdList
+  }
+
   const source = {
-    room: msg.room() || '',
+    /** room的话解析群成员信息，原始信息不会带 */
+    room: roomInfo || '',
     to: msg.to() || '',
     from: msg.talker() || '',
   }
@@ -96,7 +114,7 @@ const sendMsg2RecvdApi = async function (msg) {
       break;
   }
 
-  if (!passed || msg.self()) return
+  if (!passed) return
 
   console.log('starting fetching api: ' + webhookUrl, msg.payload)
 

@@ -43,6 +43,8 @@ const sendMsg2RecvdApi = async function (msg) {
       name: item.payload.name,
       alias: item.payload.alias
     }))
+    // we have memberList already
+    delete roomInfo.payload.memberIdList
   }
 
   const source = {

@@ -1,9 +1,7 @@
 const Utils = require('../utils/index.js')
-const chalk = require("chalk")
 
 // this handler convert data to a standard format before using wechaty to send msg, 
 const formatAndSendMsg = async function ({ bot, type, content, msgInstance }) {
-  // const { UrlLink } =  bot
 
   switch (type) {
     // 纯文本

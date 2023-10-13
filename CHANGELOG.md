@@ -66,6 +66,19 @@ All notable changes to this project will be documented in this file. See [standa
 
 
 
+## [2.1.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.0.0...v2.1.0) (2023-10-13)
+
+
+### Features
+
+* 🎸 个人消息支持给送发备注名，收群消息source.room字段提供群成员更多信息（昵称、备注、id） ([d6ffd54](https://github.com/danni-cool/docker-wechatbot-webhook/commit/d6ffd54c8b6c95d59587192c1356f35a444ccbf7))
+
+
+### Refactor
+
+* 💡 删除srouce.room.payload.memberIdList字段 ([34dce0a](https://github.com/danni-cool/docker-wechatbot-webhook/commit/34dce0a4787223380da7775695b0ae8c19892a9a))
+* 💡 移除推消息api对img类型的支持，请用fileUrl替换 ([df461d0](https://github.com/danni-cool/docker-wechatbot-webhook/commit/df461d075316b13883b18a4dd27db57f46075c0e))
+
 ## [2.0.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.5.0...v2.0.0) (2023-10-11)
 
 

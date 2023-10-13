@@ -65,9 +65,9 @@ docker logs -f wxBotWebhook
 
 > json 请求发送文件只支持外链
 
-| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选值 |
+| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
 |--|--|--|--|--|--|
-| to | **会话名**，发群消息填群名，发给个人填昵称 | `String` | -  |  N  | - |
+| to | **消息接收方**，传入`String` 默认是发给昵称（群名同理）, 传入`Object` 结构支持发给备注过的人，比如：`{alias: '备注名'}`，群名不支持备注名 | `String` `Object` | -  |  Y  | - |
 | isRoom | **是否发的群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
 | type | **消息类型**，消息不支持自动拆分，请手动调多次，发送的文件 Url 在微信里长啥样，是文件后缀决定的。| `String`  | - | N | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
 | content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
@@ -131,7 +131,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 | formData |  说明 | 数据类型 | 可选值 | 示例 |
 |--|--|--|--|-- |
-| type | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String` | `text`  `file` `urlLink` | - |
+| type | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String` | `text`  `file` `urlLink` | - |
 | content | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例 | `String`  `Binary`  |  | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source | 消息的相关发送方数据, JSON String | `String` | | [示例](docs/recvdApi.example.md#formdatasource) |
 | isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）| `String` | `1` `0` | - |

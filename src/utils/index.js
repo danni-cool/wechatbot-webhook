@@ -1,4 +1,4 @@
-const { FileBox } = require('file-box') // bugfix: wechaty can not export FileBox until v1.20.2 , so use the dependency of wechaty 
+const { FileBox } = require('file-box') // hack: wechaty use Instance to Export File-box
 const fetch = require('node-fetch-commonjs')
 
 const downloadFile = async fileUrl => {
@@ -12,6 +12,10 @@ const downloadFile = async fileUrl => {
     console.error('Error downloading file:' + fileUrl, error);
     return null;
   }
+}
+
+const equalTrueType = function (val, expectType) {
+  return Object.prototype.toString.call(val).toLowerCase() === `[object ${expectType}]`
 }
 
 //http://www.baidu.com/image.png?a=1 => image.png
@@ -49,11 +53,15 @@ const getUnvalidParamsList = arr => {
         else if (item.type === 'file' && item.val === 0) {
           item.unValidReason = `${item.key} 上传的文件不能为空`
         }
+        // exp: type:[string, object]情况
+        else if (equalTrueType(item.type, 'array')) {
+          item.unValidReason = item.type.some(type => equalTrueType(item.val, type)) ?  '' : `${item.key} 的参数类型不是 ${item.type.map(key => capitalizeFirstLetter(key)).join(' or ')}`
+        }
         else if (item.type !== 'file' && typeof item.val !== item.type) {
           item.unValidReason = `${item.key} 的参数类型不是 ${capitalizeFirstLetter(item.type)}`
         }
       } else {
-        item.unValidReason = typeof item.val !== item.type ? `${item.key} 的参数类型不是 ${item.type}` : ''
+        item.unValidReason = typeof item.val !== item.type ? `${item.key} 的参数类型不是 ${capitalizeFirstLetter(item.type)}` : ''
       }
 
       //前者通过，如果遇到要校验指定枚举值的情况
@@ -69,7 +77,7 @@ const getUnvalidParamsList = arr => {
 const generateToken = (num = 12) => {
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~';
   let token = '';
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < num; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
     token += charset[randomIndex];
   }
@@ -82,6 +90,7 @@ module.exports = {
   getMediaFromUrl,
   getBufferFile,
   getUnvalidParamsList,
-  generateToken
+  generateToken,
+  equalTrueType
 }
 

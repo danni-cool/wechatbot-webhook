@@ -1,6 +1,6 @@
 const Service = require('../service')
 const Middleware = require('../middleware')
-const { getUnvalidParamsList } = require('../utils/index')
+const Utils = require('../utils/index')
 
 module.exports = function registerPushHook({ app, bot }) {
 
@@ -18,7 +18,7 @@ module.exports = function registerPushHook({ app, bot }) {
         type = 'file'
 
         //校验必填参数
-        unValidParamsStr = getUnvalidParamsList([
+        unValidParamsStr = Utils.getUnvalidParamsList([
           { key: 'to', val: to, required: true, type: 'string', unValidReason: '' },
           { key: 'isRoom', val: isRoom, required: false, enum: ['1', '0'], type: 'string', unValidReason: '' },
           { key: 'content', val: content.size || 0, required: true, type: 'file', unValidReason: '' },
@@ -34,8 +34,8 @@ module.exports = function registerPushHook({ app, bot }) {
         content = req.body.content
 
         //校验必填参数
-        unValidParamsStr = getUnvalidParamsList([
-          { key: 'to', val: to, required: true, type: 'string', unValidReason: '' },
+        unValidParamsStr = Utils.getUnvalidParamsList([
+          { key: 'to', val: to, required: true, type: ['string','object'], unValidReason: '' },
           { key: 'type', val: type, required: true, type: 'string', enum: ['text', 'img', 'file', 'fileUrl'], unValidReason: '' },
           { key: 'content', val: content, required: true, type: 'string', unValidReason: '' },
           { key: 'isRoom', val: isRoom, required: false, type: 'boolean', unValidReason: '' }
@@ -44,12 +44,12 @@ module.exports = function registerPushHook({ app, bot }) {
       }
 
       if (unValidParamsStr) {
-        return res.status(200).json({ success: false, message: `[${unValidParamsStr}] params  is not valid, please checkout the api reference (https://github.com/danni-cool/docker-wechatbot-webhook#body-%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E)` });
+        return res.status(200).json({ success: false, message: `[${unValidParamsStr}] params  is not valid, please checkout the api reference (https://github.com/danni-cool/docker-wechatbot-webhook#%EF%B8%8F-api)` });
       }
 
       const msgReceiver = isRoom ?
         await bot.Room.find({ topic: to }) :
-        await bot.Contact.find({ name: to })
+        await bot.Contact.find(Utils.equalTrueType(to, 'object')? to : { name: to })
 
       if (msgReceiver) {
         const sendStatus = await Service.formatAndSendMsg({ bot, type, content, msgInstance: msgReceiver, res })

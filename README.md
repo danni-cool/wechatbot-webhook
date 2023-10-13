@@ -131,7 +131,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 | formData |  说明 | 数据类型 | 可选值 | 示例 |
 |--|--|--|--|-- |
-| type | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> 不支持的类型<ul><li>❌ 自定义表情</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String` | `text`  `file` `urlLink` | - |
+| type | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String` | `text`  `file` `urlLink` | - |
 | content | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例 | `String`  `Binary`  |  | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source | 消息的相关发送方数据, JSON String | `String` | | [示例](docs/recvdApi.example.md#formdatasource) |
 | isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）| `String` | `1` `0` | - |

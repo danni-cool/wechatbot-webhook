@@ -60,8 +60,11 @@ const sendMsg2RecvdApi = async function (msg) {
   formData.append('source', JSON.stringify(source))
   formData.append('isSystemEvent', msg.isSystemEvent ? '1' : '0')
 
+  //有人@我
+  const someoneMentionMe = ( msg.mentionSelf && await msg.mentionSelf()) /** 原版@我，wechaty web版应该都是false */
+  formData.append('isMentioned', someoneMentionMe ? '1' : '0')
+
   switch (msg.type()) {
-    
     case 1: // 附件
     case 2: // 语音
     case 6: // 图片
@@ -74,7 +77,10 @@ const sendMsg2RecvdApi = async function (msg) {
       //文件类型尝试解析
       if (type) {
         fileInfo = {
-          filename: steamFile._name || `${Date.now()}.${type.ext}`,
+          // _name:'unknown.txt' => unknown.jpg
+          filename: steamFile.mimeType === 'application/unknown' /** 截图等无法推断出文件名会变成 unknown.txt */
+            ? `${Date.now()}.${type.ext}`
+            : (steamFile._name || `${Date.now()}.${type.ext}`),
           ext: type.ext,
           mime: type.mime
         }
@@ -116,7 +122,7 @@ const sendMsg2RecvdApi = async function (msg) {
 
   if (!passed) return
 
-  console.log('starting fetching api: ' + webhookUrl, msg.payload)
+  console.log('starting fetching api: ' + webhookUrl, formData._streams)
 
   await fetch(webhookUrl, {
     method: 'POST',

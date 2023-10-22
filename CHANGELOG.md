@@ -9,6 +9,13 @@
 * 💡 删除srouce.room.payload.memberIdList字段 ([34dce0a](https://github.com/danni-cool/docker-wechatbot-webhook/commit/34dce0a4787223380da7775695b0ae8c19892a9a))
 * 💡 移除推消息api对img类型的支持，请用fileUrl替换 ([df461d0](https://github.com/danni-cool/docker-wechatbot-webhook/commit/df461d075316b13883b18a4dd27db57f46075c0e))
 
+## [2.2.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.1.0...v2.2.0) (2023-10-22)
+
+
+### Features
+
+* 🎸 收消息增加@我的参数isMentioned，收到文件是unknown时优先使用buffer判断文件类型 ([10ec2b7](https://github.com/danni-cool/docker-wechatbot-webhook/commit/10ec2b7dc1a7a9aad96725a6451c0cd2f00ceae4))
+
 ## [2.0.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v1.5.0...v2.0.0) (2023-10-11)
 
 ### ⚠ BREAKING CHANGES

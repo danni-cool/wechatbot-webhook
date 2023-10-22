@@ -134,6 +134,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 | type | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String` | `text`  `file` `urlLink` | - |
 | content | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例 | `String`  `Binary`  |  | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source | 消息的相关发送方数据, JSON String | `String` | | [示例](docs/recvdApi.example.md#formdatasource) |
+| isMentioned | 该消息是@我的消息[#38](https://github.com/danni-cool/docker-wechatbot-webhook/issues/38) | `String` |`1` `0` | - |
 | isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）| `String` | `1` `0` | - |
 
 ### 3. 登录APi

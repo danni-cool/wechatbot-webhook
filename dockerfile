@@ -6,9 +6,6 @@ WORKDIR /app
 
 # 将 package.json 和 package-lock.json 复制到工作目录
 COPY package*.json ./
-# 只有单独分一个层，否则拷贝的就不是文件夹了
-COPY patches ./patches/
-
 
 # 安装应用程序依赖项
 RUN npm install

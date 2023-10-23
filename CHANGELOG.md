@@ -9,6 +9,13 @@
 * 💡 删除srouce.room.payload.memberIdList字段 ([34dce0a](https://github.com/danni-cool/docker-wechatbot-webhook/commit/34dce0a4787223380da7775695b0ae8c19892a9a))
 * 💡 移除推消息api对img类型的支持，请用fileUrl替换 ([df461d0](https://github.com/danni-cool/docker-wechatbot-webhook/commit/df461d075316b13883b18a4dd27db57f46075c0e))
 
+## [2.2.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.2.0...v2.2.1) (2023-10-23)
+
+
+### Refactor
+
+* 💡 移除patch补丁，更新依赖 ([aacc5a7](https://github.com/danni-cool/docker-wechatbot-webhook/commit/aacc5a7c152a1b0eec1533c6ef2a478b504cdae2))
+
 ## [2.2.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.1.0...v2.2.0) (2023-10-22)
 
 

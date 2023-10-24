@@ -10,6 +10,8 @@
 
 ✅[Todo](https://github.com/danni-cool/docker-wechatbot-webhook/issues/11) & 💬[Discussion(Discord)](https://discord.gg/jRX5F2Km)
 
+> 项目基于web协议，已知登录几天会掉，需要重新登录。这是网页微信风控的问题。目前正在使用windows协议替换网页协议，但是网页版相对轻量，仍然适合调试学习使用，有兴趣的可以关注windows分支
+
 </div>
 
 ## 🚀 启动
@@ -140,14 +142,8 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 ### 3. 登录APi
 
-> 已知的是登录几天有几率会掉，应该是网页微信风控的问题。
-
-#### 解决方案
-
 1. 在异常或者掉线事件触发后，通知你配置的 `RECVD_MSG_API`，
 2. 在收到通知后，访问登录 Api 扫码登录 <http://localhost:3001/login?token=YOUR_PERSONAL_TOKEN。>
-
-ps: 有更好的方案 ✨[欢迎交流](https://github.com/danni-cool/docker-wechatbot-webhook/issues/22)
 
 #### 自定义token
 

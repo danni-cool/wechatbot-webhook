@@ -4,14 +4,11 @@ FROM node:18-alpine
 # 创建工作目录
 WORKDIR /app
 
-# 将 package.json 和 package-lock.json 复制到工作目录
-COPY package*.json ./
-
-# 安装应用程序依赖项
-RUN npm install
-
 # 复制应用程序代码到工作目录
 COPY . .
+
+# 安装应用程序依赖项
+RUN npm install -g pnpm && pnpm install && npm uninstall pnpm -g && npm cache clean --force
 
 # 如果收消息想接入webhook
 ENV RECVD_MSG_API=

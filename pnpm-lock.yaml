@@ -20,12 +20,12 @@ dependencies:
   form-data:
     specifier: ^4.0.0
     version: 4.0.0
+  mime:
+    specifier: ^3.0.0
+    version: 3.0.0
   multer:
     specifier: ^1.4.5-lts.1
     version: 1.4.5-lts.1
-  node-fetch-commonjs:
-    specifier: ^3.3.2
-    version: 3.3.2
   wechaty:
     specifier: ^1.20.2
     version: 1.20.2(@swc/core@1.3.78)(brolog@1.14.2)(redux@4.2.1)(rxjs@7.8.1)
@@ -1943,19 +1943,6 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /node-domexception@1.0.0:
-    resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
-    engines: {node: '>=10.5.0'}
-    dev: false
-
-  /node-fetch-commonjs@3.3.2:
-    resolution: {integrity: sha512-VBlAiynj3VMLrotgwOS3OyECFxas5y7ltLcK4t41lMUZeaK15Ym4QRkqN0EQKAFL42q9i21EPKjzLUPfltR72A==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dependencies:
-      node-domexception: 1.0.0
-      web-streams-polyfill: 3.2.1
-    dev: false
-
   /node-gyp-build@4.6.1:
     resolution: {integrity: sha512-24vnklJmyRS8ViBNI8KbtK/r/DmXQMRiOMXTNz2nrTnAYUwjmEEbnnpB/+kt+yWRv73bPsSPRFddrcIbAxSiMQ==}
     hasBin: true
@@ -2687,11 +2674,6 @@ packages:
     engines: {node: '>=16', npm: '>=7'}
     dependencies:
       brolog: 1.14.2
-    dev: false
-
-  /web-streams-polyfill@3.2.1:
-    resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}
-    engines: {node: '>= 8'}
     dev: false
 
   /wechat4u@0.7.12:

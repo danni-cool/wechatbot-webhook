@@ -1,11 +1,16 @@
 const { FileBox } = require('file-box') // hack: wechaty use Instance to Export File-box
-const fetch = require('node-fetch-commonjs')
+const MIME = require('mime')
+const path = require('path')
 
 const downloadFile = async fileUrl => {
   try {
     const response = await fetch(fileUrl);
     if (response.ok) {
-      return await response.buffer();
+      const arrayBuffer = await response.arrayBuffer();
+      return {
+        type: response.headers.get('content-type'),
+        buffer: Buffer.from(arrayBuffer)
+      }
     }
     return null;
   } catch (error) {
@@ -21,10 +26,18 @@ const equalTrueType = function (val, expectType) {
 //http://www.baidu.com/image.png?a=1 => image.png
 const getFileNameFromUrl = url => url.match(/.*\/([^/?]*)/)?.[1] || ''
 
+// 格式化文件
+// 有些资源文件链接是不会返回文件后缀的 例如  https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU  其实是一张图片
+const formatUrlToName = (url, mimeType) => {
+  const extension = MIME.getExtension(mimeType)
+  const baseFileName = getFileNameFromUrl(url)
+  return path.extname(url) ? baseFileName : `${baseFileName}.${extension}`
+}
+
 // bugfix: use `fileBox.fromUrl` api to get image is OK, but sometimes directly to get cloudflare img may return a 0 bites response.(when response is 301)
 const getMediaFromUrl = async url => {
-  const buffer = await downloadFile(url)
-  return FileBox.fromBuffer(buffer, getFileNameFromUrl(url))
+  const { buffer, type } = await downloadFile(url)
+  return FileBox.fromBuffer(buffer, formatUrlToName(url, type))
 }
 const getBufferFile = formDataFile => {
   return FileBox.fromBuffer(formDataFile.buffer, formDataFile.originalname)

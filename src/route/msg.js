@@ -48,8 +48,7 @@ module.exports = function registerPushHook({ app, bot }) {
       }
 
       const msgReceiver = isRoom ?
-        await bot.Room.find({ topic: to }) :
-        await bot.Contact.find(Utils.equalTrueType(to, 'object')? to : { name: to })
+        await bot.Room.find({ topic: to }) : await bot.Contact.find(Utils.equalTrueType(to, 'object') ? to : { name: to })
 
       if (msgReceiver) {
         const sendStatus = await Service.formatAndSendMsg({ bot, type, content, msgInstance: msgReceiver, res })

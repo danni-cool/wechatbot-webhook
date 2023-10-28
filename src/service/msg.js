@@ -1,15 +1,14 @@
 const Utils = require('../utils/index.js')
 
-// this handler convert data to a standard format before using wechaty to send msg, 
+// this handler convert data to a standard format before using wechaty to send msg,
 const formatAndSendMsg = async function ({ bot, type, content, msgInstance }) {
-
   switch (type) {
     // 纯文本
     case 'text':
-      await msgInstance.say(content);
+      await msgInstance.say(content)
       return true
 
-    case 'fileUrl':
+    case 'fileUrl': {
       const fileUrlArr = content.split(',')
       // 单文件
       if (fileUrlArr.length === 1) {
@@ -20,11 +19,11 @@ const formatAndSendMsg = async function ({ bot, type, content, msgInstance }) {
 
       // 多个文件的情况
       for (let i = 0; i < fileUrlArr.length; i++) {
-        let file = await Utils.getMediaFromUrl(fileUrlArr[i])
+        const file = await Utils.getMediaFromUrl(fileUrlArr[i])
         await msgInstance.say(file)
       }
       return true
-  
+    }
     // 文件
     case 'file':
       await msgInstance.say(Utils.getBufferFile(content))

@@ -1,6 +1,6 @@
 module.exports.TextMsg = class TextMsg {
   constructor({ text, isSystemEvent = false }) {
-    this.payload  = text
+    this.payload = text
     this.isSystemEvent = isSystemEvent
   }
 

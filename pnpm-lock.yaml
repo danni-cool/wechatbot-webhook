@@ -14,6 +14,9 @@ dependencies:
   express:
     specifier: ^4.18.2
     version: 4.18.2
+  file-box:
+    specifier: 1.4.15
+    version: 1.4.15
   file-type:
     specifier: ^18.5.0
     version: 18.5.0
@@ -518,7 +521,6 @@ packages:
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
     requiresBuild: true
     dev: false
     optional: true
@@ -528,7 +530,6 @@ packages:
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
     requiresBuild: true
     dev: false
     optional: true
@@ -538,7 +539,6 @@ packages:
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
     requiresBuild: true
     dev: false
     optional: true
@@ -548,7 +548,6 @@ packages:
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
     requiresBuild: true
     dev: false
     optional: true

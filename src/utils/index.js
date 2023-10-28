@@ -1,4 +1,4 @@
-const { FileBox } = require('file-box') // hack: wechaty use Instance to Export File-box
+const { FileBox } = require('file-box')
 const fetch = require('node-fetch-commonjs')
 
 const downloadFile = async fileUrl => {

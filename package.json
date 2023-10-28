@@ -39,8 +39,8 @@
     "file-box": "1.4.15",
     "file-type": "^18.5.0",
     "form-data": "^4.0.0",
+    "mime": "^3.0.0",
     "multer": "^1.4.5-lts.1",
-    "node-fetch-commonjs": "^3.3.2",
     "wechaty": "^1.20.2"
   },
   "devDependencies": {

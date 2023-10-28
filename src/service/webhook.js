@@ -1,4 +1,3 @@
-const fetch = require('node-fetch-commonjs')
 const FormData = require('form-data')
 const chalk = require('chalk')
 const {

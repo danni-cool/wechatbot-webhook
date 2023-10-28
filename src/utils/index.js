@@ -2,15 +2,14 @@ const { FileBox } = require('file-box')
 const MIME = require('mime')
 const path = require('path')
 
-
 const downloadFile = async (fileUrl) => {
   try {
     const response = await fetch(fileUrl)
     if (response.ok) {
-      const arrayBuffer = await response.arrayBuffer();
+      const arrayBuffer = await response.arrayBuffer()
       return {
         type: response.headers.get('content-type'),
-        buffer: Buffer.from(arrayBuffer)
+        buffer: Buffer.from(arrayBuffer),
       }
     }
     return null
@@ -40,7 +39,7 @@ const formatUrlToName = (url, mimeType) => {
 
 // bugfix: use `fileBox.fromUrl` api to get image is OK, but sometimes directly to get cloudflare img may return a 0 bites response.(when response is 301)
 
-const getMediaFromUrl = async url => {
+const getMediaFromUrl = async (url) => {
   const { buffer, type } = await downloadFile(url)
   return FileBox.fromBuffer(buffer, formatUrlToName(url, type))
 }

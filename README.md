@@ -3,8 +3,7 @@
 
 用 http 请求即可给微信发消息，集成了[Wechaty](https://github.com/wechaty/wechaty)大部分消息功能， 快用它集成到自己的自动化工作流中吧
 
-  ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/release.yml)  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/docker-wechatbot-webhook)
-
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/release.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/docker-wechatbot-webhook)
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
@@ -35,12 +34,12 @@ dannicool/docker-wechatbot-webhook
 
 #### 可选参数
 
-> Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="<https://example.com/your/url>" \
+> Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e RECVD_MSG_API="<https://example.com/your/url>" \
 
-| 功能 | 环境变量 | 案例 | 备注 |
-|--|--|--|--|
-|  收消息 |   RECVD_MSG_API  |   RECVD_MSG_API="<https://example.com/your/url>"   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
-| 自定义登录 API token | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123 | 你也可以自定义一个自己的登录令牌，不配置的话，默认会生成一个 |
+| 功能                 | 环境变量        | 案例                                           | 备注                                                                               |
+| -------------------- | --------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------- |
+| 收消息               | RECVD_MSG_API   | RECVD_MSG_API="<https://example.com/your/url>" | 如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
+| 自定义登录 API token | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123                     | 你也可以自定义一个自己的登录令牌，不配置的话，默认会生成一个                       |
 
 ## 👨🏻‍💻 登录wx
 
@@ -68,12 +67,12 @@ docker logs -f wxBotWebhook
 
 > json 请求发送文件只支持外链
 
-| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
-|--|--|--|--|--|--|
-| to | **消息接收方**，传入`String` 默认是发给昵称（群名同理）, 传入`Object` 结构支持发给备注过的人，比如：`{alias: '备注名'}`，群名不支持备注名 | `String` `Object` | -  |  Y  | - |
-| isRoom | **是否发的群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
-| type | **消息类型**，消息不支持自动拆分，请手动调多次，发送的文件 Url 在微信里长啥样，是文件后缀决定的。| `String`  | - | N | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
-| content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
+| 参数    | 说明                                                                                                                                      | 数据类型          | 默认值  | 可否为空 | 可选参数         |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ------- | -------- | ---------------- | --------------------------- |
+| to      | **消息接收方**，传入`String` 默认是发给昵称（群名同理）, 传入`Object` 结构支持发给备注过的人，比如：`{alias: '备注名'}`，群名不支持备注名 | `String` `Object` | -       | Y        | -                |
+| isRoom  | **是否发的群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上                                            | `Boolean`         | `false` | Y        | `true` `false`   |
+| type    | **消息类型**，消息不支持自动拆分，请手动调多次，发送的文件 Url 在微信里长啥样，是文件后缀决定的。                                         | `String`          | -       | N        | `text` `fileUrl` | 支持 **文字** 和 **文件**， |
+| content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔                                          | `String`          | -       | N        | -                |
 
 #### Example（curl）
 
@@ -107,11 +106,11 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 - ContentType: `multipart/form-data`
 - FormData: 格式见下面表格
 
-| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选值 |
-|--|--|--|--|--|--|
-| to | **会话名**，发群消息填群名，发给个人填昵称 | `String` | -  |  N  | - |
-| isRoom | **是否发的群消息**，formData纯文本只能使用 `String` 类型，`1`代表是，`0`代表否， | `String` | `0`  | Y  |  `1`  `0`  |
-| content | **文件**，本地文件一次只能发一个，多个文件手动调用多次 | `Binary` | - | N | - |
+| 参数    | 说明                                                                             | 数据类型 | 默认值 | 可否为空 | 可选值  |
+| ------- | -------------------------------------------------------------------------------- | -------- | ------ | -------- | ------- |
+| to      | **会话名**，发群消息填群名，发给个人填昵称                                       | `String` | -      | N        | -       |
+| isRoom  | **是否发的群消息**，formData纯文本只能使用 `String` 类型，`1`代表是，`0`代表否， | `String` | `0`    | Y        | `1` `0` |
+| content | **文件**，本地文件一次只能发一个，多个文件手动调用多次                           | `Binary` | -      | N        | -       |
 
 ##### Curl
 
@@ -132,13 +131,13 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 - ContentType: `multipart/form-data`
 - Form格式如下
 
-| formData |  说明 | 数据类型 | 可选值 | 示例 |
-|--|--|--|--|-- |
-| type | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String` | `text`  `file` `urlLink` | - |
-| content | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例 | `String`  `Binary`  |  | [示例](docs/recvdApi.example.md#formdatacontent) |
-| source | 消息的相关发送方数据, JSON String | `String` | | [示例](docs/recvdApi.example.md#formdatasource) |
-| isMentioned | 该消息是@我的消息[#38](https://github.com/danni-cool/docker-wechatbot-webhook/issues/38) | `String` |`1` `0` | - |
-| isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）| `String` | `1` `0` | - |
+| formData      | 说明                                                                                                                                                                                                                                                                      | 数据类型          | 可选值                  | 示例                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------- | ------------------------------------------------ |
+| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` | -                                                |
+| content       | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例                                                                                                                                                                                                                | `String` `Binary` |                         | [示例](docs/recvdApi.example.md#formdatacontent) |
+| source        | 消息的相关发送方数据, JSON String                                                                                                                                                                                                                                         | `String`          |                         | [示例](docs/recvdApi.example.md#formdatasource)  |
+| isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/docker-wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
+| isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）                                                                                                                                                                                                                        | `String`          | `1` `0`                 | -                                                |
 
 ### 3. 登录APi
 
@@ -152,18 +151,17 @@ token 初次启动项目会自动生成，你也可以配置一个简单好记�
 1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
 2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN
 
-| API 路径 | Query Params | Methods |  描述  |
-|--|--|--|--|
-| /login | token | `GET` |  登录成功，返回及当前用户。登录态掉了，跳转最新的登录二维码  |
-| /loginCheck  | token | `GET` | 获取登录状态 API，始终返回 json 格式，登录二维码在登录失败会放在 `message` 中 |
+| API 路径    | Query Params | Methods | 描述                                                                          |
+| ----------- | ------------ | ------- | ----------------------------------------------------------------------------- |
+| /login      | token        | `GET`   | 登录成功，返回及当前用户。登录态掉了，跳转最新的登录二维码                    |
+| /loginCheck | token        | `GET`   | 获取登录状态 API，始终返回 json 格式，登录二维码在登录失败会放在 `message` 中 |
 
 ##### /loginCheck 返回体
 
-| JSON |  说明 | 数据类型 | 可选值 |
-|--|--|--|--|
-| success | 登录成功与否 | `Boolean` | `true` / `false` |
-| message | 当前登录用户名，登录失败将返回扫码登录URL  | `String`  |  |
-
+| JSON    | 说明                                      | 数据类型  | 可选值           |
+| ------- | ----------------------------------------- | --------- | ---------------- |
+| success | 登录成功与否                              | `Boolean` | `true` / `false` |
+| message | 当前登录用户名，登录失败将返回扫码登录URL | `String`  |                  |
 
 ## 关于包管理器
 

@@ -1,21 +1,31 @@
 const { FileBox } = require('file-box')
 const MIME = require('mime')
-const path = require('path')
 
 const downloadFile = async (fileUrl) => {
   try {
     const response = await fetch(fileUrl)
+
     if (response.ok) {
-      const arrayBuffer = await response.arrayBuffer()
+      const buffer = Buffer.from(await response.arrayBuffer())
+      let fileName = getFileNameFromUrl(fileUrl)
+
+      // deal with unValid Url format like https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU
+      if (!fileName) {
+        // 有些资源文件链接是不会返回文件后缀的 例如  https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU  其实是一张图片
+        const extName = MIME.getExtension(response.headers.get('content-type'))
+        fileName = `${Date.now()}.${extName}`
+      }
+
       return {
-        type: response.headers.get('content-type'),
-        buffer: Buffer.from(arrayBuffer),
+        buffer,
+        fileName,
       }
     }
-    return null
+
+    return {}
   } catch (error) {
     console.error('Error downloading file:' + fileUrl, error)
-    return null
+    return {}
   }
 }
 
@@ -26,22 +36,23 @@ const equalTrueType = function (val, expectType) {
   )
 }
 
-// http://www.baidu.com/image.png?a=1 => image.png
-const getFileNameFromUrl = (url) => url.match(/.*\/([^/?]*)/)?.[1] || ''
-
-// 格式化文件
-// 有些资源文件链接是不会返回文件后缀的 例如  https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU  其实是一张图片
-const formatUrlToName = (url, mimeType) => {
-  const extension = MIME.getExtension(mimeType)
-  const baseFileName = getFileNameFromUrl(url)
-  return path.extname(url) ? baseFileName : `${baseFileName}.${extension}`
+// valid: http://www.baidu.com/image.png?a=1 => image.png
+// notValid: https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU => ''
+const getFileNameFromUrl = (url) => {
+  const matchRes = url.match(/.*\/([^/?]*)/)?.[1]
+  const checkMathDotPosition = matchRes.indexOf('.')
+  // fileName has string.string is Valid filename
+  if (~checkMathDotPosition && checkMathDotPosition > 0) {
+    return matchRes
+  } else {
+    return ''
+  }
 }
 
 // bugfix: use `fileBox.fromUrl` api to get image is OK, but sometimes directly to get cloudflare img may return a 0 bites response.(when response is 301)
-
 const getMediaFromUrl = async (url) => {
-  const { buffer, type } = await downloadFile(url)
-  return FileBox.fromBuffer(buffer, formatUrlToName(url, type))
+  const { buffer, fileName } = await downloadFile(url)
+  return FileBox.fromBuffer(buffer, fileName)
 }
 const getBufferFile = (formDataFile) => {
   return FileBox.fromBuffer(formDataFile.buffer, formDataFile.originalname)

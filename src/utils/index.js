@@ -126,6 +126,15 @@ const generateToken = (num = 12) => {
   return token
 }
 
+// `{"alias":123,'alias2':   '123', alias3: 123}` => `{"alias":123,"alias2":"123", "asf":2}`
+const parseJsonLikeStr = (jsonLikeStr) => {
+  const formatStr = jsonLikeStr
+    .replace(/'?(\w+)'?\s*:/g, '"$1":')
+    .replace(/:\s*'([^']+)'/g, ':"$1"')
+
+  return JSON.parse(formatStr)
+}
+
 module.exports = {
   getFileNameFromUrl,
   getMediaFromUrl,
@@ -133,4 +142,5 @@ module.exports = {
   getUnValidParamsList,
   generateToken,
   equalTrueType,
+  parseJsonLikeStr,
 }

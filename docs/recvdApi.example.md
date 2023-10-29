@@ -1,7 +1,6 @@
+# RECVD_MSG_API JSON 示例
 
-# RECVD_MSG_API  JSON 示例
-
-## formData.content  `String` | `Binary`
+## formData.content `String` | `Binary`
 
 `formData` 内的字段和 `formData.content` 映射如下：
 

@@ -1,3 +1,4 @@
+const fetch = require('node-fetch-commonjs')
 const FormData = require('form-data')
 const chalk = require('chalk')
 const {
@@ -83,7 +84,7 @@ const sendMsg2RecvdApi = async function (msg) {
       formData.append('type', 'file')
       const steamFile = await msg.toFileBox()
       const type = await fileTypeFromBuffer(
-        steamFile.buffer /** 发送一张新图 */ || steamFile.stream,
+        steamFile.buffer || steamFile.stream,
       )
       let fileInfo = { ext: '', mime: '' }
 
@@ -144,10 +145,20 @@ const sendMsg2RecvdApi = async function (msg) {
 
   console.log('starting fetching api: ' + webhookUrl, formData._streams)
 
-  await fetch(webhookUrl, {
-    method: 'POST',
-    body: formData,
-  })
+  try {
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      body: formData,
+    })
+
+    if (!response.ok) {
+      console.error(
+        `HTTP error When trying to send Data to RecvdApi: ${response.status}`,
+      )
+    }
+  } catch (e) {
+    console.error('Error occurred when trying to send Data to RecvdApi', e)
+  }
 }
 
 // 得到 loginAPIToken

@@ -4,6 +4,23 @@
 
 - 💡 移除patch补丁，更新依赖 ([aacc5a7](https://github.com/danni-cool/docker-wechatbot-webhook/commit/aacc5a7c152a1b0eec1533c6ef2a478b504cdae2))
 
+## [2.2.2](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.2.1...v2.2.2) (2023-10-29)
+
+
+### Bug Fixes
+
+* 修复发送文件链接不带文件格式时无法正确解析的问题 & 移除 fetch 请求库 使用原生支持 ([b0b86b6](https://github.com/danni-cool/docker-wechatbot-webhook/commit/b0b86b623ff939bcaa4aced79a215103e7e7f1ee))
+
+
+### Refactor
+
+* 💡 优化代码 ([8f66412](https://github.com/danni-cool/docker-wechatbot-webhook/commit/8f664127e06d32bfc6eecef1c64e34041030b3a0))
+
+
+### Performance Improvements
+
+* docker 构建优化 ([efdb9e0](https://github.com/danni-cool/docker-wechatbot-webhook/commit/efdb9e086210cc1fac843001b5603cec797592b3))
+
 ## [2.2.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.1.0...v2.2.0) (2023-10-22)
 
 ### Features

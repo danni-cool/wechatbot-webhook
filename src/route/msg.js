@@ -43,10 +43,21 @@ module.exports = function registerPushHook({ app, bot }) {
               type: 'file',
               unValidReason: '',
             },
-          ])
-            .map(({ unValidReason }) => unValidReason)
-            .join('，')
+          ]).map(({ unValidReason }) => unValidReason)
+
           isRoom = !!+isRoom /** "1" => true , "0" => false */
+
+          // 支持jsonLike传递备注名 {alias: 123}
+          if (/{\s*"?'?alias"?'?\s*:[^}]+}/.test(to)) {
+            try {
+              to = Utils.parseJsonLikeStr(to)
+            } catch (e) {
+              unValidParamsStr = [
+                `to 参数发消息给备注名， json string 格式不正确`,
+              ].concat(unValidParamsStr)
+            }
+          }
+          unValidParamsStr = unValidParamsStr.join('，')
 
           // json
         } else {
@@ -69,7 +80,7 @@ module.exports = function registerPushHook({ app, bot }) {
               val: type,
               required: true,
               type: 'string',
-              enum: ['text', 'img', 'file', 'fileUrl'],
+              enum: ['text', 'fileUrl'],
               unValidReason: '',
             },
             {

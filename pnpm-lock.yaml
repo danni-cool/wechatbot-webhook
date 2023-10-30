@@ -61,9 +61,6 @@ devDependencies:
   eslint-plugin-promise:
     specifier: ^6.0.0
     version: 6.1.1(eslint@8.52.0)
-  eslint-plugin-standard:
-    specifier: ^5.0.0
-    version: 5.0.0(eslint@8.52.0)
   husky:
     specifier: ^8.0.3
     version: 8.0.3
@@ -1804,15 +1801,6 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
-    dependencies:
-      eslint: 8.52.0
-    dev: true
-
-  /eslint-plugin-standard@5.0.0(eslint@8.52.0):
-    resolution: {integrity: sha512-eSIXPc9wBM4BrniMzJRBm2uoVuXz2EPa+NXPk2+itrVt+r5SbKFERx/IgrK/HmfjddyKVz2f+j+7gBRvu19xLg==}
-    deprecated: 'standard 16.0.0 and eslint-config-standard 16.0.0 no longer require the eslint-plugin-standard package. You can remove it from your dependencies with ''npm rm eslint-plugin-standard''. More info here: https://github.com/standard/standard/issues/1316'
-    peerDependencies:
-      eslint: '>=5.0.0'
     dependencies:
       eslint: 8.52.0
     dev: true

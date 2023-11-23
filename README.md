@@ -1,17 +1,22 @@
 <div align="center">
 <img src="https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-webhook.png" width="500" height="251"/>
 
-用 http 请求即可给微信发消息，集成了[Wechaty](https://github.com/wechaty/wechaty)大部分消息功能， 快用它集成到自己的自动化工作流中吧
+一个支持消息收发的微信 webhook 机器人，用 http 请求即可给微信发消息
 
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/release.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/docker-wechatbot-webhook)
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
-✅[Todo](https://github.com/danni-cool/docker-wechatbot-webhook/issues/11) & 💬[Discussion(Discord)](https://discord.gg/935xZTD9)
-
-> 项目基于web协议，已知登录几天会掉，需要重新登录。这是网页微信风控的问题。但是网页版相对轻量，仍然适合调试学习使用，有兴趣的可以关注[ windows 分支](https://github.com/danni-cool/docker-wechatbot-webhook/tree/windows)
-
+✅ [Todo](https://github.com/danni-cool/docker-wechatbot-webhook/issues/11) & 💬 [Discussion(Discord)](https://discord.gg/935xZTD9)
 </div>
+
+## 💼 Feature
+
+> 已知登录几天会掉，需要重新登录。这是网页微信风控的问题，项目基于web协议，只做研究和学习使用，功能相对有限，以下是所有受支持的功能，请按需服用
+
+| 功能 | 推送消息 | 接收消息 |
+--|--|--
+| 支持的功能 | <ul><li>✅ 发送文字</li><li>✅ 发送图片</li><li>✅ 发送文件</li></ul> | <ul><li>✅ 文字</li><li>✅ 链接卡片(公众号推文链接)</li><li>✅ 图片</li><li>✅ 视频</li><li>✅ 附件</li> <li>✅ 语音</li></ul> |
 
 ## 🚀 启动
 

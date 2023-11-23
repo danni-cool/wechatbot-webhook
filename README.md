@@ -71,7 +71,7 @@ docker logs -f wxBotWebhook
 | -- | -- | -- | -- | -- | -- |
 | to | **消息接收方**，传入`String` 默认是发给昵称（群名同理）, 传入`Object` 结构支持发给备注过的人，比如：`{alias: '备注名'}`，群名不支持备注名 | `String` `Object` | -  |  Y  | - |
 | isRoom | **是否发的群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
-| type | **消息类型**，消息不支持自动拆分，请手动调多次，发送的文件 Url 在微信里长啥样，是文件后缀决定的。| `String`  | - | N | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
+| type | **消息类型**，消息不支持自动拆分，请手动调多次。| `String`  | - | N | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
 | content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
 
 #### Example（curl）

@@ -4,6 +4,7 @@
   "description": "给微信里加个 webhook 机器人，支持docker部署",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npx patch-package",
     "prestart": "node ./scripts/preStart",
     "predebug": "node ./scripts/preStart",
     "start": "node main",

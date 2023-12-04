@@ -2,7 +2,9 @@
 .git
 .editorconfig
 .versionrc.js
+.env
+.vscode
+.husky
 node_modules
 script
 docs
-

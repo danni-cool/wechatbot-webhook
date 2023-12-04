@@ -1,20 +1,18 @@
-## [2.3.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.2.2...v2.3.0) (2023-10-29)
+## [2.3.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.0...v2.3.1) (2023-12-04)
 
+### Bug Fixes
+
+* 修复0.5mb以上文件无法上传问题 ([7e3993c](https://github.com/danni-cool/docker-wechatbot-webhook/commit/7e3993ca1e13931e11089ff68e6498e1dff572c3))
+
+
+## [2.3.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.2.2...v2.3.0) (2023-10-29)
 
 ### Features
 
 * 🎸 使用form表单发送本地文件支持备注名,移除发送json数据时提示不再支持的type类型 ([69f44e0](https://github.com/danni-cool/docker-wechatbot-webhook/commit/69f44e051aa71ac401179637e1cfe27f1f8c3ffe))
 
 
-## [2.3.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.0...v2.3.1) (2023-12-04)
-
-
-### Bug Fixes
-
-* 修复0.5mb以上文件无法上传问题 ([7e3993c](https://github.com/danni-cool/docker-wechatbot-webhook/commit/7e3993ca1e13931e11089ff68e6498e1dff572c3))
-
 ## [2.2.2](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.2.1...v2.2.2) (2023-10-29)
-
 
 ### Bug Fixes
 

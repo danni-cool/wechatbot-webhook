@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock .npmrc ./
 
 # 安装应用程序依赖项
-RUN npm install -g yarn && yarn && yarn cache clean && npm uninstall yarn -g
+RUN yarn && yarn cache clean && npm uninstall yarn -g
 
 # 复制应用程序代码到工作目录
 COPY . .

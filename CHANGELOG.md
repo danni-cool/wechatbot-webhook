@@ -1,10 +1,3 @@
-## [2.3.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.0...v2.3.1) (2023-12-04)
-
-### Bug Fixes
-
-* 修复0.5mb以上文件无法上传问题 ([7e3993c](https://github.com/danni-cool/docker-wechatbot-webhook/commit/7e3993ca1e13931e11089ff68e6498e1dff572c3))
-
-
 ## [2.3.3](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.2...v2.3.3) (2023-12-05)
 
 
@@ -23,6 +16,14 @@
 ### Bug Fixes
 
 * 🐛 修复因为docker 打包和本地不一致问题 ([03cfc33](https://github.com/danni-cool/docker-wechatbot-webhook/commit/03cfc336c8e73acdd064495eb9c380b619c01f86))
+
+
+## [2.3.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.0...v2.3.1) (2023-12-04)
+
+### Bug Fixes
+
+* 修复0.5mb以上文件无法上传问题 ([7e3993c](https://github.com/danni-cool/docker-wechatbot-webhook/commit/7e3993ca1e13931e11089ff68e6498e1dff572c3))
+
 
 ## [2.3.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.2.2...v2.3.0) (2023-10-29)
 

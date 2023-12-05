@@ -4241,10 +4241,10 @@ web-streams-polyfill@^3.0.3:
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
   integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==
 
-wechat4u@^0.7.12:
-  version "0.7.12"
-  resolved "https://registry.yarnpkg.com/wechat4u/-/wechat4u-0.7.12.tgz#f5b8b7516aaaf9fe3cd476022cb568b077a4a877"
-  integrity sha512-1sgDv1WgE0U3gaqf7rgaHNwOlDnUzM42aRlzjZNmLSfnLH4/9Sha5ruXZ9BPsI4oApZgZPX/eSFTEK8TaL2kwQ==
+wechat4u@^0.7.14:
+  version "0.7.14"
+  resolved "https://registry.yarnpkg.com/wechat4u/-/wechat4u-0.7.14.tgz#a7b3c82635e8e1d0d766fc803d4153438e5481e5"
+  integrity sha512-BDEHSL1drGX8f9QdclOiTQcL6EtaIQWZ0MVsTeFkxGM1xVikqqlK7WcJp2IOpK0RczG4lFvXwDmOgzyZnA1waQ==
   dependencies:
     axios "^1.1.3"
     bl "^1.1.2"
@@ -4282,14 +4282,14 @@ wechaty-puppet-service@^1.19.8:
     wechaty-token "^1.0.6"
 
 wechaty-puppet-wechat4u@^1.11.1:
-  version "1.14.6"
-  resolved "https://registry.yarnpkg.com/wechaty-puppet-wechat4u/-/wechaty-puppet-wechat4u-1.14.6.tgz#b1922c58b1ae8060220edf0be217f43100872cf5"
-  integrity sha512-d0OyGvrxLb6I6vPZtjsoKTMzgSxP4GkVtwkK+bXUg7gZr/wV8wTsW0Muin64hQlqvGxonYHmJUfXSJgVjXH9Sg==
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/wechaty-puppet-wechat4u/-/wechaty-puppet-wechat4u-1.14.7.tgz#ec97a523d12c8494e48612880e3d7c9590c47392"
+  integrity sha512-NS/3jBmJBBgxwzwuNk7FpL0L0CCKd/Fp1zIrsH2x/MgynGaflsGSuBs9ZdpfmnNmDYhJni+Sp+tnrrQ588RuHw==
   dependencies:
     "@alloc/quick-lru" "^5.2.0"
     fast-xml-parser "^3.21.1"
     promise-retry "^2.0.1"
-    wechat4u "^0.7.12"
+    wechat4u "^0.7.14"
     xml2js "^0.4.23"
 
 wechaty-puppet@^1.20.1:

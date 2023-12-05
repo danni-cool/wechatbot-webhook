@@ -5,6 +5,18 @@
 * 修复0.5mb以上文件无法上传问题 ([7e3993c](https://github.com/danni-cool/docker-wechatbot-webhook/commit/7e3993ca1e13931e11089ff68e6498e1dff572c3))
 
 
+## [2.3.3](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.2...v2.3.3) (2023-12-05)
+
+
+### Bug Fixes
+
+* 🐛 修复curl post文件时中文文件名的问题 ([85c1407](https://github.com/danni-cool/docker-wechatbot-webhook/commit/85c14078e89f2d131011fd804088cff178e01a72))
+
+
+### Performance Improvements
+
+* ⚡️ 移除大文件patch-file，指定 puppet-wechat4u 修复版本 ([dafce34](https://github.com/danni-cool/docker-wechatbot-webhook/commit/dafce3499e68d13d955e72df512cf2822b346510))
+
 ## [2.3.2](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.1...v2.3.2) (2023-12-04)
 
 

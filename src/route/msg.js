@@ -1,6 +1,7 @@
 const Service = require('../service')
 const Middleware = require('../middleware')
 const Utils = require('../utils/index')
+const iconv = require('iconv-lite')
 
 module.exports = function registerPushHook({ app, bot }) {
   // 处理 POST 请求
@@ -15,7 +16,15 @@ module.exports = function registerPushHook({ app, bot }) {
       if (req.is('multipart/form-data')) {
         to = req.body.to
         isRoom = req.body.isRoom || '0'
-        content = req.files.find((item) => item.fieldname === 'content') || {}
+        content =
+          req.files.find((item) => {
+            // 使用iconv-lite来解码文件名
+            item.originalname = iconv.decode(
+              Buffer.from(item.originalname, 'binary'),
+              'utf8',
+            )
+            return item.fieldname === 'content'
+          }) || {}
         type = 'file'
 
         // 校验必填参数

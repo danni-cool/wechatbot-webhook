@@ -168,11 +168,6 @@ token 初次启动项目会自动生成，你也可以配置一个简单好记�
 | success | 登录成功与否                              | `Boolean` | `true` / `false` |
 | message | 当前登录用户名，登录失败将返回扫码登录URL | `String`  |                  |
 
-## 关于包管理器
-
-从 npm 迁移至 pnpm，本地开发可以安装 pnpm 环境，建议 node 版本 16.13.1 以上，[参考链接](https://pnpm.io/zh/installation)
-
-> 如果你是 MacOS，建议使用 Homebrew 安装
 
 ## ⏫ 更新日志
 

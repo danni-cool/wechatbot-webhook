@@ -16,6 +16,11 @@ module.exports = function registerPushHook({ app, bot }) {
         to = req.body.to
         isRoom = req.body.isRoom || '0'
         content = req.files.find((item) => item.fieldname === 'content') || {}
+        // 转化上传文件名中文字符但是被编码成 iso885910 的问题
+        content.originalname &&
+          (content.originalname = Utils.tryConvertCnCharToUtf8Char(
+            content.originalname,
+          ))
         type = 'file'
 
         // 校验必填参数

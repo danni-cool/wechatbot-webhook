@@ -4,7 +4,6 @@
   "description": "给微信里加个 webhook 机器人，支持docker部署",
   "main": "index.js",
   "scripts": {
-    "preinstall": "patch-package",
     "prestart": "node ./scripts/preStart",
     "predebug": "node ./scripts/preStart",
     "start": "node main",
@@ -43,7 +42,6 @@
     "mime": "^3.0.0",
     "multer": "^1.4.5-lts.1",
     "node-fetch-commonjs": "^3.3.2",
-    "patch-package": "^8.0.0",
     "wechaty": "^1.20.2"
   },
   "devDependencies": {
@@ -58,5 +56,8 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
     "prettier": "^3.0.3"
+  },
+  "overrides": {
+    "wechaty-puppet-wechat4u": "^1.14.7"
   }
 }

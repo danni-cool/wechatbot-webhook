@@ -135,6 +135,29 @@ const parseJsonLikeStr = (jsonLikeStr) => {
   return JSON.parse(formatStr)
 }
 
+// 检测每个字符是否都可以被iso-8859-1表示,因为curl http1.1 在发送form-data时，文件名是中文的话会被编码成 iso-8859-1表示
+// https://github.com/danni-cool/docker-wechatbot-webhook/issues/71
+function tryConvertCnCharToUtf8Char(str) {
+  const isIso88591 = [...str].every((char) => {
+    const codePoint = char.charCodeAt(0)
+    return codePoint >= 0x00 && codePoint <= 0xff
+  })
+
+  if (isIso88591) {
+    // 假设原始编码是 ISO-8859-1，将每个字符转换为相应的字节
+    const bytes = new Uint8Array(str.length)
+    for (let i = 0; i < str.length; i++) {
+      bytes[i] = str.charCodeAt(i)
+    }
+
+    // 使用 TextDecoder 将 ISO-8859-1 编码的字节解码为 UTF-8 字符串
+    const decoder = new TextDecoder('UTF-8')
+    return decoder.decode(bytes)
+  }
+
+  return str
+}
+
 module.exports = {
   getFileNameFromUrl,
   getMediaFromUrl,
@@ -143,4 +166,5 @@ module.exports = {
   generateToken,
   equalTrueType,
   parseJsonLikeStr,
+  tryConvertCnCharToUtf8Char,
 }

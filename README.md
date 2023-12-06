@@ -4,10 +4,11 @@
 一个支持消息收发的微信 webhook 机器人，用 http 请求即可给微信发消息
 
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/release.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/docker-wechatbot-webhook)
+![Discord](https://img.shields.io/discord/1165844612473172088?logo=Discord&link=https%3A%2F%2Fdiscord.gg%2FwxZg66bS)
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
-💬 [Discord频道](https://discord.gg/935xZTD9) & 📝 [FAQ](https://github.com/danni-cool/docker-wechatbot-webhook/issues/72)
+📝 [FAQ](https://github.com/danni-cool/docker-wechatbot-webhook/issues/72)
 </div>
 
 ## 💼 Feature

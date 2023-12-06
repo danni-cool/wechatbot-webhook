@@ -7,7 +7,7 @@
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
-💬 [Discord频道](https://discord.gg/935xZTD9)
+💬 [Discord频道](https://discord.gg/935xZTD9) & 📝 [FAQ](https://github.com/danni-cool/docker-wechatbot-webhook/issues/72)
 </div>
 
 ## 💼 Feature

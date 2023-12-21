@@ -170,6 +170,9 @@ token 初次启动项目会自动生成，你也可以配置一个简单好记�
 | success | 登录成功与否                              | `Boolean` | `true` / `false` |
 | message | 当前登录用户名，登录失败将返回扫码登录URL | `String`  |                  |
 
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=danni-cool/docker-wechatbot-webhook&type=Date)](https://star-history.com/#danni-cool/docker-wechatbot-webhook&Date)
 
 ## ⏫ 更新日志
 

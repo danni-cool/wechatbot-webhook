@@ -17,6 +17,8 @@ COPY . .
 ENV RECVD_MSG_API=
 # 默认登录API接口访问token
 ENV LOGIN_API_TOKEN=
+# 是否禁用默认登录
+ENV DISABLE_AUTO_LOGIN=
 
 # 暴露端口（你的 Express 应用程序监听的端口）
 EXPOSE 3001

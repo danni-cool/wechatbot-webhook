@@ -1,3 +1,11 @@
+## [2.4.0](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.3...v2.4.0) (2023-12-22)
+
+
+### Features
+
+* 🎸 增加微信非登出状态，重启服务可以自动登录 ([#82](https://github.com/danni-cool/docker-wechatbot-webhook/issues/82)) ([839f866](https://github.com/danni-cool/docker-wechatbot-webhook/commit/839f8662bbafed6e36a990a9040462f373d04e78))
+
+
 ## [2.3.3](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.2...v2.3.3) (2023-12-05)
 
 
@@ -9,6 +17,7 @@
 ### Performance Improvements
 
 * ⚡️ 移除大文件patch-file，指定 puppet-wechat4u 修复版本 ([dafce34](https://github.com/danni-cool/docker-wechatbot-webhook/commit/dafce3499e68d13d955e72df512cf2822b346510))
+
 
 ## [2.3.2](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.1...v2.3.2) (2023-12-04)
 

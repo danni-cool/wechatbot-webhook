@@ -63,8 +63,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
     })
 
   app.get(
-    '/login',
-    Middleware.verifyToken,
+    '/',
     Service.handleError(async (req, res) => {
       // 登录成功的话，返回登录信息
       if (success) {

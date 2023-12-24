@@ -6,6 +6,13 @@
 * 🎸 增加微信非登出状态，重启服务可以自动登录 ([#82](https://github.com/danni-cool/docker-wechatbot-webhook/issues/82)) ([839f866](https://github.com/danni-cool/docker-wechatbot-webhook/commit/839f8662bbafed6e36a990a9040462f373d04e78))
 
 
+## [2.4.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.4.0...v2.4.1) (2023-12-24)
+
+
+### Bug Fixes
+
+* 🐛 修复 puppet-wechat4u 重建登录失败问题 [#90](https://github.com/danni-cool/docker-wechatbot-webhook/issues/90) ([c7fcaa6](https://github.com/danni-cool/docker-wechatbot-webhook/commit/c7fcaa6fcaf396f1aed0f59975fd2dcac89d1798))
+
 ## [2.3.3](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.3.2...v2.3.3) (2023-12-05)
 
 

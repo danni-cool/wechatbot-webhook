@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^18.1.0",
+    "@vercel/node": "^3.0.14",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-standard": "^17.1.0",

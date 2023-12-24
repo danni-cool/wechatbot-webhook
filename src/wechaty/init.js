@@ -16,10 +16,7 @@ module.exports = function init() {
     .on('scan', (qrcode) =>
       console.log(
         [
-          'Access the URL to login: ' +
-            chalk.cyan(
-              `http://localhost:${PORT}/login?token=${Service.getLoginApiToken()}`,
-            ),
+          'Access the URL to login: ' + chalk.cyan(`http://localhost:${PORT}/`),
         ].join('\n'),
       ),
     )

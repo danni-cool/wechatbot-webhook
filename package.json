@@ -1,6 +1,6 @@
 {
   "name": "docker-wechatbot-webhook",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "给微信里加个 webhook 机器人，支持docker部署",
   "main": "index.js",
   "scripts": {

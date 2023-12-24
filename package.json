@@ -1,13 +1,11 @@
 {
-  "name": "docker-wechatbot-webhook",
-  "version": "2.4.0",
+  "name": "wechatbot-webhook",
+  "version": "2.4.1",
   "description": "给微信里加个 webhook 机器人，支持docker部署",
   "main": "index.js",
   "scripts": {
     "prestart": "node ./scripts/preStart",
-    "predebug": "node ./scripts/preStart",
-    "start": "node main",
-    "debug": "node --inspect='0.0.0.0:9229' main"
+    "start": "node main"
   },
   "engines": {
     "node": ">=18"
@@ -18,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/danni-cool/docker-wechatbot-webhook.git"
+    "url": "https://github.com/danni-cool/wechatbot-webhook.git"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -56,8 +54,5 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
     "prettier": "^3.0.3"
-  },
-  "overrides": {
-    "wechaty-puppet-wechat4u": "^1.14.7"
   }
 }

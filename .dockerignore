@@ -8,4 +8,5 @@
 node_modules
 script
 docs
+cli
 loginSession.memory-card.json

@@ -136,7 +136,7 @@ const parseJsonLikeStr = (jsonLikeStr) => {
 }
 
 // 检测每个字符是否都可以被iso-8859-1表示,因为curl http1.1 在发送form-data时，文件名是中文的话会被编码成 iso-8859-1表示
-// https://github.com/danni-cool/docker-wechatbot-webhook/issues/71
+// https://github.com/danni-cool/wechatbot-webhook/issues/71
 function tryConvertCnCharToUtf8Char(str) {
   const isIso88591 = [...str].every((char) => {
     const codePoint = char.charCodeAt(0)

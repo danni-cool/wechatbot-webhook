@@ -109,7 +109,7 @@ module.exports = function registerPushHook({ app, bot }) {
       if (unValidParamsStr) {
         return res.status(200).json({
           success: false,
-          message: `[${unValidParamsStr}] params  is not valid, please checkout the api reference (https://github.com/danni-cool/docker-wechatbot-webhook#%EF%B8%8F-api)`,
+          message: `[${unValidParamsStr}] params  is not valid, please checkout the api reference (https://github.com/danni-cool/wechatbot-webhook#%EF%B8%8F-api)`,
         })
       }
 

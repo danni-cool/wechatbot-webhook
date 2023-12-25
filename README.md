@@ -1,36 +1,56 @@
 <div align="center">
 <img src="https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-webhook.png" width="500" height="251"/>
 
-一个支持消息收发的微信 webhook 机器人，用 http 请求即可给微信发消息
+简单易懂、开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人，当 http 调用和二次开发亦可，二次开发请fork
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/docker-wechatbot-webhook/release.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/docker-wechatbot-webhook)
-<a href="https://discord.gg/wxZg66bS"><img src="https://img.shields.io/discord/1165844612473172088?logo=Discord&link=https%3A%2F%2Fdiscord.gg%2FwxZg66bS" /></a>
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/wechatbot-webhook/release.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/wechatbot-webhook)
+<a href="https://discord.gg/B5FFP3hT"><img src="https://img.shields.io/discord/1165844612473172088?logo=Discord&link=https%3A%2F%2Fdiscord.gg%2FB5FFP3hT" /></a>
 
 
 [view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
 
-📝 [FAQ](https://github.com/danni-cool/docker-wechatbot-webhook/issues/72)
+📝 [FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 </div>
 
-## 💼 Feature
-
-> 项目基于web协议，只做研究和学习使用，功能相对有限，以下是所有受支持的功能，请按需服用
+## 💼 功能 Feature
 
 | 功能 | 推送消息 | 接收消息 |
 --|--|--
 | 支持的功能 | <ul><li>✅ 发送文字</li><li>✅ 发送图片</li><li>✅ 发送文件</li></ul> | <ul><li>✅ 文字</li><li>✅ 链接卡片(公众号推文链接)</li><li>✅ 图片</li><li>✅ 视频</li><li>✅ 附件</li> <li>✅ 语音</li></ul> |
 
-## 🚀 启动
+## 🚀 一分钟 Demo
 
-#### 拉取镜像
-
+### 1. 运行
 ```bash
-docker pull dannicool/docker-wechatbot-webhook
+npx wechatbot-webhook
+
+# 除非掉线，默认记住上次登录，换帐号请运行以下命令
+npx wechatbot-webhook -f
 ```
 
-#### 启动容器
+### 2. 扫码登录
 
-该方法会在后台启动一个 **只能给微信推消息** 的容器
+![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/Jietu20231224-170732.gif)
+
+### 3. 使用 http 请求给指定用户发消息
+
+新开个终端试试以下 curl
+
+```bash
+curl --location 'http://localhost:3001/webhook/msg' \
+--header 'Content-Type: application/json' \
+--data '{
+    "to": "测试昵称",
+    "type": "text",
+    "content": "Hello World!"
+}'
+```
+
+## ⛰️ 部署 Deploy（推荐）
+
+### Docker 部署
+
+#### 1. 启动容器
 
 ```bash
 docker run -d \
@@ -39,7 +59,17 @@ docker run -d \
 dannicool/docker-wechatbot-webhook
 ```
 
-#### 可选参数
+#### 2. 登录
+
+```bash
+docker logs -f wxBotWebhook
+```
+
+找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
+
+<https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN>
+
+#### Docker 可选参数
 
 > Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="<https://example.com/your/url>" \
 
@@ -48,18 +78,6 @@ dannicool/docker-wechatbot-webhook
 |  收消息 |   RECVD_MSG_API  |   RECVD_MSG_API=<https://example.com/your/url>   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
 | 禁用自动登录 | DISABLE_AUTO_LOGIN | DISABLE_AUTO_LOGIN=true |  非微信踢下线账号，可以依靠session免登, 如果想每次都扫码登陆，则增加该条配置 |
 | 自定义登录 API token | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123 | 你也可以自定义一个自己的登录令牌，不配置的话，默认会生成一个 |
-
-## 👨🏻‍💻 登录wx
-
-1.以下只展示 docker 启动，本地调试可以直接在控制台找到链接
-
-```bash
-docker logs -f wxBotWebhook
-```
-
-2.找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
-
-<https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN>
 
 ## 🛠️ API
 
@@ -92,7 +110,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --data-raw '{
     "to": "testUser",
     "type": "text",
-    "content": "Hello World!",
+    "content": "Hello World!"
 }'
 ```
 
@@ -141,10 +159,10 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 | formData      | 说明                                                                                                                                                                                                                                                                      | 数据类型          | 可选值                  | 示例                                             |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------- | ------------------------------------------------ |
-| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> close: [#10](https://github.com/danni-cool/docker-wechatbot-webhook/issues/10) refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` | -                                                |
+| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> close: [#10](https://github.com/danni-cool/wechatbot-webhook/issues/10) refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` | -                                                |
 | content       | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例                                                                                                                                                                                                                | `String` `Binary` |                         | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source        | 消息的相关发送方数据, JSON String                                                                                                                                                                                                                                         | `String`          |                         | [示例](docs/recvdApi.example.md#formdatasource)  |
-| isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/docker-wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
+| isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
 | isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）                                                                                                                                                                                                                        | `String`          | `1` `0`                 | -                                                |
 
 ### 3. 登录APi
@@ -173,7 +191,7 @@ token 初次启动项目会自动生成，你也可以配置一个简单好记�
 
 ## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=danni-cool/docker-wechatbot-webhook&type=Date)](https://star-history.com/#danni-cool/docker-wechatbot-webhook&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=danni-cool/wechatbot-webhook&type=Date)](https://star-history.com/#danni-cool/wechatbot-webhook&Date)
 
 ## ⏫ 更新日志
 

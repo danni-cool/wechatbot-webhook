@@ -13,6 +13,11 @@ import('file-type').then((res) => {
   fileTypeFromBuffer = res.fileTypeFromBuffer
 })
 
+/**
+ * 收到消息上报接受url
+ * @param {*} msg
+ * @returns Promise<void|any>
+ */
 const sendMsg2RecvdApi = async function (msg) {
   // 自己发的消息没有必要转发
   if (msg.self()) return
@@ -134,6 +139,11 @@ const sendMsg2RecvdApi = async function (msg) {
       formData.append('content', msg.text())
       break
 
+    // 好友邀请消息(自定义消息type)
+    case 99:
+      formData.append('type', 'friendship')
+      formData.append('content', msg.text())
+      break
     // 其他统一暂不处理
     case 5: // 自定义表情
     default:
@@ -144,9 +154,10 @@ const sendMsg2RecvdApi = async function (msg) {
   if (!passed) return
 
   console.log('starting fetching api: ' + webhookUrl, formData._streams)
+  let response
 
   try {
-    const response = await fetch(webhookUrl, {
+    response = await fetch(webhookUrl, {
       method: 'POST',
       body: formData,
     })
@@ -159,6 +170,8 @@ const sendMsg2RecvdApi = async function (msg) {
   } catch (e) {
     console.error('Error occurred when trying to send Data to RecvdApi', e)
   }
+
+  return response
 }
 
 // 得到 loginAPIToken

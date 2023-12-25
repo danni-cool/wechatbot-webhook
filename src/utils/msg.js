@@ -1,11 +1,12 @@
-module.exports.TextMsg = class TextMsg {
-  constructor({ text, isSystemEvent = false }) {
+class CommonMsg {
+  constructor(text, type, isSystemEvent = false) {
+    this.t = type
     this.payload = text
     this.isSystemEvent = isSystemEvent
   }
 
   type() {
-    return 7
+    return this.t
   }
 
   text() {
@@ -27,4 +28,21 @@ module.exports.TextMsg = class TextMsg {
   talker() {
     return ''
   }
+}
+
+class TextMsg extends CommonMsg {
+  constructor({ text, isSystemEvent = false }) {
+    super(text, 7, isSystemEvent)
+  }
+}
+
+class FriendshipMsg extends CommonMsg {
+  constructor(payload) {
+    super(JSON.stringify(payload), 99)
+  }
+}
+
+module.exports = {
+  TextMsg,
+  FriendshipMsg,
 }

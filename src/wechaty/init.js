@@ -45,9 +45,9 @@ module.exports = function init() {
     })
 
     // 收到加好友请求事件
-    // .on('friendship', async (friendship) =>
-    //   Service.onRecvdFriendship(friendship, bot),
-    // )
+    .on('friendship', async (friendship) =>
+      Service.onRecvdFriendship(friendship, bot),
+    )
 
     // 各种出错事件
     .on('error', (error) => {

@@ -1,4 +1,6 @@
-require('dotenv').config()
+require('dotenv').config({
+  path: process.env.homeEnvCfg /** 兼容cli调用 */ || './.env',
+})
 const { PORT } = process.env
 const express = require('express')
 const wechatBotInit = require('./src/wechaty/init')

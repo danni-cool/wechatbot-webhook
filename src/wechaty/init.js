@@ -13,7 +13,12 @@ module.exports = function init() {
   // 启动 Wechaty 机器人
   bot
     // 扫码登陆事件
-    .on('scan', (qrcode) =>
+    .on('scan', (qrcode) => {
+      // cli 调用使用qrcode terminal
+      if (process.env.homeEnvCfg) {
+        console.log('✨ 扫描以下二维码以登录 ✨')
+        return require('qrcode-terminal').generate(qrcode, { small: true })
+      }
       console.log(
         [
           'Access the URL to login: ' +
@@ -21,13 +26,26 @@ module.exports = function init() {
               `http://localhost:${PORT}/login?token=${Service.getLoginApiToken()}`,
             ),
         ].join('\n'),
-      ),
-    )
+      )
+    })
 
     // 登陆成功事件
-    .on('login', async (user) =>
-      console.log(chalk.green(`User ${user} logged in`)),
-    )
+    .on('login', async (user) => {
+      if (process.env.homeEnvCfg) {
+        console.log(
+          [
+            '🌱 ' + chalk.green(`User ${user} logged in`),
+            '📖 发送消息 HTTP API 请参考: ' +
+              `${chalk.cyan(
+                'https://github.com/danni-cool/wechatbot-webhook?tab=readme-ov-file#%EF%B8%8F-api',
+              )}`,
+          ].join('\n'),
+        )
+        return
+      }
+
+      console.log(chalk.green(`User ${user} logged in`))
+    })
 
     // 登出事件
     .on('logout', async (user) => console.log(chalk.red(`User ${user} logout`)))

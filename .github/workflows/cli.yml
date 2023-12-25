@@ -3,7 +3,7 @@ name: Push to NPM
 on:
   push:
     branches:
-      - cli
+      - main
 
 jobs:
   build:

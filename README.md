@@ -21,12 +21,12 @@
 ## 🚀 一分钟 Demo
 
 ### 1. 运行
+
 ```bash
 npx wechatbot-webhook
-
-# 除非掉线，默认记住上次登录，换帐号请运行以下命令
-npx wechatbot-webhook -f
 ```
+
+> 除非掉线，默认记住上次登录，换帐号请运行以下命令 `npx wechatbot-webhook -f`
 
 ### 2. 扫码登录
 
@@ -183,7 +183,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 | 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
 | -- | -- | -- | -- | -- | -- |
-| success | 该条请求成功与否，返回 false 或者无该字段，不会处理回复 | `Boolean` | - | Y | `true` `false` |
+| success | 该条请求成功与否，返回 false 或者无该字段，不会处理回复，**有一些特殊消息也通过这个字段控制，比如加好友邀请，返回 `true` 则会通过好友请求** | `Boolean` | - | Y | `true` `false` |
 | data | 如果需要回复消息的话，需要定义data字段 | `Object` `Object Array` | - | Y | |
 
 data 结构

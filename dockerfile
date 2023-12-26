@@ -5,10 +5,10 @@ FROM node:18-alpine
 WORKDIR /app
 
 # 非依赖变更缓存改层
-COPY package.json yarn.lock .npmrc ./
+COPY package.json pnpm-lock.yaml .npmrc ./
 
 # 安装应用程序依赖项
-RUN yarn && yarn cache clean && npm uninstall yarn -g
+RUN npm install -g pnpm && pnpm install && pnpm store prune && npm uninstall pnpm -g
 
 # 复制应用程序代码到工作目录
 COPY . .

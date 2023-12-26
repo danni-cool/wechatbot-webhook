@@ -38,3 +38,18 @@ jobs:
           push: true
           tags: dannicool/docker-wechatbot-webhook:latest
           platforms: linux/amd64,linux/arm64
+      
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+
+      # New step to copy docs/cli.readme.md to readme.md
+      - name: replace cli README.md to README.md
+        run: cp ./docs/cli.README.md ./README.md
+
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_SECRET }}

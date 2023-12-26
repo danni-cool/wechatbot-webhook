@@ -16,7 +16,7 @@
 
 | 功能 | 推送消息 | 接收消息 |
 --|--|--
-| 支持的功能 | <ul><li>✅ 发送文字</li><li>✅ 发送图片</li><li>✅ 发送文件</li></ul> | <ul><li>✅ 文字</li><li>✅ 链接卡片(公众号推文链接)</li><li>✅ 图片</li><li>✅ 视频</li><li>✅ 附件</li> <li>✅ 语音</li></ul> |
+| 支持的功能 | <ul><li>✅ 发送文字</li><li>✅ 发送图片</li><li>✅ 发送文件</li></ul> | <ul><li>✅ 文字</li><li>✅ 图片</li><li>✅ 视频</li><li>✅ 附件</li> <li>✅ 语音</li><li>✅ 添加好友邀请</li><li>✅ 链接卡片(公众号推文链接)</li></ul> |
 
 ## 🚀 一分钟 Demo
 
@@ -149,50 +149,79 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 ### 2. 收消息 API
 
-- Methods: `POST`
-- ContentType: `multipart/form-data`
-- Form格式如下
+> **快捷回复**：收消息API现在支持通过返回值实现快捷回复， https://github.com/danni-cool/wechatbot-webhook/issues/96, 无需再发起 post 请求，一个 API 搞定接受和回复
+
+#### 请求体
+  - Methods: `POST`
+  - ContentType: `multipart/form-data`
+  - Form格式如下
 
 | formData      | 说明                                                                                                                                                                                                                                                                      | 数据类型          | 可选值                  | 示例                                             |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------- | ------------------------------------------------ |
-| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 好友邀请(friendship)</li></ul> close: [#10](https://github.com/danni-cool/wechatbot-webhook/issues/10) refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` `friendship` | -                                                |
+| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 添加好友邀请(friendship)</li></ul> close: [#10](https://github.com/danni-cool/wechatbot-webhook/issues/10) refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` `friendship` | -                                                |
 | content       | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例                                                                                                                                                                                                                | `String` `Binary` |                         | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source        | 消息的相关发送方数据, JSON String                                                                                                                                                                                                                                         | `String`          |                         | [示例](docs/recvdApi.example.md#formdatasource)  |
 | isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
 | isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）                                                                                                                                                                                                                        | `String`          | `1` `0`                 | -                                                |
 
-
-> 不同类型的消息需要提前在后端使用 form 格式去解析，当然你也可以用 [n8n](https://n8n.io/) 处理，接入比较丝滑。**注意不同 type 类型时的 content 数据结构区别**
-
-> ⚠️ 如果定义了该接口的返回值，现在支持直接回复给消息发送方 #56
-
-#### 1. 文字消息 `formData.type === text`
-
-- 是否支持快捷回复：是
-- `formData.content` 为纯文本
+**服务端处理 formData 一般需要对应的处理程序，假设你已经完成这一步，你将得到以下 request**
 
 ```json
   {
-    "source": "{\"room\":\"\",\"to\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@f387910fa45\",\"payload\":{\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=1302335654&username=@f38bfd1e0567910fa45&skey=@crypaafc30\",\"friend\":false,\"gender\":1,\"id\":\"@f38bfd1e10fa45\",\"name\":\"ch.\",\"phone\":[],\"star\":false,\"type\":1}},\"from\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@6b5111dcc269b6901fbb58\",\"payload\":{\"address\":\"\",\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=123234564&username=@6b5dbb58&skey=@crypt_ec356afc30\",\"city\":\"Mars\",\"friend\":false,\"gender\":1,\"id\":\"@6b5dbd3facb58\",\"name\":\"Daniel\",\"phone\":[],\"province\":\"Earth\",\"signature\":\"\",\"star\":false,\"weixin\":\"\",\"type\":1}}}",
-    "isSystemEvent": "0",
-    "isMentioned": "0",
     "type": "text",
-    "content": "你好"
+    "content": "你好",
+    "source": "{\"room\":\"\",\"to\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@f387910fa45\",\"payload\":{\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=1302335654&username=@f38bfd1e0567910fa45&skey=@crypaafc30\",\"friend\":false,\"gender\":1,\"id\":\"@f38bfd1e10fa45\",\"name\":\"ch.\",\"phone\":[],\"star\":false,\"type\":1}},\"from\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@6b5111dcc269b6901fbb58\",\"payload\":{\"address\":\"\",\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=123234564&username=@6b5dbb58&skey=@crypt_ec356afc30\",\"city\":\"Mars\",\"friend\":false,\"gender\":1,\"id\":\"@6b5dbd3facb58\",\"name\":\"Daniel\",\"phone\":[],\"province\":\"Earth\",\"signature\":\"\",\"star\":false,\"weixin\":\"\",\"type\":1}}}",
+    "isMentioned": "0",
+    "isSystemEvent": "0"
   }
 ```
 
-#### 2. 文件消息 `formData.type === file`
 
-`formData.content` 以二进制文件存在，如果去解析该文件，你能得到
+#### 返回值（可选）
 
-#### 3. 公众号推文 `formData.type === urlLink`
+- ContentType: `json` | `null`
 
+| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
+| -- | -- | -- | -- | -- | -- |
+| success | 该条请求成功与否，返回 false 或者无该字段，不会处理回复 | `Boolean` | - | Y | `true` `false` |
+| data | 如果需要回复消息的话，需要定义data字段 | `Object` `Object Array` | - | Y | |
 
-#### 4. 加好友请求 `formData.type === friendship`
+data 结构
 
+| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
+| -- | -- | -- | -- | -- | -- |
+| type | **消息类型**，该字段不填默认当文本类型传输 | `String`  | - | Y | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
+| message | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | Y | - |
 
-#### 4. 系统消息 `formData.isSystemEvent`
+如果回复单条消息
 
+```json
+ {
+    "success": true,
+    "data": {
+      "type": "text",
+      "message": "hello world！"
+    }
+  }
+```
+
+组合回复多条消息
+
+```json
+ {
+    "success": true,
+    "data": [
+      {
+        "type": "text",
+        "message": "hello world！"
+      },
+      {
+        "type": "fileUrl",
+        "message": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3"
+      }
+    ]
+  }
+```
 
 ### 3. 登录API
 

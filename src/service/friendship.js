@@ -18,7 +18,6 @@ const onRecvdFriendship = async (friendship, botInstance) => {
         {
           const response = await Service.sendMsg2RecvdApi(
             new FriendshipMsg({
-              type: 'received',
               name: friendship.contact().name(),
               hello: friendship.hello(),
             }),

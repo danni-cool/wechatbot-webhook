@@ -15,13 +15,12 @@ module.exports = function init() {
     // 扫码登陆事件
     .on('scan', (qrcode) => {
       // cli 调用使用qrcode terminal
-      if (process.env.homeEnvCfg) {
-        console.log('✨ 扫描以下二维码以登录 ✨')
-        return require('qrcode-terminal').generate(qrcode, { small: true })
-      }
+      console.log('✨ 扫描以下二维码以登录 ✨')
+      require('qrcode-terminal').generate(qrcode, { small: true })
+
       console.log(
         [
-          'Access the URL to login: ' +
+          'Or Access the URL to login: ' +
             chalk.cyan(
               `http://localhost:${PORT}/login?token=${Service.getLoginApiToken()}`,
             ),

@@ -81,7 +81,7 @@ docker logs -f wxBotWebhook
 
 ## 🛠️ API
 
-### 1. 推消息
+### 1. 推消息 API
 
 - Url：<http://localhost:3001/webhook/msg>
 - Methods: `POST`
@@ -147,11 +147,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --form 'isRoom=1'
 ```
 
-### 2. 收消息
-
-> 收消息接口使用 form 表单传递参数
-
-入参：
+### 2. 收消息 API
 
 - Methods: `POST`
 - ContentType: `multipart/form-data`
@@ -159,13 +155,46 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 | formData      | 说明                                                                                                                                                                                                                                                                      | 数据类型          | 可选值                  | 示例                                             |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------- | ------------------------------------------------ |
-| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li></ul> close: [#10](https://github.com/danni-cool/wechatbot-webhook/issues/10) refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` | -                                                |
+| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 好友邀请(friendship)</li></ul> close: [#10](https://github.com/danni-cool/wechatbot-webhook/issues/10) refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` `friendship` | -                                                |
 | content       | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例                                                                                                                                                                                                                | `String` `Binary` |                         | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source        | 消息的相关发送方数据, JSON String                                                                                                                                                                                                                                         | `String`          |                         | [示例](docs/recvdApi.example.md#formdatasource)  |
 | isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
 | isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）                                                                                                                                                                                                                        | `String`          | `1` `0`                 | -                                                |
 
-### 3. 登录APi
+
+> 不同类型的消息需要提前在后端使用 form 格式去解析，当然你也可以用 [n8n](https://n8n.io/) 处理，接入比较丝滑。**注意不同 type 类型时的 content 数据结构区别**
+
+> ⚠️ 如果定义了该接口的返回值，现在支持直接回复给消息发送方 #56
+
+#### 1. 文字消息 `formData.type === text`
+
+- 是否支持快捷回复：是
+- `formData.content` 为纯文本
+
+```json
+  {
+    "source": "{\"room\":\"\",\"to\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@f387910fa45\",\"payload\":{\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=1302335654&username=@f38bfd1e0567910fa45&skey=@crypaafc30\",\"friend\":false,\"gender\":1,\"id\":\"@f38bfd1e10fa45\",\"name\":\"ch.\",\"phone\":[],\"star\":false,\"type\":1}},\"from\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@6b5111dcc269b6901fbb58\",\"payload\":{\"address\":\"\",\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=123234564&username=@6b5dbb58&skey=@crypt_ec356afc30\",\"city\":\"Mars\",\"friend\":false,\"gender\":1,\"id\":\"@6b5dbd3facb58\",\"name\":\"Daniel\",\"phone\":[],\"province\":\"Earth\",\"signature\":\"\",\"star\":false,\"weixin\":\"\",\"type\":1}}}",
+    "isSystemEvent": "0",
+    "isMentioned": "0",
+    "type": "text",
+    "content": "你好"
+  }
+```
+
+#### 2. 文件消息 `formData.type === file`
+
+`formData.content` 以二进制文件存在，如果去解析该文件，你能得到
+
+#### 3. 公众号推文 `formData.type === urlLink`
+
+
+#### 4. 加好友请求 `formData.type === friendship`
+
+
+#### 4. 系统消息 `formData.isSystemEvent`
+
+
+### 3. 登录API
 
 1. 在异常或者掉线事件触发后，通知你配置的 `RECVD_MSG_API`，
 2. 在收到通知后，访问登录 Api 扫码登录 <http://localhost:3001/login?token=YOUR_PERSONAL_TOKEN。>

@@ -1,12 +1,13 @@
 const { WechatyBuilder } = require('wechaty')
 const Service = require('../service')
 const chalk = require('chalk')
-const { PORT } = process.env
+const { PORT, homeEnvCfg, homeMemoryCardPath } = process.env
+const isCliEnv = !!homeEnvCfg
 const bot =
   process.env.DISABLE_AUTO_LOGIN === 'true'
     ? WechatyBuilder.build()
     : WechatyBuilder.build({
-        name: 'loginSession',
+        name: isCliEnv ? homeMemoryCardPath : 'loginSession',
       })
 
 module.exports = function init() {
@@ -14,7 +15,6 @@ module.exports = function init() {
   bot
     // 扫码登陆事件
     .on('scan', (qrcode) => {
-      // cli 调用使用qrcode terminal
       console.log('✨ 扫描以下二维码以登录 ✨')
       require('qrcode-terminal').generate(qrcode, { small: true })
 

@@ -2,3 +2,4 @@ node_modules
 root
 docs
 *.md
+packages/cli/lib

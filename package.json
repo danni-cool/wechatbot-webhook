@@ -10,9 +10,6 @@
     "http-service"
   ],
   "main": "main.js",
-  "bin": {
-    "wxbot": "cli/index.js"
-  },
   "scripts": {
     "prestart": "node ./scripts/preStart",
     "start": "node main"

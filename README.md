@@ -26,7 +26,7 @@
 npx wechatbot-webhook
 ```
 
-> 除非掉线，默认记住上次登录，换帐号请运行以下命令 `npx wechatbot-webhook -f`
+> 除非掉线，默认记住上次登录，换帐号请运行以下命令 `npx wechatbot-webhook -r`
 
 ### 2. 扫码登录
 

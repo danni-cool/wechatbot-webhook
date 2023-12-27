@@ -1,0 +1,50 @@
+{
+  "name": "wechatbot-webhook",
+  "version": "2.4.1",
+  "description": "给微信里加个 webhook 机器人，支持docker部署",
+  "keywords": [
+    "wechat",
+    "bot",
+    "webhook",
+    "wechaty",
+    "http-service"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "bin": {
+    "wxbot": "index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": {
+    "name": "danni-cool",
+    "email": "contact@danni.cool"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danni-cool/wechatbot-webhook.git"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.19.10"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "wechaty": "^1.20.2",
+    "wechaty-grpc": "^1.0.1"
+  }
+}

@@ -57,8 +57,7 @@ module.exports = function init() {
     // 收到消息事件
     .on('message', async (message) => {
       console.log(`Message: ${message}`)
-      // 收到消息二次转发特殊处理
-      Service.sendMsg2RecvdApi(message)
+      Service.onRecvdMessage(message)
     })
 
     // 收到加好友请求事件

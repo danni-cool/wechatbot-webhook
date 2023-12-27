@@ -168,3 +168,6 @@ module.exports = {
   parseJsonLikeStr,
   tryConvertCnCharToUtf8Char,
 }
+
+Object.assign(module.exports, require('./msg.js'))
+Object.assign(module.exports, require('./nextTick.js'))

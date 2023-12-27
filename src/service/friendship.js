@@ -21,7 +21,6 @@ const onRecvdFriendship = async (friendship, botInstance) => {
           }),
         ),
         type: MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP,
-        contact: friendship.contact(),
         friendship,
       })
 

@@ -1,5 +1,8 @@
 const Utils = require('../utils/index.js')
+const Service = require('./index.js')
 const { MSG_TYPE_ENUM } = require('../config/const.js')
+
+// 发送消息核心
 // this handler convert data to a standard format before using wechaty to send msg,
 const formatAndSendMsg = async function ({ type, content, msgInstance }) {
   switch (type) {
@@ -30,15 +33,15 @@ const formatAndSendMsg = async function ({ type, content, msgInstance }) {
       return true
   }
 }
+
 /**
- *
+ * 接受 Service.sendMsg2RecvdApi 的response 回调以便回复或作出其他动作
  */
 const handleResSendMsg = async ({
   res,
   type,
-  contact,
-  isRoom,
   friendship = null,
+  msgInstance = null,
 }) => {
   let success, data
 
@@ -53,20 +56,65 @@ const handleResSendMsg = async ({
       success
         ? await friendship.accept()
         : console.log(
-            `not auto accepted, because ${contact.name()}'s verify message is: ${friendship.hello()}`,
+            `not auto accepted, because ${friendship
+              .contact()
+              .name()}'s verify message is: ${friendship.hello()}`,
           )
 
       // 同意且包含回复信息
-      if (data) {
+      if (success && data) {
         await new Promise((r) => setTimeout(r, 1000))
-        await friendship.contact().say(message)
+        msgSendQueueHandler(data, friendship.contact())
       }
 
       break
+
+    default:
+      if (success && data) {
+        await new Promise((r) => setTimeout(r, 1000))
+        msgSendQueueHandler(data, msgInstance)
+      }
+      break
+  }
+}
+
+// 收消息钩子
+const onRecvdMessage = async (msg) => {
+  // 自己发的消息没有必要处理
+  if (msg.self()) return
+
+  handleResSendMsg({
+    res: await Service.sendMsg2RecvdApi(msg),
+    type: msg.type(),
+    msgInstance: msg,
+  })
+}
+
+// 消息处理队列
+const msgSendQueueHandler = (data, msgInstance) => {
+  if (Array.isArray(data)) {
+    data.forEach((item) => {
+      Utils.nextTick(() => {
+        formatAndSendMsg({
+          type: item.type,
+          content: item.content,
+          msgInstance,
+        })
+      })
+    })
+  } else {
+    Utils.nextTick(() => {
+      formatAndSendMsg({
+        type: data.type,
+        content: data.content,
+        msgInstance,
+      })
+    })
   }
 }
 
 module.exports = {
   formatAndSendMsg,
   handleResSendMsg,
+  onRecvdMessage,
 }

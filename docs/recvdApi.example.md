@@ -20,10 +20,10 @@
 示例
 ```json
 {
-  description: "AI技术逐渐成为设计师的灵感库",
-  thumbnailUrl: "",
-  title: "AI神器帮助你从小白秒变设计师",
-  url: "http://example.url",
+  "description": "AI技术逐渐成为设计师的灵感库",
+  "thumbnailUrl": "",
+  "title": "AI神器帮助你从小白秒变设计师",
+  "url": "http://example.url",
 }
 ```
 

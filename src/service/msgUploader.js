@@ -1,12 +1,7 @@
 const fetch = require('node-fetch-commonjs')
 const FormData = require('form-data')
 const chalk = require('chalk')
-const {
-  LOCAL_RECVD_MSG_API,
-  RECVD_MSG_API,
-  LOGIN_API_TOKEN,
-  LOCAL_LOGIN_API_TOKEN,
-} = process.env
+const { LOCAL_RECVD_MSG_API, RECVD_MSG_API } = process.env
 let fileTypeFromBuffer
 const { MSG_TYPE_ENUM } = require('../config/const')
 import('file-type').then((res) => {
@@ -19,8 +14,8 @@ import('file-type').then((res) => {
  * @returns Promise<void|any>
  */
 const sendMsg2RecvdApi = async function (msg) {
-  // 自己发的消息没有必要转发
-  if (msg.self()) return
+  // 自己发的消息没有必要转发（外部已经处理）
+  // if (msg.self()) return
 
   // 检测是否配置了webhookurl
   let webhookUrl
@@ -174,16 +169,6 @@ const sendMsg2RecvdApi = async function (msg) {
   return response
 }
 
-// 得到 loginAPIToken
-const getLoginApiToken = () => {
-  if (!process.env.globalLoginToken) {
-    process.env.globalLoginToken = LOGIN_API_TOKEN || LOCAL_LOGIN_API_TOKEN
-  }
-
-  return process.env.globalLoginToken
-}
-
 module.exports = {
   sendMsg2RecvdApi,
-  getLoginApiToken,
 }

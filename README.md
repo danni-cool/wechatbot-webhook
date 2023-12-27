@@ -191,7 +191,7 @@ data 结构
 | 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
 | -- | -- | -- | -- | -- | -- |
 | type | **消息类型**，该字段不填默认当文本类型传输 | `String`  | - | Y | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
-| message | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | Y | - |
+| content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | Y | - |
 
 如果回复单条消息
 

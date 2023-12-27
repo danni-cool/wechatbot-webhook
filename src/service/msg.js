@@ -1,7 +1,7 @@
 const Utils = require('../utils/index.js')
-
+const { MSG_TYPE_ENUM } = require('../config/const.js')
 // this handler convert data to a standard format before using wechaty to send msg,
-const formatAndSendMsg = async function ({ bot, type, content, msgInstance }) {
+const formatAndSendMsg = async function ({ type, content, msgInstance }) {
   switch (type) {
     // 纯文本
     case 'text':
@@ -30,7 +30,43 @@ const formatAndSendMsg = async function ({ bot, type, content, msgInstance }) {
       return true
   }
 }
+/**
+ *
+ */
+const handleResSendMsg = async ({
+  res,
+  type,
+  contact,
+  isRoom,
+  friendship = null,
+}) => {
+  let success, data
+
+  if (res && res.ok) {
+    const result = await res.json()
+    success = result.success
+    data = result.data
+  }
+
+  switch (type) {
+    case MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP:
+      success
+        ? await friendship.accept()
+        : console.log(
+            `not auto accepted, because ${contact.name()}'s verify message is: ${friendship.hello()}`,
+          )
+
+      // 同意且包含回复信息
+      if (data) {
+        await new Promise((r) => setTimeout(r, 1000))
+        await friendship.contact().say(message)
+      }
+
+      break
+  }
+}
 
 module.exports = {
   formatAndSendMsg,
+  handleResSendMsg,
 }

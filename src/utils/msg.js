@@ -1,3 +1,4 @@
+const { MSG_TYPE_ENUM } = require('../config/const')
 class CommonMsg {
   constructor(text, type, isSystemEvent = false) {
     this.t = type
@@ -32,13 +33,13 @@ class CommonMsg {
 
 class TextMsg extends CommonMsg {
   constructor({ text, isSystemEvent = false }) {
-    super(text, 7, isSystemEvent)
+    super(text, MSG_TYPE_ENUM.TEXT, isSystemEvent)
   }
 }
 
 class FriendshipMsg extends CommonMsg {
   constructor(payload) {
-    super(JSON.stringify(payload), 99)
+    super(JSON.stringify(payload), MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP)
   }
 }
 

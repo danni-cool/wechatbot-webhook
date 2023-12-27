@@ -77,15 +77,4 @@ module.exports = function registerLoginCheck({ app, bot }) {
       }
     }),
   )
-
-  app.get(
-    '/loginCheck',
-    Middleware.verifyToken,
-    Service.handleError(async (req, res) => {
-      res.status(200).json({
-        success,
-        message,
-      })
-    }),
-  )
 }

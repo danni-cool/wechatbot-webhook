@@ -8,7 +8,7 @@ const {
   LOCAL_LOGIN_API_TOKEN,
 } = process.env
 let fileTypeFromBuffer
-
+const { MSG_TYPE_ENUM } = require('../config/const')
 import('file-type').then((res) => {
   fileTypeFromBuffer = res.fileTypeFromBuffer
 })
@@ -81,10 +81,10 @@ const sendMsg2RecvdApi = async function (msg) {
   formData.append('isMentioned', someoneMentionMe ? '1' : '0')
 
   switch (msg.type()) {
-    case 1: // 附件
-    case 2: // 语音
-    case 6: // 图片
-    case 15: {
+    case MSG_TYPE_ENUM.ATTACHMENT: // 附件
+    case MSG_TYPE_ENUM.VOICE: // 语音
+    case MSG_TYPE_ENUM.PIC: // 图片
+    case MSG_TYPE_ENUM.VIDEO: {
       // 视频
       formData.append('type', 'file')
       const steamFile = await msg.toFileBox()
@@ -126,7 +126,7 @@ const sendMsg2RecvdApi = async function (msg) {
       break
     }
     // 分享的Url
-    case 14: {
+    case MSG_TYPE_ENUM.MEDIA_URL: {
       const { payload } = await msg.toUrlLink()
       formData.append('type', 'urlLink')
       formData.append('content', JSON.stringify(payload))
@@ -134,18 +134,18 @@ const sendMsg2RecvdApi = async function (msg) {
     }
 
     // 纯文本
-    case 7:
+    case MSG_TYPE_ENUM.TEXT:
       formData.append('type', 'text')
       formData.append('content', msg.text())
       break
 
     // 好友邀请消息(自定义消息type)
-    case 99:
+    case MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP:
       formData.append('type', 'friendship')
       formData.append('content', msg.text())
       break
     // 其他统一暂不处理
-    case 5: // 自定义表情
+    case MSG_TYPE_ENUM.EMOTION: // 自定义表情
     default:
       passed = false
       break

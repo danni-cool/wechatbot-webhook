@@ -121,11 +121,9 @@ module.exports = function registerPushHook({ app, bot }) {
 
       if (msgReceiver) {
         const sendStatus = await Service.formatAndSendMsg({
-          bot,
           type,
           content,
           msgInstance: msgReceiver,
-          res,
         })
         res.status(200).json({
           success: sendStatus,

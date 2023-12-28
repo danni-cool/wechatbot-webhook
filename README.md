@@ -7,9 +7,7 @@
 <a href="https://discord.gg/B5FFP3hT"><img src="https://img.shields.io/discord/1165844612473172088?logo=Discord&link=https%3A%2F%2Fdiscord.gg%2FB5FFP3hT" /></a>
 
 
-[view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
-
-📝 [FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
+[🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 </div>
 
 ## 💼 功能 Feature
@@ -108,38 +106,71 @@ docker logs -f wxBotWebhook
 ##### 发单条消息
 
 ```bash
-curl --location --request POST 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
     "to": "testUser",
     "data": { "content": "你好👋" }
 }'
 ```
 
-##### 发群消息
+##### 发给群消息
 
 ```bash
-curl --location --request POST 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
     "to": "testGroup",
     "isRoom": true,
     "data": { "type": "fileUrl" , "content": "https://download.samplelib.com/jpeg/sample-clouds-400x300.jpg" },
 }'
 ```
 
-##### 发多条消息
+##### 同一对象多条消息(群消息同理)
 
 ```bash
-curl --location --request POST 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
     "to": "testUser",
-    "data": [{ "type":"text", "content": "你好👋" },{"type":"fileUrl","content": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3"}]
+    "data": [
+        {
+            "type": "text",
+            "content": "你好👋"
+        },
+        {
+            "type": "fileUrl",
+            "content": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3"
+        }
+    ]
 }'
 ```
 
+##### 群发消息
 
+``` bash
+curl --location 'http://localhost:3001/webhook/msg' \
+--header 'Content-Type: application/json' \
+--data '[
+    {
+        "to": "testUser1",
+        "data": {
+            "content": "你好👋"
+        }
+    },
+    {
+        "to": "testUser2",
+        "data": [
+          {
+            "content": "你好👋"
+          },
+          {
+            "content": "近况如何？"
+          }
+        ]
+    }
+]'
+```
 
 #### 推消息支持读文件发送
 
@@ -193,21 +224,23 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 ```
 
 
-#### 返回值（可选）
+#### 返回值 `response`（可选）
 
-- ContentType: `json` | `null`
+> 如果期望用 `RECVD_MSG_API` 收消息后立即回复，请按以下结构返回返回值，无返回值则不会回复消息
+
+- ContentType: `json`
 
 | 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
 | -- | -- | -- | -- | -- | -- |
 | success | 该条请求成功与否，返回 false 或者无该字段，不会处理回复，**有一些特殊消息也通过这个字段控制，比如加好友邀请，返回 `true` 则会通过好友请求** | `Boolean` | - | Y | `true` `false` |
 | data | 如果需要回复消息的话，需要定义data字段 | `Object` `Object Array` | - | Y | |
 
-data 结构
+#### `response.data` 结构
 
 | 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
 | -- | -- | -- | -- | -- | -- |
-| type | **消息类型**，该字段不填默认当文本类型传输 | `String`  | - | Y | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
-| content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | Y | - |
+| type | **消息类型**，该字段不填默认当文本类型传输 | `String`  | `text` | Y | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
+| content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
 
 如果回复单条消息
 

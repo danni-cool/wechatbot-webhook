@@ -92,7 +92,7 @@ docker logs -f wxBotWebhook
 | -- | -- | -- | -- | -- | -- |
 | to | **消息接收方**，传入`String` 默认是发给昵称（群名同理）, 传入`Object` 结构支持发给备注过的人，比如：`{alias: '备注名'}`，群名不支持备注名 | `String`  `Object` | -  |  N  | - |
 | isRoom | **是否发给群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
-| data | 消息体结构 | `Object`  `Object Array` | `false`  | N  |  `true`  `false`  |
+| data | 消息体结构,见下方 `payload.data` | `Object`  `Array` | `false`  | N  |  `true`  `false`  |
 
 #### `payload.data` 结构
 
@@ -172,8 +172,12 @@ curl --location 'http://localhost:3001/webhook/msg' \
 ]'
 ```
 
-#### 推消息支持读文件发送
+#### 读文件发送
 
+> 读文件暂时只支持单条发送
+
+- Url：<http://localhost:3001/webhook/msg>
+- Methods: `POST`
 - ContentType: `multipart/form-data`
 - FormData: 格式见下面表格
 
@@ -196,16 +200,16 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 ### 2. 收消息 API
 
-> **快捷回复**：收消息API现在支持通过返回值实现快捷回复， https://github.com/danni-cool/wechatbot-webhook/issues/96, 无需再发起 post 请求，一个 API 搞定接受和回复
+> 收消息API现在支持通过返回值实现**快捷回复**，无需再发起 post 请求，一个 API 搞定接收消息后回复
 
-#### 请求体
+#### `payload` 结构
   - Methods: `POST`
   - ContentType: `multipart/form-data`
   - Form格式如下
 
 | formData      | 说明                                                                                                                                                                                                                                                                      | 数据类型          | 可选值                  | 示例                                             |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------- | ------------------------------------------------ |
-| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 添加好友邀请(friendship)</li></ul> close: [#10](https://github.com/danni-cool/wechatbot-webhook/issues/10) refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` `friendship` | -                                                |
+| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 添加好友邀请(friendship)</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` `friendship` | -                                                |
 | content       | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例                                                                                                                                                                                                                | `String` `Binary` |                         | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source        | 消息的相关发送方数据, JSON String                                                                                                                                                                                                                                         | `String`          |                         | [示例](docs/recvdApi.example.md#formdatasource)  |
 | isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
@@ -224,7 +228,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 ```
 
 
-#### 返回值 `response`（可选）
+#### 返回值 `response` 结构（可选）
 
 > 如果期望用 `RECVD_MSG_API` 收消息后立即回复，请按以下结构返回返回值，无返回值则不会回复消息
 

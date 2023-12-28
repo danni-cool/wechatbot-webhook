@@ -1,8 +1,6 @@
 <div align="center">
 <img src="https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-webhook.png" width="500" height="251"/>
 
-简单易懂、开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人，当 http 调用和二次开发亦可，二次开发请fork
-
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/wechatbot-webhook/release.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/wechatbot-webhook)
 <a href="https://discord.gg/B5FFP3hT"><img src="https://img.shields.io/discord/1165844612473172088?logo=Discord&link=https%3A%2F%2Fdiscord.gg%2FB5FFP3hT" /></a>
 
@@ -10,7 +8,9 @@
 [🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 </div>
 
-## 💼 功能 Feature
+## ✨ 介绍 Introduction
+
+简单易懂、开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人，当 http 调用和二次开发亦可，二次开发请fork
 
 | 功能 | 推送消息 | 接收消息 |
 --|--|--

@@ -25,12 +25,12 @@ const checkMsgSendersParamsV2 = (payload) => {
 
 // 发送消息核心
 // this handler convert data to a standard format before using wechaty to send msg,
-const formatAndSendMsg = async function ({ type, content, msgInstance }) {
+const formatAndSendMsg = async function ({ res, type, content, msgInstance }) {
   switch (type) {
     // 纯文本
     case 'text':
       await msgInstance.say(content)
-      return true
+      break
 
     case 'fileUrl': {
       const fileUrlArr = content.split(',')
@@ -38,7 +38,7 @@ const formatAndSendMsg = async function ({ type, content, msgInstance }) {
       if (fileUrlArr.length === 1) {
         const file = await Utils.getMediaFromUrl(content)
         await msgInstance.say(file)
-        return true
+        break
       }
 
       // 多个文件的情况
@@ -46,13 +46,18 @@ const formatAndSendMsg = async function ({ type, content, msgInstance }) {
         const file = await Utils.getMediaFromUrl(fileUrlArr[i])
         await msgInstance.say(file)
       }
-      return true
+      break
     }
     // 文件
     case 'file':
       await msgInstance.say(Utils.getBufferFile(content))
-      return true
+      break
   }
+
+  res.status(200).json({
+    success: true,
+    message: 'Message sent successfully',
+  })
 }
 
 /**
@@ -117,6 +122,7 @@ const msgSendQueueHandler = (data, msgInstance) => {
     data.forEach((item) => {
       Utils.nextTick(() => {
         formatAndSendMsg({
+          res: data.res,
           type: item.type || 'text',
           content: item.content,
           msgInstance,
@@ -126,6 +132,7 @@ const msgSendQueueHandler = (data, msgInstance) => {
   } else {
     Utils.nextTick(() => {
       formatAndSendMsg({
+        res: data.res,
         type: data.type,
         content: data.content,
         msgInstance,
@@ -138,5 +145,6 @@ module.exports = {
   formatAndSendMsg,
   handleResSendMsg,
   onRecvdMessage,
-  checkMsgSenderParams,
+  msgSendQueueHandler,
+  // checkMsgSenderParams,
 }

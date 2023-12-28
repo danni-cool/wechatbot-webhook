@@ -8,7 +8,7 @@ module.exports = function registerPushHook({ app, bot }) {
     '/webhook/msg/v2',
     Middleware.dynamicStorageMiddleware,
     Service.handleError(async (req, res) => {
-      let to, isRoom, content, type, data
+      let to, isRoom, content, type
       let unValidParamsStr = ''
 
       // 表单传文件(暂时只用来传文件)
@@ -65,11 +65,10 @@ module.exports = function registerPushHook({ app, bot }) {
 
         // json
       } else {
-        // to = req.body.to
-        // isRoom = req.body.isRoom || false
-        // type = req.body.type
-        // content = req.body.content
-        // data = req.body.data
+        to = req.body.to
+        isRoom = req.body.isRoom || false
+        type = req.body.type
+        content = req.body.content
 
         // 校验必填参数
         unValidParamsStr = Utils.getUnValidParamsList([
@@ -120,22 +119,12 @@ module.exports = function registerPushHook({ app, bot }) {
             Utils.equalTrueType(to, 'object') ? to : { name: to },
           )
 
-      if (msgReceiver) {
-        const sendStatus = await Service.msgSendQueueHandler({
-          type,
-          content,
-          msgInstance: msgReceiver,
-        })
-        res.status(200).json({
-          success: sendStatus,
-          message: `Message sent ${sendStatus ? 'successfully' : 'failed'}.`,
-        })
-      } else {
-        res.status(200).json({
-          success: false,
-          message: `${isRoom ? 'Room' : 'User'} is not found`,
-        })
-      }
+      msgReceiver
+        ? Service.msgSendQueueHandler({ type, content, res }, msgReceiver)
+        : res.status(200).json({
+            success: false,
+            message: `${isRoom ? 'Room' : 'User'} is not found`,
+          })
     }),
   )
 
@@ -255,22 +244,12 @@ module.exports = function registerPushHook({ app, bot }) {
             Utils.equalTrueType(to, 'object') ? to : { name: to },
           )
 
-      if (msgReceiver) {
-        const sendStatus = await Service.msgSendQueueHandler({
-          type,
-          content,
-          msgInstance: msgReceiver,
-        })
-        res.status(200).json({
-          success: sendStatus,
-          message: `Message sent ${sendStatus ? 'successfully' : 'failed'}.`,
-        })
-      } else {
-        res.status(200).json({
-          success: false,
-          message: `${isRoom ? 'Room' : 'User'} is not found`,
-        })
-      }
+      msgReceiver
+        ? Service.msgSendQueueHandler({ type, content, res }, msgReceiver)
+        : res.status(200).json({
+            success: false,
+            message: `${isRoom ? 'Room' : 'User'} is not found`,
+          })
     }),
   )
 }

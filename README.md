@@ -32,7 +32,7 @@ npx wechatbot-webhook
 
 ### 3. 使用 http 请求给指定用户发消息
 
-新开个终端试试以下 curl
+新开个终端试试以下 curl，to字段值换成你要发送的昵称
 
 ```bash
 curl --location 'http://localhost:3001/webhook/msg/v2' \

@@ -37,13 +37,9 @@ npx wechatbot-webhook
 新开个终端试试以下 curl
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg/v2' \
 --header 'Content-Type: application/json' \
---data '{
-    "to": "测试昵称",
-    "type": "text",
-    "content": "Hello World!"
-}'
+--data '{ "to": "测试昵称", data: { "content": "Hello World!" }}'
 ```
 
 ## ⛰️ 部署 Deploy（推荐）
@@ -83,54 +79,74 @@ docker logs -f wxBotWebhook
 
 ### 1. 推消息 API
 
-- Url：<http://localhost:3001/webhook/msg>
+> v2版本接口增加了群发功能，v1 版本接口请移步 [legacy-api](./docs/legacy-api)
+
+- Url：<http://localhost:3001/webhook/msg/v2>
 - Methods: `POST`
-
-#### Case1. 发文字或文件(外链)
-
 - ContentType: `application/json`
 - Body: 格式见下面表格
 
-> json 请求发送文件只支持外链
+#### `payload` 结构
+
+> 发文字或文件外链, 外链会解析成图片或者文件
 
 | 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
 | -- | -- | -- | -- | -- | -- |
-| to | **消息接收方**，传入`String` 默认是发给昵称（群名同理）, 传入`Object` 结构支持发给备注过的人，比如：`{alias: '备注名'}`，群名不支持备注名 | `String` `Object` | -  |  Y  | - |
-| isRoom | **是否发的群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
-| type | **消息类型**，消息不支持自动拆分，请手动调多次。| `String`  | - | N | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
+| to | **消息接收方**，传入`String` 默认是发给昵称（群名同理）, 传入`Object` 结构支持发给备注过的人，比如：`{alias: '备注名'}`，群名不支持备注名 | `String`  `Object` | -  |  N  | - |
+| isRoom | **是否发给群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
+| data | 消息体结构 | `Object`  `Object Array` | `false`  | N  |  `true`  `false`  |
+
+#### `payload.data` 结构
+
+| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
+| -- | -- | -- | -- | -- | -- |
+| type | **消息类型**, 字段留空解析为纯文本 | `String`  `text` | - | Y | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
 | content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
 
 #### Example（curl）
 
-##### Curl (发文字)
+##### 发单条消息
 
 ```bash
 curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "to": "testUser",
-    "type": "text",
-    "content": "Hello World!"
+    "data": { "content": "你好👋" }
 }'
 ```
 
-##### Curl（发文件，解析url）
+##### 发群消息
 
 ```bash
 curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "to": "testGroup",
-    "type": "fileUrl",
-    "content": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3",
-    "isRoom": true
+    "isRoom": true,
+    "data": { "type": "fileUrl" , "content": "https://download.samplelib.com/jpeg/sample-clouds-400x300.jpg" },
 }'
 ```
 
-#### Case2. 读文件发送
+##### 发多条消息
+
+```bash
+curl --location --request POST 'http://localhost:3001/webhook/msg' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "to": "testUser",
+    "data": [{ "type":"text", "content": "你好👋" },{"type":"fileUrl","content": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3"}]
+}'
+```
+
+
+
+#### 推消息支持读文件发送
 
 - ContentType: `multipart/form-data`
 - FormData: 格式见下面表格
+
+##### `payload` 结构
 
 | 参数    | 说明                                                                             | 数据类型 | 默认值 | 可否为空 | 可选值  |
 | ------- | -------------------------------------------------------------------------------- | -------- | ------ | -------- | ------- |

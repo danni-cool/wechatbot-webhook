@@ -1,6 +1,27 @@
 const Utils = require('../utils/index.js')
 const Service = require('./index.js')
 const { MSG_TYPE_ENUM } = require('../config/const.js')
+/*
+ * 发送校验逻辑
+ * eg.1 发给（单人/单群)消息
+ * feature mode {to:'',isRoom:'', data: {type: '', content: ''}}
+ *
+ * eg.2 发给（单人/单群）多条消息
+ * feature mode {to: '', data: [{type: '', content: ''}, {type: '', content: ''}]}
+ *
+ * eg.3 发给（多人/多群）(单/多）条消息
+ * feature mode [{to: '', isRoom:'', data:[{type:'', content: ''}]},{to: '', isRoom:'', data:[{type:'', content: ''}]}]
+ *
+ * 规则：
+ *   单条消息直接告知其api格式合法性
+ *   多条消息告知发送成功条数，失败条数，列出失败的消息体
+ */
+const checkMsgSendersParamsV2 = (payload) => {
+  // 发给（多人/多群）(单/多）条消息
+  if (Array.isArray(payload)) {
+  } else if ('data' in payload) {
+  }
+}
 
 // 发送消息核心
 // this handler convert data to a standard format before using wechaty to send msg,
@@ -96,7 +117,7 @@ const msgSendQueueHandler = (data, msgInstance) => {
     data.forEach((item) => {
       Utils.nextTick(() => {
         formatAndSendMsg({
-          type: item.type,
+          type: item.type || 'text',
           content: item.content,
           msgInstance,
         })
@@ -117,4 +138,5 @@ module.exports = {
   formatAndSendMsg,
   handleResSendMsg,
   onRecvdMessage,
+  checkMsgSenderParams,
 }

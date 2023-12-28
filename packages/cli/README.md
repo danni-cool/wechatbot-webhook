@@ -50,13 +50,9 @@ Options:
 新开个终端试试以下 curl
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg/v2' \
 --header 'Content-Type: application/json' \
---data '{
-    "to": "测试昵称",
-    "type": "text",
-    "content": "Hello World!"
-}'
+--data '{ "to": "测试昵称", data: { "content": "Hello World!" }}'
 ```
 
 ## 🛠️ API

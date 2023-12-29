@@ -2,6 +2,7 @@ const { WechatyBuilder } = require('wechaty')
 const Service = require('../service')
 const chalk = require('chalk')
 const { PORT } = process.env
+const token = Service.initLoginApiToken()
 const bot =
   process.env.DISABLE_AUTO_LOGIN === 'true'
     ? WechatyBuilder.build()
@@ -18,7 +19,7 @@ module.exports = function init() {
         [
           'Access the URL to login: ' +
             chalk.cyan(
-              `http://localhost:${PORT}/login?token=${Service.getLoginApiToken()}`,
+              `http://localhost:${PORT}/login?token=${token}`,
             ),
         ].join('\n'),
       ),

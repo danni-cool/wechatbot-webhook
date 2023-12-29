@@ -162,7 +162,7 @@ const sendMsg2RecvdApi = async function (msg) {
 }
 
 // 得到 loginAPIToken
-const getLoginApiToken = () => {
+const initLoginApiToken = () => {
   if (!process.env.globalLoginToken) {
     process.env.globalLoginToken = LOGIN_API_TOKEN || LOCAL_LOGIN_API_TOKEN
   }
@@ -172,5 +172,5 @@ const getLoginApiToken = () => {
 
 module.exports = {
   sendMsg2RecvdApi,
-  getLoginApiToken,
+  initLoginApiToken,
 }

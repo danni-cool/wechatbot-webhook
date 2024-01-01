@@ -8,13 +8,25 @@
 [🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 </div>
 
-## ✨ 介绍 Introduction
+开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人，当 http 调用和二次开发亦可，二次开发请fork
 
-简单易懂、开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人，当 http 调用和二次开发亦可，二次开发请fork
+## 👇 Features
 
-| 功能 | 推送消息 | 接收消息 |
---|--|--
-| 支持的功能 | <ul><li>✅ 发送文字</li><li>✅ 发送图片</li><li>✅ 发送文件</li></ul> | <ul><li>✅ 文字</li><li>✅ 图片</li><li>✅ 视频</li><li>✅ 附件</li> <li>✅ 语音</li><li>✅ 添加好友邀请</li><li>✅ 链接卡片(公众号推文链接)</li></ul> |
+- ✅ **推送消息** (发送文字 / 图片 / 文件)
+  - 💬 支持消息单条 / 多条 / 群发
+  - 📃 消息url解析成文件发送
+  - 📁 支持读文件发送
+
+- ✅ **接收消息**（文字 / 图片 / 语音 / 视频 / 文件 / 好友申请 / 公众号推文链接）
+  - ✨ 单 API 收发消息（服务无需公网IP）
+  - 🪧 登入掉线异常事件通知
+
+- ✅ **其他功能**
+  - 支持 非掉线自动登录
+  - 支持 带鉴权 api 接口获取登陆二维码
+  - 支持 [n8n](https://n8n.io/) 低码平台丝滑接入（webhook 节点）
+  - 支持 docker 部署，兼容 `arm64` 和 `amd64`
+  - 支持 日志文件导出
 
 ## 🚀 一分钟 Demo
 

@@ -12,3 +12,4 @@ cli
 loginSession.memory-card.json
 packages
 pnpm-workspace.yaml
+log

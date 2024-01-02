@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml .npmrc ./
 
 # 安装应用程序依赖项
-RUN npm install -g pnpm && pnpm install && pnpm store prune && npm uninstall pnpm -g
+RUN npm install -g pnpm && pnpm install --production&& pnpm store prune && npm uninstall pnpm -g
 
 # 复制应用程序代码到工作目录
 COPY . .

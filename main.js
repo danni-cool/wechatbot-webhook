@@ -1,18 +1,19 @@
+// const { serve } = require('@hono/node-server')
 require('dotenv').config({
-  path: process.env.homeEnvCfg /** 兼容cli调用 */ || './.env',
+  path: process.env.homeEnvCfg /** 兼容cli调用 */ ?? './.env'
 })
 const { PORT } = process.env
-const express = require('express')
+const { Hono } = require('hono')
+const { serve } = require('@hono/node-server')
 const wechatBotInit = require('./src/wechaty/init')
 const registerRoute = require('./src/route')
-const app = express()
 const bot = wechatBotInit()
-
-app.use(express.json())
+const app = new Hono()
 
 // 注册webhook
 registerRoute({ app, bot })
 
-app.listen(PORT, () => {
-  // console.log(`service is running`);
+serve({
+  fetch: app.fetch,
+  port: Number(PORT)
 })

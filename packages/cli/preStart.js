@@ -1,13 +1,12 @@
+// @ts-nocheck
 // 给 shell 调用使用
 const fs = require('fs')
 const dotenv = require('dotenv')
 const path = require('path')
-const os = require('os')
-const generateToken  = require('./lib/generateToken')
+const generateToken = require('./lib/generateToken')
 const sourceFile = path.join(__dirname, './.env.example')
 const envFilePath = process.env.homeEnvCfg
 const chalk = require('chalk')
-const reloadLoginFlag = process.argv.slice('1').pop() /** -f */
 
 // 根据env.example 生成 .env 文件
 if (!fs.existsSync(envFilePath)) {
@@ -20,13 +19,15 @@ if (!fs.existsSync(envFilePath)) {
 const envContent = fs.readFileSync(envFilePath, 'utf-8').split('\n')
 
 // 解析 .env 文件内容
-const envConfig = dotenv.parse(envContent.join('\n'))  
+const envConfig = dotenv.parse(envContent.join('\n'))
 
 // 无配置token，会默认生成一个token
 if (envConfig.LOCAL_LOGIN_API_TOKEN) return
 
 const token = generateToken()
-console.log(`写入初始化token:${chalk.green(token)}  => ${chalk.cyan(envFilePath)} \n`)
+console.log(
+  `写入初始化token:${chalk.green(token)}  => ${chalk.cyan(envFilePath)} \n`
+)
 
 envConfig.LOCAL_LOGIN_API_TOKEN = token // 添加或修改键值对
 

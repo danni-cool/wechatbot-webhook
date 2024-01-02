@@ -8,24 +8,29 @@ const fs = require('fs')
 const homeDirectory = os.homedir()
 const envFilePath = (process.env.homeEnvCfg = path.join(
   homeDirectory,
-  './.wechat_bot_env',
+  './.wechat_bot_env'
 ))
 const memoryCardFile = (process.env.homeMemoryCardPath = path.join(
   homeDirectory,
-  './loginSession.memory-card.json',
+  './loginSession.memory-card.json'
 ))
 
-console.log([
-  '╔════════════════════════════╗',
-  '║      wechatbot-webhook     ║',
-  `║           v${version}           ║`,
-  `╚════════════════════════════╝`    
-].join('\n'))
+console.log(
+  [
+    '╔════════════════════════════╗',
+    '║      wechatbot-webhook     ║',
+    `║           v${version}           ║`,
+    `╚════════════════════════════╝`
+  ].join('\n')
+)
 
 program
   .name('wechatbot-webhook')
   .description(
-    ['给微信里加个 webhook 机器人','项目地址：https://github.com/danni-cool/wechatbot-webhook'].join('\n'),
+    [
+      '给微信里加个 webhook 机器人',
+      '项目地址：https://github.com/danni-cool/wechatbot-webhook'
+    ].join('\n')
   )
   .version(version)
   .option('-r, --reload', '想重新扫码时加该参数，不加默认记住上次登录状态')

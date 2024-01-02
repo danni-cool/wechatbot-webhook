@@ -300,7 +300,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 - **query**: token
 
 **status**: `200`
-登录成功，返回及当前用户
+登录成功，返回 json 包含当前用户
 
 ```json
 {"success":true,"message":"Contact<TestUser>is already login"}
@@ -316,7 +316,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 - **query**: token
 - **status**: `200`
 
-微信已登录,返回纯文本 `healthy`，否则返回 `unHealthy`
+微信已登录, 返回纯文本 `healthy`，否则返回 `unHealthy`
 
 
 ## 🌟 Star History

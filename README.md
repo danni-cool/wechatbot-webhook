@@ -288,7 +288,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
   }
 ```
 
-### 3. 登录API
+### 3. 其他API
 
 1. 在异常或者掉线事件触发后，通知你配置的 `RECVD_MSG_API`，
 2. 在收到通知后，访问登录 Api 扫码登录 <http://localhost:3001/login?token=YOUR_PERSONAL_TOKEN。>
@@ -300,9 +300,10 @@ token 初次启动项目会自动生成，你也可以配置一个简单好记�
 1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
 2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN
 
-| API 路径    | Query Params | Methods | 描述                                                                          |
-| ----------- | ------------ | ------- | ----------------------------------------------------------------------------- |
-| /login      | token        | `GET`   | 登录成功，返回及当前用户。登录态掉了，跳转最新的登录二维码                    |
+| API 路径    | Query Params | Methods | http status | 描述                                                                          |
+| ----------- | ------------ | ------- | ----------------------------------------------------------------------------- | -- |
+| /login      | token        | `GET`   | 200 |获取登录二维码接口：登录成功，返回及当前用户。登录态掉了，跳转最新的登录二维码 |
+| /healthz      | token        | `GET`   | 200 |健康检测接口：当前微信登录中返回纯文本 `healthy`, 否则返回纯文本 `unHealthy` |
 
 
 ## 🌟 Star History

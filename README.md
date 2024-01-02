@@ -290,20 +290,33 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 ### 3. 其他API
 
-1. 在异常或者掉线事件触发后，通知你配置的 `RECVD_MSG_API`，
-2. 在收到通知后，访问登录 Api 扫码登录 <http://localhost:3001/login?token=YOUR_PERSONAL_TOKEN。>
+#### token 配置说明
+> 除了在 docker 启动时配置token，在默认缺省 token 的情况，会默认生成一个写入 `.env` 文件中
 
-#### 自定义token
+#### `/login`
 
-token 初次启动项目会自动生成，你也可以配置一个简单好记的token， 如果都配置，docker 配置将覆盖本地配置
+- **描述**：获取登录二维码接口。
+- **methods**: `GET`
+- **query**: token
 
-1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
-2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN
+**status**: `200`
+登录成功，返回及当前用户
 
-| API 路径    | Query Params | Methods | http status | 描述                                                                          |
-| ----------- | ------------ | ------- | ----------------------------------------------------------------------------- | -- |
-| /login      | token        | `GET`   | 200 |获取登录二维码接口：登录成功，返回及当前用户。登录态掉了，跳转最新的登录二维码 |
-| /healthz      | token        | `GET`   | 200 |健康检测接口：当前微信登录中返回纯文本 `healthy`, 否则返回纯文本 `unHealthy` |
+```json
+{"success":true,"message":"Contact<TestUser>is already login"}
+```
+
+**status**: `302`
+登录态掉了，跳转最新的登录二维码 
+
+#### `/healthz`
+
+- **描述**：健康检测接口。
+- **methods**: `GET`
+- **query**: token
+- **status**: `200`
+
+微信已登录,返回纯文本 `healthy`，否则返回 `unHealthy`
 
 
 ## 🌟 Star History

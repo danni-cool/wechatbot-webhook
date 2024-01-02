@@ -59,9 +59,9 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 #### 1. 启动容器
 
 ```bash
-docker run -d \
---name wxBotWebhook \
--p 3001:3001 \
+# 启动容器并映射日志目录，日志按天维度生成，e.g: app.2024-01-01.log
+docker run -d --name wxBotWebhook -p 3001:3001 \
+-v ~/wxBot_logs:/app/log \
 dannicool/docker-wechatbot-webhook
 ```
 

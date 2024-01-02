@@ -1,6 +1,11 @@
 const { FileBox } = require('file-box')
 const MIME = require('mime')
-
+const { logger } = require('./log')
+/**
+ * 下载媒体文件转化为Buffer
+ * @param {string} fileUrl
+ * @returns {Promise<{buffer?: Buffer, fileName?: string}>}
+ */
 const downloadFile = async (fileUrl) => {
   try {
     const response = await fetch(fileUrl)
@@ -10,110 +15,77 @@ const downloadFile = async (fileUrl) => {
       let fileName = getFileNameFromUrl(fileUrl)
 
       // deal with unValid Url format like https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU
-      if (!fileName) {
+      if (fileName === '') {
         // 有些资源文件链接是不会返回文件后缀的 例如  https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU  其实是一张图片
+        //@ts-expect-errors 不考虑无content-type的情况
         const extName = MIME.getExtension(response.headers.get('content-type'))
         fileName = `${Date.now()}.${extName}`
       }
 
       return {
         buffer,
-        fileName,
+        fileName
       }
     }
 
     return {}
   } catch (error) {
-    console.error('Error downloading file:' + fileUrl, error)
+    logger.error('Error downloading file:' + fileUrl, error)
     return {}
   }
 }
 
-const equalTrueType = function (val, expectType) {
-  return (
-    Object.prototype.toString.call(val).toLowerCase() ===
-    `[object ${expectType}]`
-  )
-}
-
-// valid: http://www.baidu.com/image.png?a=1 => image.png
-// notValid: https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU => ''
+/**
+ * 从url中提取文件名
+ * @param {string} url
+ * @returns {string}
+ * @example 参数 url 示例
+ * valid: "http://www.baidu.com/image.png?a=1 => image.png"
+ * notValid: "https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU => ''"
+ */
 const getFileNameFromUrl = (url) => {
   const matchRes = url.match(/.*\/([^/?]*)/)?.[1]
+
+  if (matchRes === undefined) return ''
+
   const checkMathDotPosition = matchRes.indexOf('.')
   // fileName has string.string is Valid filename
-  if (~checkMathDotPosition && checkMathDotPosition > 0) {
+  if (checkMathDotPosition > -1) {
     return matchRes
   } else {
     return ''
   }
 }
 
-// bugfix: use `fileBox.fromUrl` api to get image is OK, but sometimes directly to get cloudflare img may return a 0 bites response.(when response is 301)
+/**
+ * 根据url下载文件并转化成FileBox的标准格式
+ * @param {string} url
+ * @returns {Promise<import('file-box').FileBoxInterface>}
+ */
 const getMediaFromUrl = async (url) => {
   const { buffer, fileName } = await downloadFile(url)
+  //@ts-expect-errors buffer 解析是吧的情况
   return FileBox.fromBuffer(buffer, fileName)
 }
-const getBufferFile = (formDataFile) => {
-  return FileBox.fromBuffer(formDataFile.buffer, formDataFile.originalname)
-}
-
-// 首字母大写
-const capitalizeFirstLetter = (str) =>
-  str.charAt(0).toUpperCase() + str.slice(1)
 
 /**
- * @example
- *       const checkList = [
-        { key: 'to', val: '', required: true, type: 'string', unValidReason: '' },
-      ]
-    @return {Array} 返回不通过校验的数组项，并填充上 unValidReason 的原因
+ * @typedef {payloadFormFile} formDataFileInterface
+ * @param {formDataFileInterface} formDataFile
+ * @returns
  */
-const getUnValidParamsList = (arr) => {
-  return arr
-    .map((item) => {
-      // 区分必填和非必填情况，校验非空和类型
-      if (item.required) {
-        if (item.val === '') {
-          item.unValidReason = `${item.key} 不能为空`
-        }
-        // 文件类型特殊校验
-        else if (item.type === 'file' && item.val === 0) {
-          item.unValidReason = `${item.key} 上传的文件不能为空`
-        }
-        // exp: type:[string, object]情况
-        else if (equalTrueType(item.type, 'array')) {
-          item.unValidReason = item.type.some((type) =>
-            equalTrueType(item.val, type),
-          )
-            ? ''
-            : `${item.key} 的参数类型不是 ${item.type
-                .map((key) => capitalizeFirstLetter(key))
-                .join(' or ')}`
-        } else if (item.type !== 'file' && typeof item.val !== item.type) {
-          item.unValidReason = `${
-            item.key
-          } 的参数类型不是 ${capitalizeFirstLetter(item.type)}`
-        }
-      } else {
-        item.unValidReason =
-          typeof item.val !== item.type
-            ? `${item.key} 的参数类型不是 ${capitalizeFirstLetter(item.type)}`
-            : ''
-      }
-
-      // 前者通过，如果遇到要校验指定枚举值的情况
-      if (item.unValidReason === '' && item.enum && item.enum.length > 0) {
-        item.unValidReason = !item.enum.includes(item.val)
-          ? `${item.key} 必须是 ${item.enum.join(' or ')}`
-          : ''
-      }
-
-      return item
-    })
-    .filter(({ unValidReason }) => unValidReason)
+const getBufferFile = async (formDataFile) => {
+  const arrayBuffer = await formDataFile.arrayBuffer()
+  return FileBox.fromBuffer(
+    Buffer.from(arrayBuffer),
+    formDataFile.convertName ?? formDataFile.name
+  )
 }
 
+/**
+ *
+ * @param {number} num
+ * @returns {string} token
+ */
 const generateToken = (num = 12) => {
   const charset =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~'
@@ -126,7 +98,12 @@ const generateToken = (num = 12) => {
   return token
 }
 
-// `{"alias":123,'alias2':   '123', alias3: 123}` => `{"alias":123,"alias2":"123", "asf":2}`
+/**
+ * @param {string} jsonLikeStr
+ * @returns {string}
+ * @example jsonLikeStr 示例结构
+ * `{"alias":123,'alias2':  '123', alias3: 123}` => `{"alias":123,"alias2":"123", "asf":2}`
+ */
 const parseJsonLikeStr = (jsonLikeStr) => {
   const formatStr = jsonLikeStr
     .replace(/'?(\w+)'?\s*:/g, '"$1":')
@@ -135,8 +112,12 @@ const parseJsonLikeStr = (jsonLikeStr) => {
   return JSON.parse(formatStr)
 }
 
-// 检测每个字符是否都可以被iso-8859-1表示,因为curl http1.1 在发送form-data时，文件名是中文的话会被编码成 iso-8859-1表示
-// https://github.com/danni-cool/wechatbot-webhook/issues/71
+/**
+ * 检测每个字符是否都可以被iso-8859-1表示,因为curl http1.1 在发送form-data时，文件名是中文的话会被编码成 iso-8859-1表示
+ * @param {string} str
+ * @returns {string}
+ * @see https://github.com/danni-cool/wechatbot-webhook/issues/71
+ */
 function tryConvertCnCharToUtf8Char(str) {
   const isIso88591 = [...str].every((char) => {
     const codePoint = char.charCodeAt(0)
@@ -158,16 +139,49 @@ function tryConvertCnCharToUtf8Char(str) {
   return str
 }
 
+/**
+ * 创建并返回一个具有额外 resolve 和 reject 方法的 Promise 对象。
+ * @returns {Promise<any> & { resolve: (value: any) => void, reject: (reason?: any) => void }}
+ */
+function Defer() {
+  /**@type {(value: any) => void} */
+  let res
+  /**@type {(reason?: any) => void} */
+  let rej
+
+  /** @type {Promise<any> & { resolve: (value: any) => void, reject: (reason?: any) => void }} */
+  // @ts-expect-errors 没法完美定义类型，暂时忽略
+  const promise = new Promise((resolve, reject) => {
+    res = resolve
+    rej = reject
+  })
+
+  // @ts-expect-errors 没法完美定义类型，暂时忽略
+  promise.resolve = res
+  // @ts-expect-errors 没法完美定义类型，暂时忽略
+  promise.reject = rej
+
+  return promise
+}
+
+/**
+ * @param {number} ms
+ */
+const sleep = async (ms) => {
+  return await new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 module.exports = {
+  ...require('./msg.js'),
+  ...require('./nextTick.js'),
+  ...require('./paramsValid.js'),
+  ...require('./log.js'),
   getFileNameFromUrl,
   getMediaFromUrl,
   getBufferFile,
-  getUnValidParamsList,
   generateToken,
-  equalTrueType,
   parseJsonLikeStr,
   tryConvertCnCharToUtf8Char,
+  sleep,
+  Defer
 }
-
-Object.assign(module.exports, require('./msg.js'))
-Object.assign(module.exports, require('./nextTick.js'))

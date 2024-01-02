@@ -8,5 +8,5 @@ module.exports = {
     }
 
     return process.env.globalLoginToken
-  },
+  }
 }

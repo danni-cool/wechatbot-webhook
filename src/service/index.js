@@ -1,7 +1,6 @@
-Object.assign(exports, require('./login.js'))
-Object.assign(exports, require('./errorHandle.js'))
-Object.assign(exports, require('./friendship.js'))
-Object.assign(exports, require('./msgSender.js'))
-Object.assign(exports, require('./msgUploader.js'))
-
-module.exports = exports
+module.exports = {
+  ...require('./login.js'),
+  ...require('./friendship.js'),
+  ...require('./msgSender.js'),
+  ...require('./msgUploader.js')
+}

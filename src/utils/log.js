@@ -37,51 +37,76 @@ if (!process.env.homeEnvCfg) {
     }
   })
 
-  const logger = log4js.getLogger()
+  /**@type {log4js.Logger} */
+  let logger = log4js.getLogger()
   const originalConsoleLog = console.log
   const originalConsoleWarn = console.warn
   const originalConsoleErr = console.error
 
-  /**
-   * 希望排除在log4js里的console输出，即不希望打到日志里去或者显示异常
-   * @param {any[]} args
-   */
-  const whiteListConditionLog = (args) =>
-    [
-      args?.[0].startsWith(
-        '▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\n'
-      ) /** 二维码扫码 */
-    ].some(Boolean)
+  const proxyConsole = () => {
+    /**
+     * 希望排除在log4js里的console输出，即不希望打到日志里去或者显示异常
+     * @param {any[]} args
+     */
+    const whiteListConditionLog = (args) => {
+      const arg0 = args?.[0]
 
-  console.log = function (...args) {
-    if (args?.[1] instanceof Error) {
-      logger.error(...args)
-    } else if (!whiteListConditionLog(args)) {
-      logger.info(...args) // 将输出写入 Log4js 配置的文件
-    } else {
-      originalConsoleLog.apply(console, args) // 保持控制台输出
+      return [
+        typeof arg0 === 'string' &&
+          arg0.startsWith('▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\n') /** 二维码扫码 */
+      ].some(Boolean)
+    }
+
+    console.log = function (...args) {
+      try {
+        if (args?.[1] instanceof Error) {
+          logger.error(...args)
+        } else if (!whiteListConditionLog(args)) {
+          logger.info(...args) // 将输出写入 Log4js 配置的文件
+        } else {
+          originalConsoleLog.apply(console, args) // 保持控制台输出
+        }
+      } catch (/**@type {any} **/ e) {
+        originalConsoleLog.apply(console, args)
+        throw new Error('log4js 记录 console.log 出错:', e)
+      }
+    }
+
+    console.warn = function (...args) {
+      try {
+        if (!whiteListConditionLog(args)) {
+          logger.warn(...args) // 将输出写入 Log4js 配置的文件
+        } else {
+          originalConsoleWarn.apply(console, args)
+        }
+      } catch (/**@type {any} **/ e) {
+        originalConsoleWarn.apply(console, args)
+        throw new Error('log4js 记录 console.warn 出错:', e)
+      }
+    }
+
+    console.error = function (...args) {
+      try {
+        if (!whiteListConditionLog(args)) {
+          logger.error(...args) // 将输出写入 Log4js 配置的文件
+        } else {
+          originalConsoleErr.apply(console, args)
+        }
+      } catch (/**@type {any} **/ e) {
+        originalConsoleErr.apply(console, args)
+        throw new Error('log4js 记录 console.error 出错:', e)
+      }
     }
   }
 
-  console.warn = function (...args) {
-    if (!whiteListConditionLog(args)) {
-      logger.warn(...args) // 将输出写入 Log4js 配置的文件
-    } else {
-      originalConsoleWarn.apply(console, args)
-    }
+  module.exports = {
+    // @ts-ignore
+    logger,
+    proxyConsole
   }
-
-  console.error = function (...args) {
-    if (!whiteListConditionLog(args)) {
-      logger.error(...args) // 将输出写入 Log4js 配置的文件
-    } else {
-      originalConsoleErr.apply(console, args)
-    }
-  }
-
-  module.exports.logger = log4js.getLogger()
   // cli环境使用console
 } else {
+  // @ts-ignore
   module.exports.logger = {
     /**
      * @param {*} payload

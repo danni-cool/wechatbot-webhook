@@ -27,13 +27,14 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
+      "tsc-files --noEmit",
       "eslint --fix",
       "prettier --write"
     ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsc --noEmit && lint-staged"
+      "pre-commit": "lint-staged"
     }
   },
   "license": "MIT",
@@ -63,6 +64,7 @@
     "eslint-plugin-prettier": "^5.1.2",
     "husky": "^8.0.3",
     "prettier": "^3.1.1",
+    "tsc-files": "^1.1.4",
     "typescript": "^5.3.3",
     "wechaty-puppet-mock": "^1.18.2"
   }

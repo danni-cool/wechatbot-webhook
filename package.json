@@ -12,8 +12,7 @@
   "main": "main.js",
   "scripts": {
     "prestart": "node ./scripts/preStart",
-    "start": "node main",
-    "type-check": "tsc-files --allowJs ./src/service/msgUploader.js"
+    "start": "node main"
   },
   "engines": {
     "node": ">=18.14.1"

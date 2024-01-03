@@ -15,7 +15,6 @@
     "forceConsistentCasingInFileNames": true,            
     "strict": true,                                      
     "skipLibCheck": true,
-    "noEmit": true,
-    "typeRoots": ["./typings"]                        
+    "noEmit": true                     
   }
 }

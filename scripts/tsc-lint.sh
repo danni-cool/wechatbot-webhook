@@ -8,7 +8,7 @@ npx tsc --noEmit --project tsconfig.tmp.json
 TSC_EXIT_CODE=$?
 
 # 清理：删除临时的配置文件
-# rm tsconfig.tmp.json
+rm tsconfig.tmp.json
 
 if [[ $TSC_EXIT_CODE != 0 ]]; then
   echo "TypeScript check failed."

@@ -20,8 +20,7 @@ const config = {
     'prettier/prettier': 'error',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
-    '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/consistent-type-definitions': ['error', 'type']
+    '@typescript-eslint/ban-ts-comment': 'off'
   }
 }
 

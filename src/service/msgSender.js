@@ -1,141 +1,164 @@
 const Utils = require('../utils/index.js')
-const Service = require('./index.js')
+const { sendMsg2RecvdApi } = require('./msgUploader.js')
 const { MSG_TYPE_ENUM } = require('../config/const.js')
-/*
- * 发送校验逻辑
- * eg.1 发给（单人/单群)消息
- * feature mode {to:'',isRoom:'', data: {type: '', content: ''}}
- *
- * eg.2 发给（单人/单群）多条消息
- * feature mode {to: '', data: [{type: '', content: ''}, {type: '', content: ''}]}
- *
- * eg.3 发给（多人/多群）(单/多）条消息
- * feature mode [{to: '', isRoom:'', data:[{type:'', content: ''}]},{to: '', isRoom:'', data:[{type:'', content: ''}]}]
- *
- * 规则：
- *   单条消息直接告知其api格式合法性
- *   多条消息告知发送成功条数，失败条数，列出失败的消息体
+const rules = require('../config/valid.js')
+
+/**
+ * 根据传入规则校验消息发送单元 type 和 content 是否合法
+ * @param {pushMsgUnitPayload} param
  */
-const checkMsgSendersParamsV2 = (payload) => {
-  // 发给（多人/多群）(单/多）条消息
-  if (Array.isArray(payload)) {
-  } else if ('data' in payload) {
-  }
+const getPushMsgUnitUnvalidStr = function ({ type, content }) {
+  return Utils.getUnValidParamsList(
+    rules.pushMsgV2ChildRules({
+      type,
+      content
+    })
+  )
+    .map(({ unValidReason }) => unValidReason)
+    .join('，')
 }
 
-// 发送消息核心
-// this handler convert data to a standard format before using wechaty to send msg,
-const formatAndSendMsg = async function ({ res, type, content, msgInstance }) {
-  switch (type) {
-    // 纯文本
-    case 'text':
-      await msgInstance.say(content)
-      break
+/**
+ * 发送消息核心。这个处理程序将数据转换为标准格式，然后使用 wechaty 发送消息。
+ * @type {{
+ * (payload:{ type: 'text' | 'fileUrl'|'file', content: string| payloadFormFile, msgInstance: msgInstanceType }) : Promise<boolean>;
+ * }}
+ */
+const formatAndSendMsg = async function ({ type, content, msgInstance }) {
+  let flag = false
 
-    case 'fileUrl': {
-      const fileUrlArr = content.split(',')
-      // 单文件
-      if (fileUrlArr.length === 1) {
-        const file = await Utils.getMediaFromUrl(content)
-        await msgInstance.say(file)
+  try {
+    switch (type) {
+      // 纯文本
+      case 'text':
+        //@ts-expect-errors 重载不是很好使，手动判断
+        await msgInstance.say(content)
+        break
+
+      case 'fileUrl': {
+        //@ts-expect-errors 重载不是很好使，手动判断
+        const fileUrlArr = content.split(',')
+        // 单文件
+        if (fileUrlArr.length === 1) {
+          //@ts-expect-errors 重载不是很好使，手动判断
+          const file = await Utils.getMediaFromUrl(content)
+          await msgInstance.say(file)
+          break
+        }
+
+        // 多个文件的情况
+        for (let i = 0; i < fileUrlArr.length; i++) {
+          const file = await Utils.getMediaFromUrl(fileUrlArr[i])
+          await msgInstance.say(file)
+        }
         break
       }
-
-      // 多个文件的情况
-      for (let i = 0; i < fileUrlArr.length; i++) {
-        const file = await Utils.getMediaFromUrl(fileUrlArr[i])
-        await msgInstance.say(file)
-      }
-      break
+      // 文件
+      case 'file':
+        {
+          //@ts-expect-errors 重载不是很好使，手动判断
+          await msgInstance.say(await Utils.getBufferFile(content))
+        }
+        break
+      default:
+        throw new Error('发送消息 type 不能为空')
     }
-    // 文件
-    case 'file':
-      await msgInstance.say(Utils.getBufferFile(content))
-      break
+    flag = true
+  } catch (e) {
+    Utils.logger.error(e)
   }
 
-  res.status(200).json({
-    success: true,
-    message: 'Message sent successfully',
-  })
+  return flag
 }
 
 /**
  * 接受 Service.sendMsg2RecvdApi 的response 回调以便回复或作出其他动作
+ * @param {Object} payload
+ * @param {Response} [payload.res]
+ * @param {import('@src/config/const.js').MSG_TYPE_ENUM} payload.type
+ * @param {import('wechaty').Friendship} [payload.friendship]
+ * @param {msgInstanceType} [payload.msgInstance]
  */
-const handleResSendMsg = async ({
-  res,
-  type,
-  friendship = null,
-  msgInstance = null,
-}) => {
+const handleResSendMsg = async ({ res, type, friendship, msgInstance }) => {
   let success, data
 
-  if (res && res.ok) {
+  if (res?.ok) {
     const result = await res.json()
+
+    if (!result) return
+
     success = result.success
     data = result.data
   }
 
   switch (type) {
     case MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP:
-      success
-        ? await friendship.accept()
-        : console.log(
+      success === true
+        ? //@ts-expect-errors 重载不是很好使，手动判断
+          await friendship.accept()
+        : Utils.logger.info(
+            //@ts-expect-errors 重载不是很好使，手动判断
             `not auto accepted, because ${friendship
               .contact()
-              .name()}'s verify message is: ${friendship.hello()}`,
+              //@ts-expect-errors 重载不是很好使，手动判断
+              .name()}'s verify message is: ${friendship.hello()}`
           )
 
       // 同意且包含回复信息
-      if (success && data) {
-        await new Promise((r) => setTimeout(r, 1000))
+      if (success === true && data !== undefined) {
+        await Utils.sleep(1000)
+        //@ts-expect-errors 重载不是很好使，手动判断
         msgSendQueueHandler(data, friendship.contact())
       }
 
       break
 
     default:
-      if (success && data) {
-        await new Promise((r) => setTimeout(r, 1000))
+      if (success === true && data !== undefined) {
+        await Utils.sleep(1000)
         msgSendQueueHandler(data, msgInstance)
       }
       break
   }
 }
 
-// 收消息钩子
+/**
+ * 收消息钩子
+ * @param {import('wechaty').Message} msg
+ */
 const onRecvdMessage = async (msg) => {
   // 自己发的消息没有必要处理
   if (msg.self()) return
 
   handleResSendMsg({
-    res: await Service.sendMsg2RecvdApi(msg),
+    res: await sendMsg2RecvdApi(msg),
     type: msg.type(),
-    msgInstance: msg,
+    msgInstance: msg
   })
 }
 
-// 消息处理队列
+/**
+ *
+ * @param {*} data
+ * @param {*} msgInstance
+ */
 const msgSendQueueHandler = (data, msgInstance) => {
   if (Array.isArray(data)) {
     data.forEach((item) => {
       Utils.nextTick(() => {
         formatAndSendMsg({
-          res: data.res,
-          type: item.type || 'text',
+          type: item.type,
           content: item.content,
-          msgInstance,
+          msgInstance
         })
       })
     })
   } else {
     Utils.nextTick(() => {
       formatAndSendMsg({
-        res: data.res,
         type: data.type,
         content: data.content,
-        msgInstance,
+        msgInstance
       })
     })
   }
@@ -146,5 +169,5 @@ module.exports = {
   handleResSendMsg,
   onRecvdMessage,
   msgSendQueueHandler,
-  // checkMsgSenderParams,
+  getPushMsgUnitUnvalidStr
 }

@@ -48,13 +48,6 @@ function getUnValidParamsList(arr) {
             // @ts-expect-errors 此处已经是除了array 文件后的情况，期望是个普通类型，直接提示
           } 的参数类型不是 ${capitalizeFirstLetter(item.type)}`
         }
-        //一般不要求required值的场景要求赋一个默认值
-      } else {
-        item.unValidReason =
-          typeof item.val !== item.type
-            ? //@ts-expect-errors 暂时不考虑 required 为false场景下 type 为数组的情况
-              `${item.key} 的参数类型不是 ${capitalizeFirstLetter(item.type)}`
-            : ''
       }
 
       // 前者通过，如果遇到要校验指定枚举值的情况

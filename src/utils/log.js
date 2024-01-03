@@ -111,22 +111,22 @@ if (!process.env.homeEnvCfg) {
     /**
      * @param {*} payload
      */
-    debug: (payload) => console.log(payload),
+    debug: (...payload) => console.log.apply(console, payload),
     /**
      * @param {*} payload
      */
-    warn: (payload) => console.warn(payload),
+    warn: (...payload) => console.warn.apply(console, payload),
     /**
      * @param {*} payload
      */
-    error: (payload) => console.error(payload),
+    error: (...payload) => console.error.apply(console, payload),
     /**
      * @param {*} payload
      */
-    info: (payload) => console.log(payload),
+    info: (...payload) => console.log.apply(console, payload),
     /**
      * @param {*} payload
      */
-    trace: (payload) => console.log(payload)
+    trace: (...payload) => console.log.apply(console, payload)
   }
 }

@@ -12,7 +12,8 @@
   "main": "main.js",
   "scripts": {
     "prestart": "node ./scripts/preStart",
-    "start": "node main"
+    "start": "node main",
+    "type-check": "tsc-files --allowJs ./src/service/msgUploader.js"
   },
   "engines": {
     "node": ">=18.14.1"
@@ -26,8 +27,8 @@
     "url": "git+https://github.com/danni-cool/wechatbot-webhook.git"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "tsc-files --noEmit",
+    "**/*.{js,jsx,ts,tsx}": [
+      "./scripts/tsc-lint.sh",
       "eslint --fix",
       "prettier --write"
     ]

@@ -1,8 +1,7 @@
-/** @typedef {{content:string, type: 'text'| 'fileUrl'}} msgDataType */
-
 const Service = require('../service')
 const Utils = require('../utils/index.js')
-
+const rules = require('../config/valid')
+const middleware = require('../middleware')
 /**
  * 注册推消息钩子
  * @param {Object} payload
@@ -10,8 +9,8 @@ const Utils = require('../utils/index.js')
  * @param {import('wechaty').Wechaty} payload.bot
  */
 function registerPushHook({ app, bot }) {
-  // 处理 POST 请求 V2 只支持多发模式
-  app.post('/webhook/msg/v2', async (c) => {
+  // 处理 POST 请求 V2 支持多发模式
+  app.post('/webhook/msg/v2', middleware.loginCheck, async (c) => {
     const body = await c.req.json()
 
     const payload = {
@@ -19,35 +18,19 @@ function registerPushHook({ app, bot }) {
       to: body.to,
       /** @type {boolean} */
       isRoom: body.isRoom ?? false,
-      /** @type {msgDataType} */
+      /** @type {pushMsgUnitPayload} */
       data: body.data /** { "type": "", content: "" } */,
       unValidParamsStr: ''
     }
 
     // 校验必填参数
-    payload.unValidParamsStr = Utils.getUnValidParamsList([
-      {
-        key: 'to',
-        val: payload.to,
-        required: true,
-        type: ['string', 'object'],
-        unValidReason: ''
-      },
-      {
-        key: 'isRoom',
-        val: payload.isRoom,
-        required: false,
-        type: 'boolean',
-        unValidReason: ''
-      },
-      {
-        key: 'data',
-        val: payload.data,
-        required: true,
-        type: ['object', 'array'],
-        unValidReason: ''
-      }
-    ])
+    payload.unValidParamsStr = Utils.getUnValidParamsList(
+      rules.pushMsgV2ParentRules({
+        to: payload.to,
+        isRoom: payload.isRoom,
+        data: payload.data
+      })
+    )
       .map(({ unValidReason }) => unValidReason)
       .join('，')
 
@@ -62,33 +45,64 @@ function registerPushHook({ app, bot }) {
 
     // 继续校验 payload.data的结构
     let unValidDataParamsStr
-    // TODO: 需要提示
+    /**@type {(pushMsgUnitPayload & {success: boolean})[] | []} */
+    let msgArr = []
+    // 检查每条消息的合法性
     if (Array.isArray(payload.data)) {
-      console.log(1)
+      let UnValidReasonArr = {
+        to,
+        isRoom,
+        /**@type { { rejectReason:string, type?:'text'|'fileUrl', content: string}[]  } */
+        data: []
+      }
+      //给省略了type的添加上type:text
+      // @ts-ignore
+      msgArr = payload.data.map(
+        /**
+         * @param {pushMsgUnitTypeOpt} item
+         */
+        (item) => {
+          const { type, content } = item
+
+          const rejectReason = Service.getPushMsgUnitUnvalidStr({
+            type: type || 'text',
+            content
+          })
+
+          if (rejectReason) {
+            let tempObj = {
+              rejectReason,
+              content: ''
+            }
+            Object.assign(tempObj, item)
+            UnValidReasonArr.data.push(tempObj)
+          }
+
+          if (!type) {
+            item.type = 'text'
+          }
+
+          return item
+        }
+      )
+
+      //从payload.data 数组结构中有检测到不合法的结构
+      if (UnValidReasonArr.data.length) {
+        return c.json({
+          success: false,
+          message: `some msg params listed in (errorFields) is not valid, please checkout the api reference (https://github.com/danni-cool/wechatbot-webhook#%EF%B8%8F-api)`,
+          errorFields: [UnValidReasonArr]
+        })
+      }
     } else {
       payload.data.type = payload.data.type ?? 'text'
-      unValidDataParamsStr = Utils.getUnValidParamsList([
-        {
-          key: 'data.type',
-          val: payload.data.type,
-          required: false,
-          type: 'string',
-          enum: ['text', 'fileUrl'],
-          unValidReason: ''
-        },
-        {
-          key: 'data.content',
-          val: payload.data.content,
-          required: false,
-          type: 'string',
-          unValidReason: ''
-        }
-      ])
-        .map(({ unValidReason }) => unValidReason)
-        .join('，')
+      unValidDataParamsStr = Service.getPushMsgUnitUnvalidStr({
+        type: payload.data.type,
+        content: payload.data.content
+      })
     }
 
-    if (unValidDataParamsStr !== '') {
+    if (unValidDataParamsStr) {
       return c.json({
         success: false,
         message: `[${unValidDataParamsStr}] params  is not valid, please checkout the api reference (https://github.com/danni-cool/wechatbot-webhook#%EF%B8%8F-api)`
@@ -115,16 +129,42 @@ function registerPushHook({ app, bot }) {
     }
 
     if (msgReceiver !== undefined) {
-      const success = await Service.formatAndSendMsg({
-        type: payload.data.type,
-        content: payload.data.content,
-        msgInstance: msgReceiver
-      })
+      //批量消息发送
+      if (msgArr.length) {
+        for (let i = 0; i < msgArr.length; i++) {
+          msgArr[i].success = await Service.formatAndSendMsg({
+            type: msgArr[i].type,
+            content: msgArr[i].content,
+            msgInstance: msgReceiver
+          })
+        }
 
-      return c.json({
-        success,
-        message: `Message sent ${success ? 'successfully' : 'failed'}`
-      })
+        const successCount = msgArr.filter(({ success }) => success).length
+        const failedList = msgArr.filter(({ success }) => !success)
+        return c.json({
+          success: msgArr.some(({ success }) => success), //只要有消息发送成功就为true
+          message: `Message sent ${successCount} of ${msgArr.length} are successed`,
+          ...(failedList.length
+            ? {
+                failedTask: {
+                  to,
+                  isRoom,
+                  data: msgArr.filter(({ success }) => !success)
+                }
+              }
+            : {})
+        })
+      } else {
+        const success = await Service.formatAndSendMsg({
+          type: payload.data.type,
+          content: payload.data.content,
+          msgInstance: msgReceiver
+        })
+        return c.json({
+          success,
+          message: `Message sent ${success ? 'successfully' : 'failed'}`
+        })
+      }
     } else {
       return c.json({
         success: false,
@@ -134,7 +174,7 @@ function registerPushHook({ app, bot }) {
   })
 
   // 处理 POST 请求 V1 只支持单发模式
-  app.post('/webhook/msg', async (c) => {
+  app.post('/webhook/msg', middleware.loginCheck, async (c) => {
     const formPayload = {}
     const payload = {}
 
@@ -144,15 +184,13 @@ function registerPushHook({ app, bot }) {
     // 表单传文件(暂时只用来传文件)
     if (contentType && contentType.includes('multipart/form-data')) {
       body = await c.req.parseBody()
-      /** @type {string} */
-      // @ts-expect-errors 已经提前做了判断
+      /** @type {any} */
       formPayload.to = body.to
-      // @ts-expect-errors 已经提前做了判断
+      /** @type {any} */
       formPayload.isRoom = body.isRoom ?? '0'
       /** @type {'file'} */
       formPayload.type = 'file'
-      /** @type {payloadFormFile} */
-      // @ts-expect-errors 已经提前做了判断
+      /** @type {any} */
       formPayload.content = body.content ?? {}
       // 转化上传文件名中文字符但是被编码成 iso885910 的问题
       if (formPayload.content.name !== undefined) {
@@ -162,31 +200,16 @@ function registerPushHook({ app, bot }) {
       }
 
       // 校验必填参数
-      let unValidParamsStr = Utils.getUnValidParamsList([
-        {
-          key: 'to',
-          val: formPayload.to,
-          required: true,
-          type: 'string',
-          unValidReason: ''
-        },
-        {
-          key: 'isRoom',
-          val: formPayload.isRoom,
-          required: false,
-          enum: ['1', '0'],
-          type: 'string',
-          unValidReason: ''
-        },
-        {
-          key: 'content',
-          val: formPayload.content.size ?? 0,
-          required: true,
-          type: 'file',
-          unValidReason: ''
-        }
-      ]).map(({ unValidReason }) => unValidReason)
-      /**@type {boolean} */
+
+      let unValidParamsStr = Utils.getUnValidParamsList(
+        rules.pushFileMsgRules({
+          to: formPayload.to,
+          /**@type {boolean} */
+          isRoom: formPayload.isRoom,
+          content: formPayload.content.size
+        })
+      ).map(({ unValidReason }) => unValidReason)
+
       formPayload.isRoom = Boolean(
         Number(formPayload.isRoom)
       ) /** "1" => true , "0" => false */
@@ -216,37 +239,14 @@ function registerPushHook({ app, bot }) {
       payload.content = body.content
 
       // 校验必填参数
-      payload.unValidParamsStr = Utils.getUnValidParamsList([
-        {
-          key: 'to',
-          val: payload.to,
-          required: true,
-          type: ['string', 'object'],
-          unValidReason: ''
-        },
-        {
-          key: 'type',
-          val: payload.type,
-          required: false,
-          type: 'string',
-          enum: ['text', 'fileUrl'],
-          unValidReason: ''
-        },
-        {
-          key: 'content',
-          val: payload.content,
-          required: true,
-          type: 'string',
-          unValidReason: ''
-        },
-        {
-          key: 'isRoom',
-          val: payload.isRoom,
-          required: false,
-          type: 'boolean',
-          unValidReason: ''
-        }
-      ])
+      payload.unValidParamsStr = Utils.getUnValidParamsList(
+        rules.pushMsgV1Rules({
+          to: payload.to,
+          type: payload.type,
+          content: payload.content,
+          isRoom: payload.isRoom
+        })
+      )
         .map(({ unValidReason }) => unValidReason)
         .join('，')
     }

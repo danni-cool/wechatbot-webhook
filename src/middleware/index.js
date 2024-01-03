@@ -1,3 +1,4 @@
 module.exports = {
-  ...require('./verifyToken.js')
+  ...require('./verifyToken.js'),
+  ...require('./loginCheck.js')
 }

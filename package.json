@@ -12,9 +12,7 @@
   "main": "main.js",
   "scripts": {
     "prestart": "node ./scripts/preStart",
-    "start": "node main",
-    "test": "node --test",
-    "lint": "eslint . --fix --ext .js"
+    "start": "node main"
   },
   "engines": {
     "node": ">=18.14.1"

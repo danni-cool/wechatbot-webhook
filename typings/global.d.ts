@@ -27,6 +27,8 @@ type payloadFormFile = File & { convertName: string }
 
 type pushMsgUnitPayload = { type: 'text' | 'fileUrl'; content: string }
 
+type pushMsgUnitTypeOpt = { type?: 'text' | 'fileUrl'; content: string }
+
 type pushMsgMain = {
   to: string | { alias: string }
   isRoom: boolean

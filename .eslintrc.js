@@ -17,10 +17,11 @@ const config = {
     sourceType: 'script' // 对于 CommonJS
   },
   rules: {
-    'prettier/prettier': 'error',
-    '@typescript-eslint/no-var-requires': 'off',
+    'prettier/prettier': 'error' /** check prettier lint */,
+    '@typescript-eslint/no-var-requires': 'off' /** only run with commonjs */,
     '@typescript-eslint/no-unused-vars': 'error',
-    '@typescript-eslint/ban-ts-comment': 'off'
+    '@typescript-eslint/ban-ts-comment':
+      'off' /** quickly ban all error unnecessary */
   }
 }
 

@@ -1,30 +1,32 @@
+// @ts-nocheck
 // 给 shell 调用使用
 const fs = require('fs')
+const dotenv = require('dotenv')
 const path = require('path')
-const { generateToken } = require('../src/utils/index.js')
-const sourceFile = path.join(__dirname, '../.env.example')
-const destFile = path.join(__dirname, '../.env')
-const { logger } = require('../src/utils/log.js')
+const generateToken = require('./lib/generateToken')
+const sourceFile = path.join(__dirname, './.env.example')
+const envFilePath = process.env.homeEnvCfg
+const chalk = require('chalk')
 
 // 根据env.example 生成 .env 文件
-if (!fs.existsSync(destFile)) {
+if (!fs.existsSync(envFilePath)) {
   // 如果不存在，则从 env.example 复制
-  fs.copyFileSync(sourceFile, destFile)
-  logger.info('.env file created from .env.example')
+  fs.copyFileSync(sourceFile, envFilePath)
+  console.log(chalk.grey(`${envFilePath} file created`))
 }
 
 // 读取 .env 文件内容
-const envContent = fs.readFileSync('.env', 'utf-8').split('\n')
+const envContent = fs.readFileSync(envFilePath, 'utf-8').split('\n')
 
 // 解析 .env 文件内容
-const envConfig = require('dotenv').parse(envContent.join('\n'))
+const envConfig = dotenv.parse(envContent.join('\n'))
 
 // 无配置token，会默认生成一个token
-if (envConfig.LOCAL_LOGIN_API_TOKEN) process.exit(0) // 0 表示正常退出
+if (envConfig.LOCAL_LOGIN_API_TOKEN) return
 
 const token = generateToken()
-logger.info(
-  `检测未配置 LOGIN_API_TOKEN, 写入初始化值 LOCAL_LOGIN_API_TOKEN=${token}  => .env \n`
+console.log(
+  `写入初始化token:${chalk.green(token)}  => ${chalk.cyan(envFilePath)} \n`
 )
 
 envConfig.LOCAL_LOGIN_API_TOKEN = token // 添加或修改键值对
@@ -55,4 +57,4 @@ for (const [key, value] of Object.entries(envConfig)) {
 }
 
 // 写入新的 .env 文件内容
-fs.writeFileSync('.env', newEnv)
+fs.writeFileSync(envFilePath, newEnv)

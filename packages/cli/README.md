@@ -6,10 +6,10 @@
 <a href="https://discord.gg/B5FFP3hT"><img src="https://img.shields.io/discord/1165844612473172088?logo=Discord&link=https%3A%2F%2Fdiscord.gg%2FB5FFP3hT" /></a>
 
 
-[🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)| [📦 NPM包](https://www.npmjs.com/package/wechatbot-webhook)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
+[🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general) | [🧑‍💻 Github](https://github.com/danni-cool/wechatbot-webhook)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 </div>
 
-开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人，当 http 调用和二次开发亦可，二次开发请fork
+开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人
 
 ## ✨ Features
 
@@ -29,15 +29,27 @@
   - 🚢 支持 docker 部署，兼容 `arm64` 和 `amd64`
   - ✍️ 支持 日志文件导出
 
-## 🚀 一分钟 Demo
-
-### 1. 运行
+### 1. 安装
 
 ```bash
-npx wechatbot-webhook
+npm i wechatbot-webhook -g
 ```
 
-> 除非掉线，默认记住上次登录，换帐号请运行以下命令 `npx wechatbot-webhook -r`
+### 2. 运行
+
+```bash
+wxbot
+```
+
+#### 参数
+
+```bash
+Options:
+  -V, --version  output the version number
+  -r, --reload   想重新扫码时加该参数，不加默认记住上次登录状态
+  -e, --edit     打开 .wechat_bot_env 配置文件，可以填写上报消息API等
+  -h, --help     display help for command
+```
 
 ### 2. 扫码登录
 
@@ -52,39 +64,6 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 --header 'Content-Type: application/json' \
 --data '{ "to": "测试昵称", data: { "content": "Hello World!" }}'
 ```
-
-## ⛰️ 部署 Deploy（推荐）
-
-### Docker 部署
-
-#### 1. 启动容器
-
-```bash
-# 启动容器并映射日志目录，日志按天维度生成，e.g: app.2024-01-01.log
-docker run -d --name wxBotWebhook -p 3001:3001 \
--v ~/wxBot_logs:/app/log \
-dannicool/docker-wechatbot-webhook
-```
-
-#### 2. 登录
-
-```bash
-docker logs -f wxBotWebhook
-```
-
-找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
-
-<https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN>
-
-#### Docker 可选 env 参数
-
-> Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="<https://example.com/your/url>" \
-
-| 功能 | 环境变量 | 案例 | 备注 |
-|--|--|--|--|
-|  收消息 |   RECVD_MSG_API  |   RECVD_MSG_API=<https://example.com/your/url>   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
-| 禁用自动登录 | DISABLE_AUTO_LOGIN | DISABLE_AUTO_LOGIN=true |  非微信踢下线账号，可以依靠session免登, 如果想每次都扫码登陆，则增加该条配置 |
-| 自定义登录 API token | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123 | 你也可以自定义一个自己的登录令牌，不配置的话，默认会生成一个 |
 
 ## 🛠️ API
 
@@ -361,10 +340,6 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 微信已登录, 返回纯文本 `healthy`，否则返回 `unHealthy`
 
-
-## 🌟 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=danni-cool/wechatbot-webhook&type=Date)](https://star-history.com/#danni-cool/wechatbot-webhook&Date)
 
 ## ⏫ 更新日志
 

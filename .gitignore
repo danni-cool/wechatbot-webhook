@@ -1,3 +1,7 @@
 node_modules
 .env
 loginSession.memory-card.json
+generated
+log
+tsconfig.tmp.json
+packages/cli/lib/bot.js

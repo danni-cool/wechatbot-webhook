@@ -1,23 +1,33 @@
 <div align="center">
 <img src="https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-webhook.png" width="500" height="251"/>
 
-简单易懂、开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人，当 http 调用和二次开发亦可，二次开发请fork
-
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/wechatbot-webhook/release.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/wechatbot-webhook)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/wechatbot-webhook/release.yml) ![npm dowloads](https://img.shields.io/npm/dm/wechatbot-webhook?label=npm/downloads)
+ ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/wechatbot-webhook)
 <a href="https://discord.gg/B5FFP3hT"><img src="https://img.shields.io/discord/1165844612473172088?logo=Discord&link=https%3A%2F%2Fdiscord.gg%2FB5FFP3hT" /></a>
 
 
-[view this project on docker hub :)](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)
-
-📝 [FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
+[🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general) | [🧑‍💻 Github](https://github.com/danni-cool/wechatbot-webhook)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 </div>
 
-## 💼 功能 Feature
+开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人
 
-| 功能 | 推送消息 | 接收消息 |
---|--|--
-| 支持的功能 | <ul><li>✅ 发送文字</li><li>✅ 发送图片</li><li>✅ 发送文件</li></ul> | <ul><li>✅ 文字</li><li>✅ 图片</li><li>✅ 视频</li><li>✅ 附件</li> <li>✅ 语音</li><li>✅ 添加好友邀请</li><li>✅ 链接卡片(公众号推文链接)</li></ul> |
+## ✨ Features
 
+- **推送消息** (发送文字 / 图片 / 文件)
+  - 💬 支持消息单条 / 多条 / 群发
+  - 🌃 消息 url 解析成文件发送
+  - 📁 支持读文件发送
+
+- **接收消息**（文字 / 图片 / 语音 / 视频 / 文件 / 好友申请 / 公众号推文链接）
+  - 🚗 单 API 收发消息（依赖收消息API，被动回复无需公网IP）
+  - 🪧 登入掉线异常事件通知
+
+- **其他功能**
+  - 🤖 支持 非掉线自动登录
+  - ✈️ 支持 带鉴权 api 接口获取登陆二维码
+  - 支持 [n8n](https://n8n.io/) 低码平台丝滑接入（webhook 节点）
+  - 🚢 支持 docker 部署，兼容 `arm64` 和 `amd64`
+  - ✍️ 支持 日志文件导出
 
 ### 1. 安装
 
@@ -47,7 +57,7 @@ Options:
 
 ### 3. 使用 http 请求给指定用户发消息
 
-新开个终端试试以下 curl
+新开个终端试试以下 curl，to字段值换成你要发送的昵称
 
 ```bash
 curl --location 'http://localhost:3001/webhook/msg/v2' \
@@ -59,54 +69,144 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 
 ### 1. 推消息 API
 
-- Url：<http://localhost:3001/webhook/msg>
+> v2版本接口增加了群发功能，v1 版本接口请移步 [legacy-api](./docs/legacy-api)
+
+- Url：<http://localhost:3001/webhook/msg/v2>
 - Methods: `POST`
-
-#### Case1. 发文字或文件(外链)
-
 - ContentType: `application/json`
 - Body: 格式见下面表格
 
-> json 请求发送文件只支持外链
+#### `payload` 结构
+
+> 发文字或文件外链, 外链会解析成图片或者文件
 
 | 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
 | -- | -- | -- | -- | -- | -- |
-| to | **消息接收方**，传入`String` 默认是发给昵称（群名同理）, 传入`Object` 结构支持发给备注过的人，比如：`{alias: '备注名'}`，群名不支持备注名 | `String` `Object` | -  |  Y  | - |
-| isRoom | **是否发的群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
-| type | **消息类型**，消息不支持自动拆分，请手动调多次。| `String`  | - | N | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
+| to | **消息接收方**，传入`String` 默认是发给昵称（群名同理）, 传入`Object` 结构支持发给备注过的人，比如：`{alias: '备注名'}`，群名不支持备注名 | `String`  `Object` | -  |  N  | - |
+| isRoom | **是否发给群消息**，这个参数决定了找人的时候找的是群还是人，因为昵称其实和群名相同在技术处理上 | `Boolean` | `false`  | Y  |  `true`  `false`  |
+| data | 消息体结构,见下方 `payload.data` | `Object`  `Array` | `false`  | N  |  `true`  `false`  |
+
+#### `payload.data` 结构
+
+| 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
+| -- | -- | -- | -- | -- | -- |
+| type | **消息类型**, 字段留空解析为纯文本 | `String`  `text` | - | Y | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
 | content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
 
 #### Example（curl）
 
-##### Curl (发文字)
+##### 发单条消息
 
 ```bash
-curl --location --request POST 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
     "to": "testUser",
-    "type": "text",
-    "content": "Hello World!"
+    "data": { "content": "你好👋" }
 }'
 ```
 
-##### Curl（发文件，解析url）
+##### 发给群消息
 
 ```bash
-curl --location --request POST 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg' \
 --header 'Content-Type: application/json' \
---data-raw '{
+--data '{
     "to": "testGroup",
-    "type": "fileUrl",
-    "content": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3",
-    "isRoom": true
+    "isRoom": true,
+    "data": { "type": "fileUrl" , "content": "https://download.samplelib.com/jpeg/sample-clouds-400x300.jpg" },
 }'
 ```
 
-#### Case2. 读文件发送
+##### 同一对象多条消息(群消息同理)
 
+```bash
+curl --location 'http://localhost:3001/webhook/msg' \
+--header 'Content-Type: application/json' \
+--data '{
+    "to": "testUser",
+    "data": [
+        {
+            "type": "text",
+            "content": "你好👋"
+        },
+        {
+            "type": "fileUrl",
+            "content": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3"
+        }
+    ]
+}'
+```
+
+##### 群发消息
+
+``` bash
+curl --location 'http://localhost:3001/webhook/msg' \
+--header 'Content-Type: application/json' \
+--data '[
+    {
+        "to": "testUser1",
+        "data": {
+            "content": "你好👋"
+        }
+    },
+    {
+        "to": "testUser2",
+        "data": [
+          {
+            "content": "你好👋"
+          },
+          {
+            "content": "近况如何？"
+          }
+        ]
+    }
+]'
+```
+
+#### 返回值 `response` 结构
+
+- **`success`**: 消息发送成功与否，群发消息即使部份发送成功也会返回 `true`
+- **`message`**: 出错时提示的消息
+  - 消息发送成功: Message sent successfully
+  - 参数校验不通过: Some params is not valid, sending task is suspend...
+  - 消息都发送失败: All Messages [number] sent failed...
+  - 部份发送成功: Part of the message sent successfully...
+- **`task`**: 发送任务详细信息
+  - `task.successCount`: 发送成功条数
+  - `task.totalCount`: 总消息条数
+  - `task.failedCount`: 发送失败条数
+  - `task.reject`: 因为参数校验不通过的参数和 error 提示
+  - `task.sentFailed`: 因为发送失败和 error 提示
+  - `task.notFound`: 因为未找到用户或者群和 error 提示
+
+> 确保消息单次发送一致性，某一条参数校验失败会终止所有消息发送任务
+
+```json
+{
+    "success": true,
+    "message": "",
+    "task": {
+        "successCount": 0,
+        "totalCount": 0,
+        "failedCount": 0,
+        "reject": [],
+        "sentFailed": [],
+        "notFound": []
+    }
+}
+```
+
+#### 读文件发送
+
+> 读文件暂时只支持单条发送
+
+- Url：<http://localhost:3001/webhook/msg>
+- Methods: `POST`
 - ContentType: `multipart/form-data`
 - FormData: 格式见下面表格
+
+##### `payload` 结构
 
 | 参数    | 说明                                                                             | 数据类型 | 默认值 | 可否为空 | 可选值  |
 | ------- | -------------------------------------------------------------------------------- | -------- | ------ | -------- | ------- |
@@ -123,22 +223,31 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --form 'isRoom=1'
 ```
 
+#### 返回值 `response` 结构
+
+```json
+{
+  "success": true,
+  "message": "Message sent successfully"
+}
+```
+
 ### 2. 收消息 API
 
-> **快捷回复**：收消息API现在支持通过返回值实现快捷回复， https://github.com/danni-cool/wechatbot-webhook/issues/96, 无需再发起 post 请求，一个 API 搞定接受和回复
+> 收消息API现在支持通过返回值实现**快捷回复**，无需再发起 post 请求，一个 API 搞定接收消息后回复
 
-#### 请求体
+#### `payload` 结构
   - Methods: `POST`
   - ContentType: `multipart/form-data`
   - Form格式如下
 
 | formData      | 说明                                                                                                                                                                                                                                                                      | 数据类型          | 可选值                  | 示例                                             |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------- | ------------------------------------------------ |
-| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 添加好友邀请(friendship)</li></ul> close: [#10](https://github.com/danni-cool/wechatbot-webhook/issues/10) refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` `friendship` | -                                                |
+| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 添加好友邀请(friendship)</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` `friendship` | -                                                |
 | content       | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例                                                                                                                                                                                                                | `String` `Binary` |                         | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source        | 消息的相关发送方数据, JSON String                                                                                                                                                                                                                                         | `String`          |                         | [示例](docs/recvdApi.example.md#formdatasource)  |
 | isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
-| isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）                                                                                                                                                                                                                        | `String`          | `1` `0`                 | -                                                |
+| isSystemEvent | 是否是来自系统消息事件（上线，掉线、异常事件、快捷回复后的通知）                                                                                                                                                                                                                        | `String`          | `1` `0`                 | -                                                |
 
 **服务端处理 formData 一般需要对应的处理程序，假设你已经完成这一步，你将得到以下 request**
 
@@ -153,21 +262,23 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 ```
 
 
-#### 返回值（可选）
+#### 返回值 `response` 结构（可选）
 
-- ContentType: `json` | `null`
+> 如果期望用 `RECVD_MSG_API` 收消息后立即回复，请按以下结构返回返回值，无返回值则不会回复消息
+
+- ContentType: `json`
 
 | 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
 | -- | -- | -- | -- | -- | -- |
 | success | 该条请求成功与否，返回 false 或者无该字段，不会处理回复，**有一些特殊消息也通过这个字段控制，比如加好友邀请，返回 `true` 则会通过好友请求** | `Boolean` | - | Y | `true` `false` |
 | data | 如果需要回复消息的话，需要定义data字段 | `Object` `Object Array` | - | Y | |
 
-data 结构
+#### `response.data` 结构
 
 | 参数 |  说明 | 数据类型 | 默认值 | 可否为空 | 可选参数 |
 | -- | -- | -- | -- | -- | -- |
-| type | **消息类型**，该字段不填默认当文本类型传输 | `String`  | - | Y | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
-| content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | Y | - |
+| type | **消息类型**，该字段不填默认当文本类型传输 | `String`  | `text` | Y | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
+| content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
 
 如果回复单条消息
 
@@ -199,21 +310,36 @@ data 结构
   }
 ```
 
-### 3. 登录API
+### 3. 其他API
 
-1. 在异常或者掉线事件触发后，通知你配置的 `RECVD_MSG_API`，
-2. 在收到通知后，访问登录 Api 扫码登录 <http://localhost:3001/login?token=YOUR_PERSONAL_TOKEN。>
+#### token 配置说明
+> 除了在 docker 启动时配置token，在默认缺省 token 的情况，会默认生成一个写入 `.env` 文件中
 
-#### 自定义token
+#### `/login`
 
-token 初次启动项目会自动生成，你也可以配置一个简单好记的token， 如果都配置，docker 配置将覆盖本地配置
+- **描述**：获取登录二维码接口。
+- **methods**: `GET`
+- **query**: token
 
-1. docker 启动，参数为 -e LOGIN_API_TOKEN="YOUR_PERSONAL_TOKEN"
-2. `.env` 文件中，配置 LOCAL_LOGIN_API_TOKEN=YOUR_PERSONAL_TOKEN
+**status**: `200`
+登录成功，返回 json 包含当前用户
 
-| API 路径    | Query Params | Methods | 描述                                                                          |
-| ----------- | ------------ | ------- | ----------------------------------------------------------------------------- |
-| /login      | token        | `GET`   | 登录成功，返回及当前用户。登录态掉了，跳转最新的登录二维码                    |
+```json
+{"success":true,"message":"Contact<TestUser>is already login"}
+```
+
+**status**: `302`
+登录态掉了，跳转最新的登录二维码 
+
+#### `/healthz`
+
+- **描述**：健康检测接口。
+- **methods**: `GET`
+- **query**: token
+- **status**: `200`
+
+微信已登录, 返回纯文本 `healthy`，否则返回 `unHealthy`
+
 
 ## ⏫ 更新日志
 

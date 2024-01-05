@@ -71,7 +71,7 @@ type preCheckStatus =
 type statusResolverStatus = msg2SingleStatus | preCheckStatus
 
 type statusResolverOpt = {
-  validCount?: number
+  count?: number
   rejectReasonObj?: msg2SingleRejectReason | null
   sendingTaskObj?: sendingTaskType | null
   notFoundObj?: msg2SingleRejectReason | null

@@ -73,7 +73,6 @@ function registerPushHook({ app, bot }) {
       }
 
       // 校验必填参数
-
       let unValidParamsStr = Utils.getUnValidParamsList(
         rules.pushFileMsgRules({
           to: formPayload.to,

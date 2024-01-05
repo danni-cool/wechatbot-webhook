@@ -83,8 +83,6 @@ const handleSendV2MsgCollectInfo = async function (
     notFound: []
   }
 
-  let paramValidCount = 0
-
   /**
    * 根据状态组装数据
    * @param {statusResolverStatus} status
@@ -92,16 +90,16 @@ const handleSendV2MsgCollectInfo = async function (
    */
   function statusResolver(
     status,
-    { rejectReasonObj, sendingTaskObj, notFoundObj, validCount }
+    { rejectReasonObj, sendingTaskObj, notFoundObj, count = 0 }
   ) {
     switch (status) {
       case 'valid':
-        //@ts-expect-error 进入这个分支 validCount一定存在
-        paramValidCount += validCount
+        task.totalCount += count
         break
       case 'unValidMsgParent':
       case 'unValidDataMsg':
       case 'RoomAliasNotSupported':
+        task.totalCount += count
         // @ts-ignore
         task.reject.push(rejectReasonObj)
         // @ts-ignore
@@ -146,13 +144,13 @@ const handleSendV2MsgCollectInfo = async function (
    * @param {*} item
    */
   function preCheckAndResolveStatus(item) {
-    const { status, rejectReasonObj, validCount } = hadnleMsgV2PreCheck(item, {
+    const { status, rejectReasonObj, count } = hadnleMsgV2PreCheck(item, {
       skipReceiverCheck
     })
 
     statusResolver(status, {
       rejectReasonObj,
-      validCount
+      count
     })
 
     return status === 'valid'
@@ -192,21 +190,6 @@ const handleSendV2MsgCollectInfo = async function (
     })
   }
 
-  //发送停止，校验通过一些，不通过一些
-  if (task.successCount === 0 && task.failedCount > 0 && paramValidCount > 0) {
-    task.totalCount = task.failedCount + paramValidCount
-    //发送停止，校验都不通过
-  } else if (
-    task.successCount === 0 &&
-    task.failedCount > 0 &&
-    paramValidCount === 0
-  ) {
-    task.totalCount = task.failedCount
-    // 有发送成功，说明校验都过了
-  } else if (task.successCount > 0) {
-    task.totalCount = paramValidCount
-  }
-
   return {
     state,
     task
@@ -230,6 +213,7 @@ const hadnleMsgV2PreCheck = function (body, opt) {
     data: body.data,
     unValidParamsStr: ''
   }
+  const count = Array.isArray(payload.data) ? payload.data.length : 1
 
   // 跳过发送主体校验（比如recvd单api回复消息，已经知道主体的情况下）
   if (!skipReceiverCheck) {
@@ -324,7 +308,8 @@ const hadnleMsgV2PreCheck = function (body, opt) {
   if (['unValidDataMsg', 'unValidMsgParent'].includes(status)) {
     return {
       status,
-      rejectReasonObj
+      rejectReasonObj,
+      count
     }
   }
 
@@ -338,7 +323,8 @@ const hadnleMsgV2PreCheck = function (body, opt) {
           isRoom,
           error:
             '群名只支持群昵称，please checkout the api reference (https://github.com/danni-cool/wechatbot-webhook#%EF%B8%8F-api)'
-        }
+        },
+        count
       }
     }
   }
@@ -347,7 +333,7 @@ const hadnleMsgV2PreCheck = function (body, opt) {
   return {
     status,
     rejectReasonObj,
-    validCount: Array.isArray(payload.data) ? payload.data.length : 1
+    count
   }
 }
 

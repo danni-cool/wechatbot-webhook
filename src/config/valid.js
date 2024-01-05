@@ -73,7 +73,7 @@ module.exports = {
     },
     {
       key: 'content',
-      val: content.size ?? 0,
+      val: content ?? 0,
       required: true,
       type: 'file',
       unValidReason: ''

@@ -13,3 +13,7 @@ loginSession.memory-card.json
 packages
 pnpm-workspace.yaml
 log
+typings
+.eslintignore
+.eslintrc.js
+tsconfig.json

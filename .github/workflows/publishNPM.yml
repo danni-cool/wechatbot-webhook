@@ -6,6 +6,22 @@ on:
       - '*'
 
 jobs:
+  update-cli-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Update CLI package.json
+        run: |
+          ROOT_VERSION=$(jq -r '.version' package.json)
+          jq ".version = \"$ROOT_VERSION\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add packages/cli/package.json
+          git commit -m "chore(cli): sync package version [skip ci]"
+          git push
+      
   publish-cli:
     runs-on: ubuntu-latest
     steps:

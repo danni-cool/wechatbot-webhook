@@ -107,26 +107,29 @@ if (!process.env.homeEnvCfg) {
   // cli环境使用console
 } else {
   // @ts-ignore
-  module.exports.logger = {
-    /**
-     * @param {*} payload
-     */
-    debug: (...payload) => console.log.apply(console, payload),
-    /**
-     * @param {*} payload
-     */
-    warn: (...payload) => console.warn.apply(console, payload),
-    /**
-     * @param {*} payload
-     */
-    error: (...payload) => console.error.apply(console, payload),
-    /**
-     * @param {*} payload
-     */
-    info: (...payload) => console.log.apply(console, payload),
-    /**
-     * @param {*} payload
-     */
-    trace: (...payload) => console.log.apply(console, payload)
+  module.exports = {
+    proxyConsole() {},
+    logger: {
+      /**
+       * @param {*} payload
+       */
+      debug: (...payload) => console.log.apply(console, payload),
+      /**
+       * @param {*} payload
+       */
+      warn: (...payload) => console.warn.apply(console, payload),
+      /**
+       * @param {*} payload
+       */
+      error: (...payload) => console.error.apply(console, payload),
+      /**
+       * @param {*} payload
+       */
+      info: (...payload) => console.log.apply(console, payload),
+      /**
+       * @param {*} payload
+       */
+      trace: (...payload) => console.log.apply(console, payload)
+    }
   }
 }

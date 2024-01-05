@@ -1,8 +1,10 @@
-// 此处批量管理注册的webhook
-const registerMsgPusherRouter = require('./msg')
-const registerLoginCheck = require('./login')
-
+/**
+ * 注册路由
+ * @param {Object} param
+ * @param {import('hono').Hono} param.app
+ * @param {import('wechaty').Wechaty} param.bot
+ */
 module.exports = function registerRoute({ app, bot }) {
-  registerMsgPusherRouter({ app, bot })
-  registerLoginCheck({ app, bot })
+  require('./msg')({ app, bot })
+  require('./login')({ app, bot })
 }

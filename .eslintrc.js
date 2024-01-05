@@ -1,27 +1,28 @@
-module.exports = {
+/** @type {import('eslint').Linter.BaseConfig} */
+const config = {
   env: {
-    browser: true,
-    commonjs: true,
-    es2021: true,
+    node: true,
+    commonjs: true
   },
-  plugins: ['prettier'],
-  extends: ['standard', 'prettier'],
-  overrides: [
-    {
-      env: {
-        node: true,
-      },
-      files: ['.eslintrc.{js,cjs}'],
-      parserOptions: {
-        sourceType: 'script',
-      },
-    },
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'prettier'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier'
   ],
   parserOptions: {
     ecmaVersion: 'latest',
+    sourceType: 'script' // 对于 CommonJS
   },
   rules: {
-    'prettier/prettier': 'error',
-    'valid-typeof': 0 /** js 配置这个太麻烦，不如上ts */,
-  },
+    'prettier/prettier': 'error' /** check prettier lint */,
+    '@typescript-eslint/no-var-requires': 'off' /** only run with commonjs */,
+    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/ban-ts-comment':
+      'off' /** quickly ban all error unnecessary */
+  }
 }
+
+module.exports = config

@@ -1,19 +1,54 @@
 # RECVD_MSG_API JSON 示例
 
-## formData.content `String` | `Binary`
+## formData 请求体不同情况说明
 
-`formData` 内的字段和 `formData.content` 映射如下：
+### 文字消息 `formData.type === text`
 
-<table>
-  <thead>
-    <tr><th>字段条件</th> <th>字段类型说明</th> <th>formData.content 数据结构</th></tr>
-  </thead>
-  <tbody>
-      <tr><td><code>formData.isSystemEvent</code> === '1'</td><td> <code>json string</code></td><td>
+- 是否支持快捷回复：✅
+- `formData.content`: `String`
 
+### 文件消息 `formData.type === file`
+
+- 是否支持快捷回复：✅
+- `formData.content`: `binary`
+
+### 公众号推文 `formData.type === urlLink`
+
+- 是否支持快捷回复：❌
+- `formData.content`：`json`
+
+示例
+```json
+{
+  "description": "AI技术逐渐成为设计师的灵感库",
+  "thumbnailUrl": "",
+  "title": "AI神器帮助你从小白秒变设计师",
+  "url": "http://example.url",
+}
+```
+
+### 加好友请求 `formData.type === friendship`
+
+- 是否支持快捷回复：✅
+- `formData.content`：`json`
+
+```json
+{
+  "name": "加你的人昵称",
+  "hello": "朋友验证消息"
+}
+```
+
+> 通过好友请求，需要通过接口返回 `{ "success": true }` 字段
+
+### 4. 系统消息 `formData.isSystemEvent === '1'`
+
+- 是否支持快捷回复：❌
+- `formData.content`: `json`
+示例
 ```js
 {
-  "event": "login", // login | logout | error
+  "event": "login", // login | logout | error | notifyOfRecvdApiPushMsg
 
   "user": { // 当前的用户信息，没有则为null
     "_events": {},
@@ -33,32 +68,23 @@
 
     "error": ''// js 报错的错误栈信息
   }
+
+  //仅当 event: "notifyOfRecvdApiPushMsg" 快捷回复后触发才返回次结构， 如果有部分消息推送失败也在此结构能拿到所有信息, 结构同推消息的api结构
+  "recvdApiReplyNotify": {
+    "success": true,
+    "message": "Message sent successfully",
+    "task": {
+        "successCount": 1,
+        "totalCount": 1,
+        "failedCount": 0,
+        "reject": [],
+        "sentFailed": [],
+        "notFound": []
+    }
+  }
 }
 ```
 
-</td></tr>
-<tr>
-<td><code>formData.type</code> === 'urlLink'</td>
-<td>
-<code>json string</code>
-</td>
-<td>
-
-```js
-{
-  description: "AI技术逐渐成为设计师的灵感库",
-  thumbnailUrl: "",
-  title: "AI神器帮助你从小白秒变设计师",
-  url: "http://example.url",
-}
-```
-
-</td>
-</tr>
-  </tbody>
-</table>
-
-### 时，返回 json string 如下
 
 ## formData.source `String`
 

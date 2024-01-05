@@ -8,4 +8,12 @@
 node_modules
 script
 docs
+cli
 loginSession.memory-card.json
+packages
+pnpm-workspace.yaml
+log
+typings
+.eslintignore
+.eslintrc.js
+tsconfig.json

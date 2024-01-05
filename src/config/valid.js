@@ -1,7 +1,7 @@
 module.exports = {
   /**
    * 推消息v2 发送消息主体结构校验规则
-   * @param {pushMsgMain} param0
+   * @param {pushMsgMainOpt} param0
    * @returns {{ key: 'to' | 'isRoom' | 'data', val: any, required: boolean, type: string|string[], unValidReason: string}[]}
    */
   pushMsgV2ParentRules: ({ to, isRoom, data }) => [
@@ -29,12 +29,12 @@ module.exports = {
   ],
   /**
    * 推消息v2 发送消息data结构校验规则
-   * @param {pushMsgUnitPayload} param
-   * @returns {{ key: 'data.type' | 'data.content', val: any, required: boolean, type: string, enum?: Array<string|number>, unValidReason: string}[]}
+   * @param {pushMsgUnitTypeOpt} param
+   * @returns {{ key: 'type' | 'content', val: any, required: boolean, type: string, enum?: Array<string|number>, unValidReason: string}[]}
    */
   pushMsgV2ChildRules: ({ type, content }) => [
     {
-      key: 'data.type',
+      key: 'type',
       val: type,
       required: false,
       type: 'string',
@@ -42,7 +42,7 @@ module.exports = {
       unValidReason: ''
     },
     {
-      key: 'data.content',
+      key: 'content',
       val: content,
       required: true,
       type: 'string',

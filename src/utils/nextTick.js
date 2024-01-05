@@ -1,22 +1,25 @@
 // 简化版 nextTick 函数，仅使用 Promise
 // credit: https://github.com/vuejs/vue/blob/main/src/core/util/next-tick.ts
+const { logger } = require('./log')
 /**@type {any[]} */
 const callbacks = []
+const freezedTickQueueMap = new Map()
 let pending = false
-const { logger } = require('./log')
-
+let id = 0
 /**
  * 微任务回调
- * @param {(arg0:any) => any} cb
- * @param {any} [ctx]
+ * @param {(arg0:any) => any} [cb]
+ * @param {{ctx?: any, freezed?:boolean, freezedTickId?:number}} [opt]
  * @returns
  */
-const nextTick = async (cb, ctx) => {
+const nextTick = async (cb, opt) => {
   /**@type {(value:any)=>void | undefined} */
   let _resolve
 
+  const { ctx, freezed, freezedTickId } = opt || {}
+
   // 将一个新的函数加入 callbacks 队列
-  callbacks.push(() => {
+  ;(freezed ? freezedTickQueueMap.get(freezedTickId) : callbacks).push(() => {
     if (typeof cb === 'function') {
       try {
         // 如果提供了回调函数，立即执行
@@ -32,10 +35,9 @@ const nextTick = async (cb, ctx) => {
     }
   })
 
-  if (!pending) {
+  if (!pending && !freezed) {
     pending = true
     // 使用 Promise 来处理 callbacks 队列
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     Promise.resolve().then(flushCallbacks)
   }
 
@@ -66,6 +68,34 @@ function handleError(e) {
   logger.error('消息任务执行失败：', e)
 }
 
+//增加暂时不被执行的队列
+class messageQueue {
+  constructor() {
+    this.id = id++
+    freezedTickQueueMap.set(id, [])
+  }
+
+  /**
+   * @param {(arg0:any) => any} cb
+   */
+  push(cb) {
+    nextTick(cb, { freezed: true, freezedTickId: this.id })
+  }
+
+  flush() {
+    const unfreezeQueue = freezedTickQueueMap.get(this.id)
+    nextTick(() => {
+      logger.info('开始发送队列消息')
+    })
+    unfreezeQueue.forEach((/** @type {any} */ item) => {
+      callbacks.push(item)
+    })
+
+    freezedTickQueueMap.delete(this.id)
+  }
+}
+
 module.exports = {
-  nextTick
+  nextTick,
+  messageQueue
 }

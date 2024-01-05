@@ -108,3 +108,10 @@ type msgV2taskType = {
   sentFailed: failedTaskType[]
   notFound: msg2SingleRejectReason[]
 }
+
+type standardV2Payload = {
+  to: string | { alias: string }
+  isRoom: boolean
+  data: pushMsgUnitTypeOpt | pushMsgUnitTypeOpt[]
+  unValidParamsStr: string
+}

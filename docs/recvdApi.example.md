@@ -48,7 +48,7 @@
 示例
 ```js
 {
-  "event": "login", // login | logout | error
+  "event": "login", // login | logout | error | notifyOfRecvdApiPushMsg
 
   "user": { // 当前的用户信息，没有则为null
     "_events": {},
@@ -67,6 +67,20 @@
     }
 
     "error": ''// js 报错的错误栈信息
+  }
+
+  //仅当 event: "notifyOfRecvdApiPushMsg" 快捷回复后触发才返回次结构， 如果有部分消息推送失败也在此结构能拿到所有信息, 结构同推消息的api结构
+  "recvdApiReplyNotify": {
+    "success": true,
+    "message": "Message sent successfully",
+    "task": {
+        "successCount": 1,
+        "totalCount": 1,
+        "failedCount": 0,
+        "reject": [],
+        "sentFailed": [],
+        "notFound": []
+    }
   }
 }
 ```

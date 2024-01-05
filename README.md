@@ -243,6 +243,15 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 --form 'isRoom=1'
 ```
 
+#### 返回值 `response` 结构
+
+```json
+{
+  "success": true,
+  "message": "Message sent successfully"
+}
+```
+
 ### 2. 收消息 API
 
 > 收消息API现在支持通过返回值实现**快捷回复**，无需再发起 post 请求，一个 API 搞定接收消息后回复
@@ -258,7 +267,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 | content       | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例                                                                                                                                                                                                                | `String` `Binary` |                         | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source        | 消息的相关发送方数据, JSON String                                                                                                                                                                                                                                         | `String`          |                         | [示例](docs/recvdApi.example.md#formdatasource)  |
 | isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
-| isSystemEvent | 是否是来自系统消息事件（比如上线，掉线、异常事件）                                                                                                                                                                                                                        | `String`          | `1` `0`                 | -                                                |
+| isSystemEvent | 是否是来自系统消息事件（上线，掉线、异常事件、快捷回复后的通知）                                                                                                                                                                                                                        | `String`          | `1` `0`                 | -                                                |
 
 **服务端处理 formData 一般需要对应的处理程序，假设你已经完成这一步，你将得到以下 request**
 

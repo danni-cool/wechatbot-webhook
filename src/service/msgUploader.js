@@ -1,5 +1,5 @@
 const Utils = require('../utils/index')
-// const fetch = require('node-fetch-commonjs')
+const fetch = require('node-fetch-commonjs')
 const { config } = require('../config/const')
 const FormData = require('form-data')
 const { LOCAL_RECVD_MSG_API, RECVD_MSG_API } = process.env
@@ -197,9 +197,9 @@ async function sendMsg2RecvdApi(msg) {
   let response
 
   try {
+    //@ts-expect-error node-fetch-commonjs 无type
     response = await fetch(webhookUrl, {
       method: 'POST',
-      //@ts-expect-errors 瞎报错
       body: formData
     })
 

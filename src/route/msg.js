@@ -24,7 +24,7 @@ function registerPushHook({ app, bot }) {
 
     const { success, task, message, status } = await Service.handleSendV2Msg(
       body,
-      bot
+      { bot }
     )
 
     if (status !== 200) {

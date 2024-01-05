@@ -6,14 +6,21 @@ const rules = require('../config/valid.js')
 /**
  * 根据v2群发逻辑整合归并状态方便调用和处理回调
  * @param {*} body
- * @param {import('wechaty/impls').WechatyInterface} bot
+ * @param {{bot?:import('wechaty/impls').WechatyInterface, skipReceiverCheck?:boolean, messageReceiver?:msgInstanceType}} bot
  * */
-const handleSendV2Msg = async function (body, bot) {
+const handleSendV2Msg = async function (
+  body,
+  { bot, skipReceiverCheck, messageReceiver }
+) {
   let success = false
   let message = ''
   let status = 200
 
-  const { state, task } = await handleMsg2Multi(body, bot)
+  const { state, task } = await handleSendV2MsgCollectInfo(body, {
+    bot,
+    skipReceiverCheck,
+    messageReceiver
+  })
 
   //有部分 or 全部参数校验不通过
   if (state === 'reject') {
@@ -57,10 +64,13 @@ const handleSendV2Msg = async function (body, bot) {
 /**
  * 处理v2版本推消息（群发or个人）,返回状态
  * @param {*} body
- * @param {import('wechaty/impls').WechatyInterface} bot
+ * @param {{bot?:import('wechaty/impls').WechatyInterface, skipReceiverCheck?:boolean, messageReceiver?:msgInstanceType}} opt
  * @returns {Promise<{state:'pass' | 'reject' | '', task:msgV2taskType}>}
  */
-const handleMsg2Multi = async function (body, bot) {
+const handleSendV2MsgCollectInfo = async function (
+  body,
+  { bot, skipReceiverCheck = false, messageReceiver }
+) {
   /**@type {'pass' | 'reject' | ''} */
   let state = ''
   /**@type {msgV2taskType} */
@@ -136,7 +146,9 @@ const handleMsg2Multi = async function (body, bot) {
    * @param {*} item
    */
   function preCheckAndResolveStatus(item) {
-    const { status, rejectReasonObj, validCount } = hadnleMsgV2PreCheck(item)
+    const { status, rejectReasonObj, validCount } = hadnleMsgV2PreCheck(item, {
+      skipReceiverCheck
+    })
 
     statusResolver(status, {
       rejectReasonObj,
@@ -162,7 +174,7 @@ const handleMsg2Multi = async function (body, bot) {
       // 参数校验成功进入发送逻辑
       for (let item of body) {
         const { status, rejectReasonObj, sendingTaskObj, notFoundObj } =
-          await handleMsg2Single(item, bot)
+          await handleMsg2Single(item, { bot, messageReceiver })
         statusResolver(status, {
           rejectReasonObj,
           sendingTaskObj,
@@ -172,7 +184,7 @@ const handleMsg2Multi = async function (body, bot) {
     }
   } else if (!Array.isArray(body) && (await preCheckAndResolveStatus(body))) {
     const { status, rejectReasonObj, sendingTaskObj, notFoundObj } =
-      await handleMsg2Single(body, bot)
+      await handleMsg2Single(body, { bot, messageReceiver })
     statusResolver(status, {
       rejectReasonObj,
       sendingTaskObj,
@@ -203,44 +215,46 @@ const handleMsg2Multi = async function (body, bot) {
 
 /** 发送消息前预先校验参数
  * @param {*} body
+ * @param {{skipReceiverCheck:boolean}} [opt]
  */
-const hadnleMsgV2PreCheck = function (body) {
+const hadnleMsgV2PreCheck = function (body, opt) {
+  const skipReceiverCheck = !!opt?.skipReceiverCheck
   /** @type {preCheckStatus} */
   let status = 'valid'
   /** @type { msg2SingleRejectReason | null} */
   let rejectReasonObj = null
-
+  /**@type {standardV2Payload} */
   const payload = {
-    /** @type {string| {alias:string}} */
     to: body.to,
-    /** @type {boolean| undefined} */
     isRoom: body.isRoom,
-    /** @type {pushMsgUnitTypeOpt | pushMsgUnitTypeOpt[]} */
-    data: body.data /** { "type": "", content: "" } */,
+    data: body.data,
     unValidParamsStr: ''
   }
 
-  // 校验必填参数
-  payload.unValidParamsStr = Utils.getUnValidParamsList(
-    rules.pushMsgV2ParentRules({
-      to: payload.to,
-      isRoom: payload.isRoom ?? false,
-      data: payload.data
-    })
-  )
-    .map(({ unValidReason }) => unValidReason)
-    .join('，')
+  // 跳过发送主体校验（比如recvd单api回复消息，已经知道主体的情况下）
+  if (!skipReceiverCheck) {
+    // 校验必填参数
+    payload.unValidParamsStr = Utils.getUnValidParamsList(
+      rules.pushMsgV2ParentRules({
+        to: payload.to,
+        isRoom: payload.isRoom ?? false,
+        data: payload.data
+      })
+    )
+      .map(({ unValidReason }) => unValidReason)
+      .join('，')
 
-  const { to, isRoom, unValidParamsStr } = payload
-
-  if (unValidParamsStr) {
-    status = 'unValidMsgParent'
-    rejectReasonObj = {
-      to,
-      ...(isRoom !== undefined ? { isRoom } : {}),
-      error: unValidParamsStr
+    if (payload.unValidParamsStr) {
+      status = 'unValidMsgParent'
+      rejectReasonObj = {
+        to: payload.to,
+        ...(payload.isRoom !== undefined ? { isRoom: payload.isRoom } : {}),
+        error: payload.unValidParamsStr
+      }
     }
   }
+
+  const { to, isRoom } = payload
 
   // 继续校验 payload.data的结构
   let unValidDataParamsStr
@@ -340,10 +354,10 @@ const hadnleMsgV2PreCheck = function (body) {
 /**
  * 处理消息发给个人逻辑（单条/多条）（不校验参数）
  * @param {*} body
- * @param {import('wechaty/impls').WechatyInterface} bot
+ * @param {{bot?:import('wechaty/impls').WechatyInterface, messageReceiver?:msgInstanceType }} opt
  * @returns {Promise<{status: msg2SingleStatus, notFoundObj: msg2SingleRejectReason | null, rejectReasonObj: msg2SingleRejectReason|null, sendingTaskObj: sendingTaskType | null}>}
  */
-const handleMsg2Single = async function (body, bot) {
+const handleMsg2Single = async function (body, { bot, messageReceiver }) {
   /**@type {msg2SingleStatus} */
   let status = ''
   /** @type { msg2SingleRejectReason | null} */
@@ -365,15 +379,18 @@ const handleMsg2Single = async function (body, bot) {
 
   const { to, isRoom } = payload
 
-  let msgReceiver
+  let msgReceiver = messageReceiver
 
-  if (isRoom === true && typeof to === 'string') {
-    msgReceiver = await bot.Room.find({ topic: to })
-  } else {
-    msgReceiver = await bot.Contact.find(
-      //@ts-expect-error wechaty 貌似未定义 {alias:string} 的场景
-      Utils.equalTrueType(to, 'object') ? to : { name: to }
-    )
+  // msgReceiver 可以由外部提供
+  if (!msgReceiver && bot) {
+    if (isRoom === true && typeof to === 'string') {
+      msgReceiver = await bot.Room.find({ topic: to })
+    } else {
+      msgReceiver = await bot.Contact.find(
+        //@ts-expect-error wechaty 貌似未定义 {alias:string} 的场景
+        Utils.equalTrueType(to, 'object') ? to : { name: to }
+      )
+    }
   }
 
   if (msgReceiver !== undefined) {
@@ -529,7 +546,15 @@ const formatAndSendMsg = async function ({ type, content, msgInstance }) {
  * @param {msgInstanceType} [payload.msgInstance]
  */
 const handleResSendMsg = async ({ res, type, friendship, msgInstance }) => {
-  let success, data
+  // to 的逻辑
+  // 个人
+  // msgInstance.payload.name
+  // 群名
+  // msgInstance.payload.topic
+  // 好友卡片
+  // msgInstance.contact().name()
+
+  let success, data, to, isRoom
 
   if (res?.ok) {
     const result = await res.json()
@@ -542,33 +567,65 @@ const handleResSendMsg = async ({ res, type, friendship, msgInstance }) => {
 
   switch (type) {
     case MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP:
+      to = friendship?.contact().name()
       success === true
         ? //@ts-expect-errors 重载不是很好使，手动判断
           await friendship.accept()
         : Utils.logger.info(
             //@ts-expect-errors 重载不是很好使，手动判断
-            `not auto accepted, because ${friendship
-              .contact()
-              //@ts-expect-errors 重载不是很好使，手动判断
-              .name()}'s verify message is: ${friendship.hello()}`
+            `not auto accepted, because ${to}'s verify message is: ${friendship.hello()}`
           )
 
       // 同意且包含回复信息
       if (success === true && data !== undefined) {
         await Utils.sleep(1000)
         //@ts-expect-errors 重载不是很好使，手动判断
-        msgSendQueueHandler(data, friendship.contact())
+        recvdApiReplyHandler(data, friendship.contact(), to)
       }
 
       break
 
     default:
-      if (success === true && data !== undefined) {
+      //进入该分支一定有msgInstance，判断是为了让 ts happy
+      if (success === true && data !== undefined && msgInstance) {
         await Utils.sleep(1000)
-        msgSendQueueHandler(data, msgInstance)
+        //@ts-ignore
+        isRoom = !!msgInstance.payload?.topic
+        //@ts-ignore
+        to = isRoom ? msgInstance.payload?.topic : msgInstance.payload.name
+        recvdApiReplyHandler(data, { msgInstance, to, isRoom })
       }
       break
   }
+}
+
+/**
+ * 处理消息回复api和加好友请求后的回复
+ * @param {pushMsgUnitTypeOpt | pushMsgUnitTypeOpt[]} data
+ * @param {{msgInstance:msgInstanceType, to:string, isRoom?:boolean}} opt
+ */
+const recvdApiReplyHandler = async (data, { msgInstance, to, isRoom }) => {
+  // 组装标准的请求结构
+
+  const { success, task, message, status } = await handleSendV2Msg(
+    { to, isRoom, data },
+    { skipReceiverCheck: true, messageReceiver: msgInstance }
+  )
+
+  sendMsg2RecvdApi(
+    new Utils.TextMsg({
+      text: JSON.stringify({
+        event: 'notifyOfRecvdApiPushMsg',
+        recvdApiReplyNotify: {
+          success,
+          task,
+          message,
+          status
+        }
+      }),
+      isSystemEvent: true
+    })
+  )
 }
 
 /**
@@ -586,38 +643,10 @@ const onRecvdMessage = async (msg) => {
   })
 }
 
-/**
- *
- * @param {*} data
- * @param {*} msgInstance
- */
-const msgSendQueueHandler = (data, msgInstance) => {
-  if (Array.isArray(data)) {
-    data.forEach((item) => {
-      Utils.nextTick(() => {
-        formatAndSendMsg({
-          type: item.type,
-          content: item.content,
-          msgInstance
-        })
-      })
-    })
-  } else {
-    Utils.nextTick(() => {
-      formatAndSendMsg({
-        type: data.type,
-        content: data.content,
-        msgInstance
-      })
-    })
-  }
-}
-
 module.exports = {
   formatAndSendMsg,
   handleResSendMsg,
   onRecvdMessage,
-  msgSendQueueHandler,
   getPushMsgUnitUnvalidStr,
   handleSendV2Msg
 }

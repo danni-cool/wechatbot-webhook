@@ -21,6 +21,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Sync package.json Version
+        run: |
+          ROOT_VERSION=$(jq -r '.version' package.json)
+          jq ".version = \"$ROOT_VERSION\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
+
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -38,18 +43,3 @@ jobs:
           push: true
           tags: dannicool/docker-wechatbot-webhook:latest
           platforms: linux/amd64,linux/arm64
-      
-      # Setup .npmrc file to publish to npm
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     node-version: '18.x'
-      #     registry-url: 'https://registry.npmjs.org'
-      # - run: npm ci
-
-      # # New step to copy docs/cli.readme.md to readme.md
-      # - name: replace cli README.md to README.md
-      #   run: cp ./docs/cli.README.md ./README.md
-
-      # - run: npm publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_SECRET }}

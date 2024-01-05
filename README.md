@@ -184,6 +184,39 @@ curl --location 'http://localhost:3001/webhook/msg' \
 ]'
 ```
 
+#### 返回值 `response` 结构
+
+- **`success`**: 消息发送成功与否，群发消息即使部份发送成功也会返回 `true`
+- **`message`**: 出错时提示的消息
+  - 消息发送成功: Message sent successfully
+  - 参数校验不通过: Some params is not valid, sending task is suspend...
+  - 消息都发送失败: All Messages [number] sent failed...
+  - 部份发送成功: Part of the message sent successfully...
+- **`task`**: 发送任务详细信息
+  - `task.successCount`: 发送成功条数
+  - `task.totalCount`: 总消息条数
+  - `task.failedCount`: 发送失败条数
+  - `task.reject`: 因为参数校验不通过的参数和 error 提示
+  - `task.sentFailed`: 因为发送失败和 error 提示
+  - `task.notFound`: 因为未找到用户或者群和 error 提示
+
+> 确保消息单次发送一致性，某一条参数校验失败会终止所有消息发送任务
+
+```json
+{
+    "success": true,
+    "message": "",
+    "task": {
+        "successCount": 0,
+        "totalCount": 0,
+        "failedCount": 0,
+        "reject": [],
+        "sentFailed": [],
+        "notFound": []
+    }
+}
+```
+
 #### 读文件发送
 
 > 读文件暂时只支持单条发送

@@ -1,12 +1,3 @@
-## [2.4.2](https://github.com/danni-cool/wechatbot-webhook/compare/v2.4.1...v2.4.2) (2023-12-29)
-
-
-### Bug Fixes
-
-* 🐛 修复因为未触发scan事件导致token未初始化可无鉴权访问/login的问题 close:[#102](https://github.com/danni-cool/wechatbot-webhook/issues/102) ([#103](https://github.com/danni-cool/wechatbot-webhook/issues/103)) ([2891e41](https://github.com/danni-cool/wechatbot-webhook/commit/2891e41416bc641aae3f7e372d318df2c9cfa6c1))
-
-
-
 ## [2.5.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.4.2...v2.5.0) (2024-01-05)
 
 
@@ -27,6 +18,16 @@
 
 * ⚡️ 增加log日志输出稳定性 ([161c235](https://github.com/danni-cool/wechatbot-webhook/commit/161c235f79c4f7b01f22ce8df7efd3a1767fe418))
 * ⚡️ 推消息api增加未登录校验 ([6ef54e3](https://github.com/danni-cool/wechatbot-webhook/commit/6ef54e3915d22686df8971eb1a80a897df40504f))
+
+
+
+## [2.4.2](https://github.com/danni-cool/wechatbot-webhook/compare/v2.4.1...v2.4.2) (2023-12-29)
+
+
+### Bug Fixes
+
+* 🐛 修复因为未触发scan事件导致token未初始化可无鉴权访问/login的问题 close:[#102](https://github.com/danni-cool/wechatbot-webhook/issues/102) ([#103](https://github.com/danni-cool/wechatbot-webhook/issues/103)) ([2891e41](https://github.com/danni-cool/wechatbot-webhook/commit/2891e41416bc641aae3f7e372d318df2c9cfa6c1))
+
 
 ## [2.4.1](https://github.com/danni-cool/docker-wechatbot-webhook/compare/v2.4.0...v2.4.1) (2023-12-24)
 

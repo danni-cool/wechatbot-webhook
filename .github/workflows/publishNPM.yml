@@ -1,9 +1,11 @@
 name: Publish CLI Package
 on:
   push:
-    tags: ['v*']
+    branches:
+      - main
 jobs:
   update-cli-version:
+    if: "${{contains(github.event.head_commit.message, 'chore(main): release')}}"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -20,6 +22,7 @@ jobs:
           git push
       
   publish-cli:
+    if: "${{contains(github.event.head_commit.message, 'chore(main): release')}}"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

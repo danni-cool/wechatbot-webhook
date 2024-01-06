@@ -1,0 +1,56 @@
+name: Publish CLI Package
+on:
+  push:
+    branches:
+      - main
+jobs:
+  update-cli-version:
+    if: "${{contains(github.event.head_commit.message, 'chore(main): release')}}"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Update CLI package.json
+        run: |
+          ROOT_VERSION=$(jq -r '.version' package.json)
+          jq ".version = \"$ROOT_VERSION\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add packages/cli/package.json
+          git commit -m "chore(cli): sync package version [skip ci]"
+          git push
+      
+  publish-cli:
+    if: "${{contains(github.event.head_commit.message, 'chore(main): release')}}"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    # 设置 Node.js 环境
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+        registry-url: 'https://registry.npmjs.org'
+
+    # 安装 pnpm
+    - name: Install pnpm
+      run: npm install -g pnpm
+
+    # 安装依赖
+    - name: Install Dependencies
+      run: pnpm install
+      working-directory: ./packages/cli
+
+    # 构建（如果需要）
+    - name: Build package
+      run: pnpm run build
+      working-directory: ./packages/cli
+
+    # 发布到 npm
+    - name: Publish to npm
+      run: pnpm publish --access public
+      working-directory: ./packages/cli
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_SECRET }}

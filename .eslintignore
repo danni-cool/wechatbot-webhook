@@ -3,4 +3,4 @@ packages/cli/node_modules
 root
 docs
 *.md
-packages/cli/lib
+packages/cli/lib/**/*

@@ -336,7 +336,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 #### token 配置说明
 > 除了在 docker 启动时配置token，在默认缺省 token 的情况，会默认生成一个写入 `.env` 文件中
 
-#### `/login`
+#### `/login?token=YOUR_PERSONAL_TOKEN`
 
 - **描述**：获取登录二维码接口。
 - **methods**: `GET`
@@ -352,7 +352,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 **status**: `302`
 登录态掉了，跳转最新的登录二维码 
 
-#### `/healthz`
+#### `/healthz?token=YOUR_PERSONAL_TOKEN`
 
 - **描述**：健康检测接口。
 - **methods**: `GET`

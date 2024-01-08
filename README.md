@@ -119,7 +119,7 @@ docker logs -f wxBotWebhook
 ##### 发单条消息
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg/v2' \
 --header 'Content-Type: application/json' \
 --data '{
     "to": "testUser",
@@ -130,7 +130,7 @@ curl --location 'http://localhost:3001/webhook/msg' \
 ##### 发给群消息
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg/v2' \
 --header 'Content-Type: application/json' \
 --data '{
     "to": "testGroup",
@@ -142,7 +142,7 @@ curl --location 'http://localhost:3001/webhook/msg' \
 ##### 同一对象多条消息(群消息同理)
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg/v2' \
 --header 'Content-Type: application/json' \
 --data '{
     "to": "testUser",
@@ -162,7 +162,7 @@ curl --location 'http://localhost:3001/webhook/msg' \
 ##### 群发消息
 
 ``` bash
-curl --location 'http://localhost:3001/webhook/msg' \
+curl --location 'http://localhost:3001/webhook/msg/v2' \
 --header 'Content-Type: application/json' \
 --data '[
     {

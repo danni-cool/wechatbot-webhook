@@ -148,6 +148,11 @@ async function sendMsg2RecvdApi(msg) {
       formData.append('type', 'friendship')
       formData.append('content', msg.text())
       break
+    // 暂时已知的有: 拍一拍消息
+    case MSG_TYPE_ENUM.UNKNOWN:
+      formData.append('type', 'unknown')
+      formData.append('content', msg.text())
+      break
     // 其他统一暂不处理
     case MSG_TYPE_ENUM.EMOTION: // 自定义表情
     default:

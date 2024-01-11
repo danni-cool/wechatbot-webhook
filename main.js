@@ -1,7 +1,9 @@
-const Utils = require('./src/utils/index')
-Utils.proxyConsole()
 require('dotenv').config({
   path: process.env.homeEnvCfg /** 兼容cli调用 */ ?? './.env'
+})
+/** log 在 prestart 阶段初始化了，后续需要手动改level才能同步env配置  */
+require('./src/utils/index').proxyConsole({
+  logLevel: process.env.LOG_LEVEL
 })
 const { PORT } = process.env
 const { Hono } = require('hono')

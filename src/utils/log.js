@@ -42,8 +42,12 @@ if (!process.env.homeEnvCfg) {
   const originalConsoleLog = console.log
   const originalConsoleWarn = console.warn
   const originalConsoleErr = console.error
-
-  const proxyConsole = () => {
+  /**
+   *
+   * @param {{logLevel?:string}} param0
+   */
+  const proxyConsole = ({ logLevel = 'info' } = {}) => {
+    logger.level = logLevel
     /**
      * 希望排除在log4js里的console输出，即不希望打到日志里去或者显示异常
      * @param {any[]} args

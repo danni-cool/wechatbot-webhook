@@ -319,7 +319,7 @@ curl --location 'https://your.recvdapi.com' \
     "success": true,
     "data": {
       "type": "text",
-      "message": "hello world！"
+      "content": "hello world！"
     }
   }
 ```
@@ -332,11 +332,11 @@ curl --location 'https://your.recvdapi.com' \
     "data": [
       {
         "type": "text",
-        "message": "hello world！"
+        "content": "hello world！"
       },
       {
         "type": "fileUrl",
-        "message": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3"
+        "content": "https://samplelib.com/lib/preview/mp3/sample-3s.mp3"
       }
     ]
   }

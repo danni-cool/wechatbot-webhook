@@ -1,3 +1,12 @@
+## [2.5.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.0...v2.5.1) (2024-01-11)
+
+
+### Bug Fixes
+
+* 🐛 修复收消息api解析文件名和类型问题。close:[#118](https://github.com/danni-cool/wechatbot-webhook/issues/118) ([cd1288e](https://github.com/danni-cool/wechatbot-webhook/commit/cd1288ea2935312675d06cafc1784848276a2b95))
+
+
+
 ## [2.5.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.4.2...v2.5.0) (2024-01-05)
 
 
@@ -19,14 +28,6 @@
 * ⚡️ 增加log日志输出稳定性 ([161c235](https://github.com/danni-cool/wechatbot-webhook/commit/161c235f79c4f7b01f22ce8df7efd3a1767fe418))
 * ⚡️ 推消息api增加未登录校验 ([6ef54e3](https://github.com/danni-cool/wechatbot-webhook/commit/6ef54e3915d22686df8971eb1a80a897df40504f))
 
-
-
-## [2.5.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.0...v2.5.1) (2024-01-11)
-
-
-### Bug Fixes
-
-* 🐛 修复收消息api解析文件名和类型问题。close:[#118](https://github.com/danni-cool/wechatbot-webhook/issues/118) ([cd1288e](https://github.com/danni-cool/wechatbot-webhook/commit/cd1288ea2935312675d06cafc1784848276a2b95))
 
 ## [2.4.2](https://github.com/danni-cool/wechatbot-webhook/compare/v2.4.1...v2.4.2) (2023-12-29)
 

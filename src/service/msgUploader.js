@@ -6,17 +6,6 @@ const { LOCAL_RECVD_MSG_API, RECVD_MSG_API } = process.env
 const { MSG_TYPE_ENUM } = require('../config/const')
 const cacheTool = require('../service/cache')
 
-/** @type {import('file-type').fileTypeFromBuffer} */
-let fileTypeFromBuffer
-
-import('file-type')
-  .then((res) => {
-    fileTypeFromBuffer = res.fileTypeFromBuffer
-  })
-  .catch((e) => {
-    Utils.logger.error('error', '导入file-type发生异常', e)
-  })
-
 /**
  * 收到消息上报接受url
  * @typedef {{type:'text'|'fileUrl'}} baseMsgInterface
@@ -117,36 +106,14 @@ async function sendMsg2RecvdApi(msg) {
       /**@type {import('file-box').FileBox} */
       //@ts-expect-errors 这里msg一定是wechaty的msg
       const steamFile = await msg.toFileBox()
-      const type = await fileTypeFromBuffer(
-        // wechaty dont defined this property as Unit8Array or ArrayBuffer
-        //@ts-expect-errors 需要用到私有属性
-        steamFile.buffer ?? steamFile.stream
-      )
-      let fileInfo = { ext: '', mime: '', filename: '' }
 
-      // 文件类型尝试解析
-      if (type !== undefined) {
-        fileInfo = {
-          // _name:'unknown.txt' => unknown.jpg
-          filename:
-            steamFile.mimeType ===
-            'application/unknown' /** 截图等无法推断出文件名会变成 unknown.txt */
-              ? `${Date.now()}.${type.ext}`
-              : //@ts-expect-errors 需要用到私有属性
-                steamFile._name ?? `${Date.now()}.${type.ext}`,
-          ext: type.ext,
-          mime: type.mime
-        }
-        // 解析不出来尝试用文件后缀名
-      } else {
-        fileInfo = {
-          //@ts-expect-errors 需要用到私有属性
-          filename: steamFile._name ?? 'UnknownFile',
-          //@ts-expect-errors 需要用到私有属性
-          ext: steamFile._name.split('.').pop() ?? '',
-          //@ts-expect-errors 需要用到私有属性
-          mime: steamFile._mediaType
-        }
+      let fileInfo = {
+        // @ts-ignore
+        ext: steamFile._name.split('.').pop() ?? '',
+        // @ts-ignore
+        mime: steamFile._mediaType ?? 'Unknown',
+        // @ts-ignore
+        filename: steamFile._name ?? 'UnknownFile'
       }
 
       formData.append(

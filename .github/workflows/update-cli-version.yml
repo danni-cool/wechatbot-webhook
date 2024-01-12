@@ -10,20 +10,38 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+      
+      - name: Create new branch
+        run: |
+          ROOT_VERSION=$(jq -r '.version' package.json)
+          NEW_BRANCH="npm-pull-request-of-v${ROOT_VERSION}"
+          git checkout -b $NEW_BRANCH
 
       - name: Update CLI package.json
         run: |
           ROOT_VERSION=$(jq -r '.version' package.json)
           jq ".version = \"$ROOT_VERSION\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.name "github-actions[bot]"
           git add packages/cli/package.json
-          git commit -m "chore(cli): sync package version [skip ci]"
-          git push
+          git commit -m "chore(cli): sync package version to cli"
+          git push origin $NEW_BRANCH
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(cli): release npm version of ${{steps.set_version.outputs.version}}"
+          title: "Publish npm v${{ steps.set_version.outputs.version }}"
+          body: "Update npm package version to ${{ steps.set_version.outputs.version }}"
+          branch: "npm-pull-request-of-v${{ steps.set_version.outputs.version }}"
+          base: main
+          labels: release
+        id: cpr
       
   publish-cli:
     needs: update-cli-version
-    if: "${{contains(github.event.head_commit.message, 'chore(main): release')}}"
+    if: "${{contains(github.event.head_commit.message, 'chore(cli): release')}}"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

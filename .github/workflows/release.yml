@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    if: contains(github.event.head_commit.message, '[skip ci]') == false
+    if: contains(github.event.head_commit.message, '[skip ci]') == false && contains(github.event.head_commit.message, 'Publish npm') == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository

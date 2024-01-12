@@ -22,10 +22,10 @@ jobs:
 
       - name: Update CLI package.json
         run: |
-          jq ".version = \"${{ env.NEW_BRANCH }}\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
+          jq ".version = \"${{ env.NEW_VERSION }}\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
           git config --local user.email "action@github.com"
           git config --local user.name "github-actions[bot]"
-          git add .
+          git add packages/cli/package.json
           git status
           git commit -m "chore(cli): sync package version to cli"
           git push --set-upstream origin ${{ env.NEW_BRANCH }}

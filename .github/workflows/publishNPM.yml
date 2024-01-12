@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-    
 jobs:
   publish-cli:
     if: contains(github.event.head_commit.message, 'Publish npm')

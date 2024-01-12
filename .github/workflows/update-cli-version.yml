@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      
+
 jobs:
   update-cli-version:
     if: "${{contains(github.event.head_commit.message, 'chore(main): release')}}"
@@ -16,6 +16,7 @@ jobs:
         run: |
           ROOT_VERSION=$(jq -r '.version' package.json)
           NEW_BRANCH="npm-pull-request-of-v${ROOT_VERSION}"
+          echo "NEW_BRANCH=$NEW_BRANCH" >> $GITHUB_ENV
           git checkout -b $NEW_BRANCH
 
       - name: Update CLI package.json
@@ -26,8 +27,8 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add packages/cli/package.json
           git commit -m "chore(cli): sync package version to cli"
-          git push --set-upstream origin $NEW_BRANCH
-
+          git push --set-upstream origin ${{ env.NEW_BRANCH }}
+          
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:

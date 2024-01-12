@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      
 jobs:
   update-cli-version:
     if: "${{contains(github.event.head_commit.message, 'chore(main): release')}}"
@@ -26,7 +25,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add packages/cli/package.json
           git commit -m "chore(cli): sync package version to cli"
-          git push origin $NEW_BRANCH
+          git push --set-upstream origin $NEW_BRANCH
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4

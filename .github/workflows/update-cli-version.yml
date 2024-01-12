@@ -8,8 +8,6 @@ jobs:
   update-cli-version:
     if: "${{contains(github.event.head_commit.message, 'chore(main): release')}}"
     runs-on: ubuntu-latest
-    outputs:
-      new_version: ${{ steps.create_branch.outputs.new_version }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -19,13 +17,12 @@ jobs:
           ROOT_VERSION=$(jq -r '.version' package.json)
           NEW_BRANCH="npm-pull-request-of-v${ROOT_VERSION}"
           echo "NEW_BRANCH=$NEW_BRANCH" >> $GITHUB_ENV
-          echo "::set-output name=new_version::$ROOT_VERSION"
+          echo "NEW_VERSION=$ROOT_VERSION" >> $GITHUB_ENV
           git checkout -b $NEW_BRANCH
 
       - name: Update CLI package.json
         run: |
-          ROOT_VERSION=$(jq -r '.version' package.json)
-          jq ".version = \"$ROOT_VERSION\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
+          jq ".version = \"${{ env.NEW_VERSION }}\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
           git config --local user.email "action@github.com"
           git config --local user.name "github-actions[bot]"
           git add .
@@ -36,10 +33,10 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore(cli): release npm version of ${{ steps.create_branch.outputs.new_version }}"
-          title: "Publish npm v${{ steps.create_branch.outputs.new_version }}"
-          body: "Update npm package version to ${{ steps.create_branch.outputs.new_version }}"
-          branch: "npm-pull-request-of-v${{ steps.create_branch.outputs.new_version }}"
+          commit-message: "chore(cli): release npm version of ${{ env.NEW_VERSION }}"
+          title: "Publish npm v${{ env.NEW_VERSION }}"
+          body: "Update npm package version to ${{ env.NEW_VERSION }}"
+          branch: "npm-pull-request-of-v${{ env.NEW_VERSION }}"
           base: main
           labels: release
         id: cpr

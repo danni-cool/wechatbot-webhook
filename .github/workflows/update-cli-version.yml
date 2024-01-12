@@ -1,4 +1,4 @@
-name: Publish CLI Package
+name: UPDATE CLI Package
 on:
   push:
     branches:
@@ -28,6 +28,7 @@ jobs:
           git add .
           git commit -m "chore(cli): sync package version to cli"
           git push --set-upstream origin ${{ env.NEW_BRANCH }}
+          git push
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4

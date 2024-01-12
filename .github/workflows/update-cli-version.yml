@@ -9,26 +9,28 @@ jobs:
     if: "${{contains(github.event.head_commit.message, 'chore(main): release')}}"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      
-      - name: Create new branch
+      - name: git-checkout
+        uses: actions/checkout@v2
+
+      - name: Update CLI package.json
         run: |
           ROOT_VERSION=$(jq -r '.version' package.json)
           NEW_BRANCH="npm-pull-request-of-v${ROOT_VERSION}"
           echo "NEW_BRANCH=$NEW_BRANCH" >> $GITHUB_ENV
           echo "NEW_VERSION=$ROOT_VERSION" >> $GITHUB_ENV
-          git checkout -b $NEW_BRANCH
+          # git checkout -b $NEW_BRANCH
+          jq ".version = \"$ROOT_VERSION\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
+          # git config --local user.email "action@github.com"
+          # git config --local user.name "Github Action"
 
-      - name: Update CLI package.json
-        run: |
-          jq ".version = \"${{env.NEW_VERSION}}\"" packages/cli/package.json > temp.json && mv temp.json packages/cli/package.json
-          git config --local user.email "action@github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          cat packages/cli/package.json
-          git commit -m "chore(cli): sync package version to cli"
-          git push --set-upstream origin ${{ env.NEW_BRANCH }}
+      - name: Push to New Branch
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: ${{env.NEW_BRANCH}} # The branch name where you want to push the assets
+          FOLDER: packages/cli # The directory where your assets are generated
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
+          MESSAGE: "chore(cli): sync package version to cli" # The commit message
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
@@ -39,5 +41,5 @@ jobs:
           body: "Update npm package version to ${{ env.NEW_VERSION }}"
           branch: "npm-pull-request-of-v${{ env.NEW_VERSION }}"
           base: main
-          labels: release
+          labels: npm
         id: cpr

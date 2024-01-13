@@ -54,7 +54,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
     })
     .on('error', (error) => {
       // 登出后的错误没有必要重复上报
-      bot.isLoggedIn &&
+      !logOutWhenError &&
         Service.sendMsg2RecvdApi(
           new TextMsg({
             text: JSON.stringify({ event: 'error', error, user: currentUser }),

@@ -55,7 +55,7 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 
 ## 🔧 开发
 
-> ![IMPORTANT] 包管理器迁移已至 pnpm，安装依赖请使用它，以解决一些临时包修补（patches）和加速依赖安装
+> [!IMPORTANT] 包管理器迁移已至 pnpm，安装依赖请使用它，以支持一些不定时的临时包修补（patches）和加速依赖安装
 
 ## ⛰️ 部署 Deploy（推荐）
 

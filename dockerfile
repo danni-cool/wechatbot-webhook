@@ -5,7 +5,10 @@ FROM node:18-alpine
 WORKDIR /app
 
 # 非依赖变更缓存改层
-COPY package.json pnpm-lock.yaml patches/* .npmrc ./
+COPY package.json pnpm-lock.yaml .npmrc ./
+
+# 创建 patches 目录并复制所有内容
+COPY patches ./patches
 
 # 安装应用程序依赖项
 RUN npm install -g pnpm && pnpm install --production&& pnpm store prune && npm uninstall pnpm -g

@@ -53,6 +53,10 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 --data '{ "to": "测试昵称", data: { "content": "Hello World!" }}'
 ```
 
+## 🔧 开发
+
+> ![IMPORTANT] 包管理器迁移已至 pnpm，安装依赖请使用它，以解决一些临时包修补（patches）和加速依赖安装
+
 ## ⛰️ 部署 Deploy（推荐）
 
 ### Docker 部署

@@ -1,0 +1,15 @@
+diff --git a/lib/wechat.js b/lib/wechat.js
+index b00a1b4e21e1b8216689096618da08e911cfc79d..d64c450843a83af6e5b1962912e4eb94269f0494 100644
+--- a/lib/wechat.js
++++ b/lib/wechat.js
+@@ -180,7 +180,9 @@ var Wechat = function (_WechatCore) {
+     key: '_init',
+     value: function _init() {
+       var _this5 = this;
+-
++      
++      //HOTFIX: 每次初始化，必定要清空历史数据，不然在重新登录场景会出现多个id对应一个人
++      _this5.contacts = {}
+       return this.init().then(function (data) {
+         // this.getContact() 这个接口返回通讯录中的联系人（包括已保存的群聊）
+         // 临时的群聊会话在初始化的接口中可以获取，因此这里也需要更新一遍 contacts

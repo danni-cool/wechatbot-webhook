@@ -5,7 +5,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # 非依赖变更缓存改层
-COPY package.json pnpm-lock.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml patches .npmrc ./
 
 # 安装应用程序依赖项
 RUN npm install -g pnpm && pnpm install --production&& pnpm store prune && npm uninstall pnpm -g

@@ -66,5 +66,10 @@
     "tsc-files": "^1.1.4",
     "typescript": "^5.3.3",
     "wechaty-puppet-mock": "^1.18.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "wechat4u@0.7.14": "patches/wechat4u@0.7.14.patch"
+    }
   }
 }

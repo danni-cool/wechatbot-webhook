@@ -53,15 +53,16 @@ module.exports = function registerLoginCheck({ app, bot }) {
       })
     })
     .on('error', (error) => {
-      // 报错时接收特殊文本
-      Service.sendMsg2RecvdApi(
-        new TextMsg({
-          text: JSON.stringify({ event: 'error', error, user: currentUser }),
-          isSystemEvent: true
+      // 登出后的错误没有必要重复上报
+      !logOutWhenError &&
+        Service.sendMsg2RecvdApi(
+          new TextMsg({
+            text: JSON.stringify({ event: 'error', error, user: currentUser }),
+            isSystemEvent: true
+          })
+        ).catch((e) => {
+          Utils.logger.error('上报 error 事件给 RECVD_MSG_API 出错：', e)
         })
-      ).catch((e) => {
-        Utils.logger.error('上报 error 事件给 RECVD_MSG_API 出错：', e)
-      })
 
       // 处理异常错误后的登出上报，每次登录成功后掉线只上报一次
       if (!logOutWhenError && !bot.isLoggedIn) {

@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  wxBotWebhook:
+    image: dannicool/docker-wechatbot-webhook
+    container_name: wxBotWebhook
+    volumes:
+      - ./wxBot_logs:/app/log
+    ports:
+      - "3001:3001"
+    environment:
+      - LOG_LEVEL=info # 调整容器输出级别（不影响日志文件输出等级）运行时提示的消息等级（默认info，想有更详细的日志，等级同log4js)
+      # - DISABLE_AUTO_LOGIN=true # 如果不希望登录一次后就记住当前账号，想每次都扫码登陆，填 true
+      # - LOCAL_RECVD_MSG_API= # 如果想自己处理收到消息的逻辑，在下面填上你的API地址, 默认为空
+      # - LOCAL_LOGIN_API_TOKEN= # 登录地址Token访问地址： http://localhost:3001/login?token=[LOCAL_LOGIN_API_TOKEN]
+    restart: unless-stopped

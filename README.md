@@ -60,9 +60,10 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 
 ## ⛰️ 部署 Deploy（推荐）
 
-### Docker 部署
 
-#### 1. 启动容器
+#### 启动
+
+##### 使用 docker
 
 ```bash
 # 启动容器并映射日志目录，日志按天维度生成，e.g: app.2024-01-01.log
@@ -71,7 +72,14 @@ docker run -d --name wxBotWebhook -p 3001:3001 \
 dannicool/docker-wechatbot-webhook
 ```
 
-#### 2. 登录
+##### 使用 compose
+
+```bash
+wget -P ./wxbotWebhook https://raw.githubusercontent.com/danni-cool/wechatbot-webhook/main/docker-compose.yml && cd wxbotWebhook && docker-compose up
+```
+
+
+#### 登录
 
 ```bash
 docker logs -f wxBotWebhook
@@ -81,7 +89,7 @@ docker logs -f wxBotWebhook
 
 <https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN>
 
-#### Docker 可选 env 参数
+#### 可选 env 参数
 
 > Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="<https://example.com/your/url>" \
 
@@ -90,12 +98,6 @@ docker logs -f wxBotWebhook
 |  收消息 |   RECVD_MSG_API  |   RECVD_MSG_API=<https://example.com/your/url>   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
 | 禁用自动登录 | DISABLE_AUTO_LOGIN | DISABLE_AUTO_LOGIN=true |  非微信踢下线账号，可以依靠session免登, 如果想每次都扫码登陆，则增加该条配置 |
 | 自定义登录 API token | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123 | 你也可以自定义一个自己的登录令牌，不配置的话，默认会生成一个 |
-
-### 使用 compose
-
-```
-docker-compose up
-```
 
 ## 🛠️ API
 

@@ -8,7 +8,9 @@ assignees: ''
 ---
 
 **提bug前先检查以下是否已经执行**
+
 - [ ] 我已更新了最新版本的代码
+- [ ] 我已经仔细地阅读了readme 文档
 - [ ] 我已在[FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)里查找了可能寻找的答案
 - [ ] 我已经尝试搜索过历史关闭issue寻找可能的答案
 

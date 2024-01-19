@@ -75,7 +75,7 @@ dannicool/docker-wechatbot-webhook
 ##### 使用 compose
 
 ```bash
-wget -P ./wxbotWebhook https://raw.githubusercontent.com/danni-cool/wechatbot-webhook/main/docker-compose.yml && cd wxbotWebhook && docker-compose up
+wget https://cdn.jsdelivr.net/gh/danni-cool/wechatbot-webhook@main/docker-compose.yml && docker-compose up
 ```
 
 

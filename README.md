@@ -28,6 +28,10 @@
   - 支持 [n8n](https://n8n.io/) 低码平台丝滑接入（webhook 节点）
   - 🚢 支持 docker 部署，兼容 `arm64` 和 `amd64`
   - ✍️ 支持 日志文件导出
+ 
+- **❌ 不支持**
+  - 企业微信消息的收发 [#142](https://github.com/danni-cool/wechatbot-webhook/issues/142)
+  - 发送语音消息/分享音乐/公众号等未提到的功能
 
 ## 🚀 一分钟 Demo
 

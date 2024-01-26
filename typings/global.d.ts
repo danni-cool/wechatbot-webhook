@@ -115,3 +115,8 @@ type standardV2Payload = {
   data: pushMsgUnitTypeOpt | pushMsgUnitTypeOpt[]
   unValidParamsStr: string
 }
+
+type systemEventPayload = {
+  event: keyof typeof import('@src/config/const').legacySystemMsgStrMap
+  user: Record<string, never>
+}

@@ -1,4 +1,4 @@
-const { MSG_TYPE_ENUM } = require('../config/const')
+const { MSG_TYPE_ENUM, legacySystemMsgStrMap } = require('../config/const')
 class CommonMsg {
   /**
    * @param {string} text
@@ -8,6 +8,7 @@ class CommonMsg {
   constructor(text, type, isSystemEvent = false) {
     this.t = type
     this.payload = text
+    /** @deprecated 已经废弃，但保留其旧版本逻辑的兼容性 */
     this.isSystemEvent = isSystemEvent
   }
 
@@ -48,12 +49,10 @@ class CommonMsg {
 
 class TextMsg extends CommonMsg {
   /**
-   * @param {Object} option
-   * @param {string} option.text
-   * @param {boolean} option.isSystemEvent
+   * @param {string} text
    */
-  constructor({ text, isSystemEvent = false }) {
-    super(text, MSG_TYPE_ENUM.TEXT, isSystemEvent)
+  constructor(text) {
+    super(text, MSG_TYPE_ENUM.TEXT)
   }
 }
 
@@ -66,8 +65,18 @@ class FriendshipMsg extends CommonMsg {
   }
 }
 
+class SystemEvent extends CommonMsg {
+  /**
+   * @param {systemEventPayload} payload
+   */
+  constructor(payload) {
+    super(JSON.stringify(payload), legacySystemMsgStrMap[payload.event], true)
+  }
+}
+
 module.exports = {
   CommonMsg,
   TextMsg,
-  FriendshipMsg
+  FriendshipMsg,
+  SystemEvent
 }

@@ -599,17 +599,14 @@ const recvdApiReplyHandler = async (data, { msgInstance, to, isRoom }) => {
   )
 
   sendMsg2RecvdApi(
-    new Utils.TextMsg({
-      text: JSON.stringify({
-        event: 'notifyOfRecvdApiPushMsg',
-        recvdApiReplyNotify: {
-          success,
-          task,
-          message,
-          status
-        }
-      }),
-      isSystemEvent: true
+    new Utils.SystemEvent({
+      event: 'notifyOfRecvdApiPushMsg',
+      recvdApiReplyNotify: {
+        success,
+        task,
+        message,
+        status
+      }
     })
   )
 }

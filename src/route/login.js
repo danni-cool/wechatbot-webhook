@@ -1,7 +1,7 @@
 const Service = require('../service')
 const Utils = require('../utils')
 const Middleware = require('../middleware')
-const { TextMsg } = require('../utils/msg.js')
+const { SystemEvent } = require('../utils/msg.js')
 
 /**
  * 注册login路由和处理上报逻辑
@@ -29,10 +29,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
 
       try {
         await Service.sendMsg2RecvdApi(
-          new TextMsg({
-            text: JSON.stringify({ event: 'login', user }),
-            isSystemEvent: true
-          })
+          new SystemEvent({ event: 'login', user })
         )
       } catch (e) {
         Utils.logger.error('上报login事件给 RECVD_MSG_API 出错', e)
@@ -44,10 +41,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
       success = false
       // 登出时给接收消息api发送特殊文本
       Service.sendMsg2RecvdApi(
-        new TextMsg({
-          text: JSON.stringify({ event: 'logout', user }),
-          isSystemEvent: true
-        })
+        new SystemEvent({ event: 'logout', user })
       ).catch((e) => {
         Utils.logger.error('上报 logout 事件给 RECVD_MSG_API 出错：', e)
       })
@@ -56,10 +50,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
       // 登出后的错误没有必要重复上报
       !logOutWhenError &&
         Service.sendMsg2RecvdApi(
-          new TextMsg({
-            text: JSON.stringify({ event: 'error', error, user: currentUser }),
-            isSystemEvent: true
-          })
+          new SystemEvent({ event: 'error', error, user: currentUser })
         ).catch((e) => {
           Utils.logger.error('上报 error 事件给 RECVD_MSG_API 出错：', e)
         })
@@ -67,10 +58,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
       // 处理异常错误后的登出上报，每次登录成功后掉线只上报一次
       if (!logOutWhenError && !bot.isLoggedIn) {
         Service.sendMsg2RecvdApi(
-          new TextMsg({
-            text: JSON.stringify({ event: 'logout', user: currentUser }),
-            isSystemEvent: true
-          })
+          new SystemEvent({ event: 'logout', user: currentUser })
         ).catch((e) => {
           Utils.logger.error(
             '上报 error 事件中的 logout 给 RECVD_MSG_API 出错：',

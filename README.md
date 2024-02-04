@@ -61,6 +61,8 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 
 > [!IMPORTANT] 
 > 包管理器迁移已至 pnpm，安装依赖请使用它，以支持一些不定时的临时包修补（patches）和加速依赖安装
+>
+> 值得一提的是，运行程序请使用 `npm start`, pnpm 不会执行 prestart 的钩子 [pnpm 与 npm run的不同之处](https://pnpm.io/zh/cli/run#%E4%B8%8E-npm-run%E7%9A%84%E4%B8%8D%E5%90%8C%E4%B9%8B%E5%A4%84)
 
 ## ⛰️ 部署 Deploy（推荐）
 

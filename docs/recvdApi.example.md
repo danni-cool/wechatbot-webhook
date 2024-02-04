@@ -124,7 +124,7 @@
     }
   },
 
-  // 快捷回复后触发才返回次结构， 如果有部分消息推送失败也在此结构能拿到所有信息, 结构同推消息的api结构
+  // 快捷回复后触发才返回此结构，如果有部分消息推送失败也在此结构能拿到所有信息, 结构同推消息的api结构
   "recvdApiReplyNotify": {
     "success": true,
     "message": "Message sent successfully",

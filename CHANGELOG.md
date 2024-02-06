@@ -10,6 +10,14 @@
 
 * ⚡️ 微信登出状态下不上报RecvdAPI Error级别错误 ([f45d42d](https://github.com/danni-cool/wechatbot-webhook/commit/f45d42d600d1849d79cd581e53b9e11b84b4eb49))
 
+## [2.5.3](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.2...v2.5.3) (2024-02-06)
+
+
+### Bug Fixes
+
+* 🐛 pnpm 运行命令不执行pre钩子。refer:[#146](https://github.com/danni-cool/wechatbot-webhook/issues/146) ([51ce80e](https://github.com/danni-cool/wechatbot-webhook/commit/51ce80ef8ba06606a7b1a1ea15c8494b1985db40))
+* 🐛 修复friendship事件不上报recvdAPI的问题. close:[#155](https://github.com/danni-cool/wechatbot-webhook/issues/155) ([19b9148](https://github.com/danni-cool/wechatbot-webhook/commit/19b9148debf92115e57ea3239a86be2f1bf24c95))
+
 ## [2.5.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.0...v2.5.1) (2024-01-11)
 
 

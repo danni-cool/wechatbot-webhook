@@ -47,18 +47,21 @@ module.exports = function registerLoginCheck({ app, bot }) {
       })
     })
     .on('error', (error) => {
-      // 实际已经登出当时wechaty未判断到登出，此时需要上报logout事件，注销登录状态
+      // 登出后再多的error事件不上报
+      if (logOutWhenError) return
 
-      // 登出后的错误没有必要重复上报
-      !logOutWhenError &&
-        Service.sendMsg2RecvdApi(
-          new SystemEvent({ event: 'error', error, user: currentUser })
-        ).catch((e) => {
-          Utils.logger.error('上报 error 事件给 RECVD_MSG_API 出错：', e)
-        })
+      // wechaty 仍定的登出状态，处理异常错误后的登出上报，每次登录成功后掉线只上报一次
+      const logOutOffical = !bot.isLoggedIn
+      // wechaty 未知的登出状态，处理异常错误后的登出上报
+      const logOutUnofficial = [
+        "'1101' == 0" /** 场景：手动登出 */,
+        "'1102' == 0" /** 场景：没法发消息了 */,
+        '-1 == 0' /** 场景：没法发消息 */,
+        "'-1' == 0" /** 不确定，暂时两种都加上 */,
+        '连续5次同步失败，5s后尝试重启' /** 5次同步失败作为登出标识 */
+      ].some((item) => error.message.includes(item))
 
-      // 处理异常错误后的登出上报，每次登录成功后掉线只上报一次
-      if (!logOutWhenError && !bot.isLoggedIn) {
+      if (logOutOffical || logOutUnofficial) {
         Service.sendMsg2RecvdApi(
           new SystemEvent({ event: 'logout', user: currentUser })
         ).catch((e) => {
@@ -73,6 +76,13 @@ module.exports = function registerLoginCheck({ app, bot }) {
         logOutWhenError = true
         currentUser = null
       }
+
+      // 发送error事件给接收消息api
+      Service.sendMsg2RecvdApi(
+        new SystemEvent({ event: 'error', error, user: currentUser })
+      ).catch((e) => {
+        Utils.logger.error('上报 error 事件给 RECVD_MSG_API 出错：', e)
+      })
     })
 
   app.get(

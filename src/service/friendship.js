@@ -1,5 +1,6 @@
 const Utils = require('../utils/index')
-const Service = require('./index')
+const { handleResSendMsg } = require('./msgSender')
+const { sendMsg2RecvdApi } = require('./msgUploader')
 const { FriendshipMsg } = require('../utils/msg.js')
 const { MSG_TYPE_ENUM } = require('../config/const')
 /**
@@ -17,14 +18,14 @@ const onRecvdFriendship = async (friendship, botInstance) => {
     // 收到好友邀请
     case Friendship.Type.Receive:
       try {
-        const res = await Service.sendMsg2RecvdApi(
+        const res = await sendMsg2RecvdApi(
           new FriendshipMsg({
             name: friendship.contact().name(),
             hello: friendship.hello()
           })
         )
 
-        await Service.handleResSendMsg({
+        await handleResSendMsg({
           res,
           type: MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP,
           friendship

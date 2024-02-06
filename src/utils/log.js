@@ -61,6 +61,20 @@ if (!process.env.homeEnvCfg) {
       ].some(Boolean)
     }
 
+    /**
+     * 希望排除一些错误
+     * @param {any[]} args
+     * @returns {boolean}
+     */
+    const blackListConditionError = (args) => {
+      const arg0 = args?.[0]
+
+      return [
+        // form-data 提示的DepracationWarning，会被认为是错误提issue
+        '[https://github.com/node-fetch/node-fetch/issues/1167]'
+      ].some((str) => arg0.includes(str))
+    }
+
     console.log = function (...args) {
       try {
         if (args?.[1] instanceof Error) {
@@ -91,6 +105,8 @@ if (!process.env.homeEnvCfg) {
 
     console.error = function (...args) {
       try {
+        if (blackListConditionError(args)) return
+
         if (!whiteListConditionLog(args)) {
           logger.error(...args) // 将输出写入 Log4js 配置的文件
         } else {

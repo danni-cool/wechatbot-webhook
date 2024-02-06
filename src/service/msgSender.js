@@ -566,7 +566,7 @@ const handleResSendMsg = async ({ res, type, friendship, msgInstance }) => {
       if (success === true && data !== undefined) {
         await Utils.sleep(1000)
         //@ts-expect-errors 重载不是很好使，手动判断
-        recvdApiReplyHandler(data, friendship.contact(), to)
+        recvdApiReplyHandler(data, { msgInstance: friendship.contact(), to })
       }
 
       break

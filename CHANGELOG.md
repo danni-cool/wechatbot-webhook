@@ -1,10 +1,21 @@
+## [2.5.2](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.1...v2.5.2) (2024-01-14)
+
+
+### Bug Fixes
+
+* 🐛 修复无重启登录后发送消息失败问题got more than 2 contacts close:[#60](https://github.com/danni-cool/wechatbot-webhook/issues/60) ([9d90ec1](https://github.com/danni-cool/wechatbot-webhook/commit/9d90ec1bd269ed588e8cfe17162af186bc87fe71))
+
+
+### Performance Improvements
+
+* ⚡️ 微信登出状态下不上报RecvdAPI Error级别错误 ([f45d42d](https://github.com/danni-cool/wechatbot-webhook/commit/f45d42d600d1849d79cd581e53b9e11b84b4eb49))
+
 ## [2.5.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.0...v2.5.1) (2024-01-11)
 
 
 ### Bug Fixes
 
 * 🐛 修复收消息api解析文件名和类型问题。close:[#118](https://github.com/danni-cool/wechatbot-webhook/issues/118) ([cd1288e](https://github.com/danni-cool/wechatbot-webhook/commit/cd1288ea2935312675d06cafc1784848276a2b95))
-
 
 
 ## [2.5.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.4.2...v2.5.0) (2024-01-05)

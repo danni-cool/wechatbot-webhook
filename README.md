@@ -28,6 +28,10 @@
   - 支持 [n8n](https://n8n.io/) 低码平台丝滑接入（webhook 节点）
   - 🚢 支持 docker 部署，兼容 `arm64` 和 `amd64`
   - ✍️ 支持 日志文件导出
+ 
+- **❌ 不支持**
+  - 企业微信消息的收发 [#142](https://github.com/danni-cool/wechatbot-webhook/issues/142)
+  - 发送语音消息/分享音乐/公众号等未提到的功能
 
 ## 🚀 一分钟 Demo
 
@@ -57,12 +61,15 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 
 > [!IMPORTANT] 
 > 包管理器迁移已至 pnpm，安装依赖请使用它，以支持一些不定时的临时包修补（patches）和加速依赖安装
+>
+> 值得一提的是，运行程序请使用 `npm start`, pnpm 不会执行 prestart 的钩子 [pnpm 与 npm run的不同之处](https://pnpm.io/zh/cli/run#%E4%B8%8E-npm-run%E7%9A%84%E4%B8%8D%E5%90%8C%E4%B9%8B%E5%A4%84)
 
 ## ⛰️ 部署 Deploy（推荐）
 
-### Docker 部署
 
-#### 1. 启动容器
+#### 启动
+
+##### 使用 docker
 
 ```bash
 # 启动容器并映射日志目录，日志按天维度生成，e.g: app.2024-01-01.log
@@ -71,7 +78,14 @@ docker run -d --name wxBotWebhook -p 3001:3001 \
 dannicool/docker-wechatbot-webhook
 ```
 
-#### 2. 登录
+##### 使用 compose
+
+```bash
+wget https://cdn.jsdelivr.net/gh/danni-cool/wechatbot-webhook@main/docker-compose.yml && docker-compose up
+```
+
+
+#### 登录
 
 ```bash
 docker logs -f wxBotWebhook
@@ -81,7 +95,7 @@ docker logs -f wxBotWebhook
 
 <https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN>
 
-#### Docker 可选 env 参数
+#### 可选 env 参数
 
 > Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="<https://example.com/your/url>" \
 

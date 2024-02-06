@@ -371,14 +371,18 @@ curl --location 'https://your.recvdapi.com' \
 - **query**: token
 
 **status**: `200`
-登录成功，返回 json 包含当前用户
+
+##### 登录成功
+
+返回 json 包含当前用户
 
 ```json
 {"success":true,"message":"Contact<TestUser>is already login"}
 ```
 
-**status**: `302`
-登录态掉了，跳转最新的登录二维码 
+##### 登录失败
+
+展示微信登录扫码页面
 
 #### `/healthz?token=YOUR_PERSONAL_TOKEN`
 

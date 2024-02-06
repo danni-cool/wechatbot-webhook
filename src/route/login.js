@@ -47,6 +47,8 @@ module.exports = function registerLoginCheck({ app, bot }) {
       })
     })
     .on('error', (error) => {
+      // 实际已经登出当时wechaty未判断到登出，此时需要上报logout事件，注销登录状态
+
       // 登出后的错误没有必要重复上报
       !logOutWhenError &&
         Service.sendMsg2RecvdApi(
@@ -86,7 +88,29 @@ module.exports = function registerLoginCheck({ app, bot }) {
           message
         })
       } else {
-        return c.redirect(message, 302)
+        // 构建带有iframe的HTML字符串
+        const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>扫码登录</title>
+          <style>
+            body, html { 
+              margin: 0; padding: 0; height: 100%; overflow: hidden; 
+            }
+            iframe { 
+              position:absolute; left:0; right:0; bottom:0; top:0; border:0; 
+            }
+          </style>
+        </head>
+        <body>
+          <iframe src="${message}" frameborder="0" style="height:100%;width:100%" allowfullscreen></iframe>
+        </body>
+        </html>
+      `
+        return c.html(html)
       }
     }
   )

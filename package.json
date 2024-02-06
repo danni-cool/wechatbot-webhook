@@ -69,7 +69,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "wechat4u@0.7.14": "patches/wechat4u@0.7.14.patch"
+      "wechat4u@0.7.14": "patches/wechat4u@0.7.14.patch",
+      "wechaty-puppet-wechat4u@1.14.13": "patches/wechaty-puppet-wechat4u@1.14.13.patch"
     }
   }
 }

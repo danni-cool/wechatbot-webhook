@@ -1,0 +1,13 @@
+diff --git a/dist/cjs/src/puppet-wechat4u.js b/dist/cjs/src/puppet-wechat4u.js
+index 68a52e6eb60c6efa0436984ef4399b1cf38d03af..6d1ae5aa166f61c288b66ea9a8e0273777d22687 100644
+--- a/dist/cjs/src/puppet-wechat4u.js
++++ b/dist/cjs/src/puppet-wechat4u.js
+@@ -353,6 +353,8 @@ class PuppetWechat4u extends PUPPET.Puppet {
+             if (!this.getContactInterval) {
+                 this.getContactsInfo();
+                 this.getContactInterval = setInterval(() => {
++                //fix: 修复登出了还一直请求
++                  this.isLoggedIn &&
+                     this.getContactsInfo();
+                 }, 2000);
+             }

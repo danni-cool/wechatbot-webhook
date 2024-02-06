@@ -107,7 +107,7 @@ docker logs -f wxBotWebhook
 
 ### 1. 推消息 API
 
-> v2版本接口增加了群发功能，v1 版本接口请移步 [legacy-api](./docs/legacy-api)
+> v2版本接口增加了群发功能，v1 版本接口请移步 [legacy-api](./docs/legacy-api.md)
 
 - Url：<http://localhost:3001/webhook/msg/v2>
 - Methods: `POST`

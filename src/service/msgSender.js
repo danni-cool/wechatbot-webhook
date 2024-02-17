@@ -617,7 +617,7 @@ const recvdApiReplyHandler = async (data, { msgInstance, to, isRoom }) => {
  */
 const onRecvdMessage = async (msg) => {
   // 自己发的消息没有必要处理
-  if (msg.self()) return
+  if (process.env.ACCEPT_RECVD_MSG_MYSELF !== 'true' && msg.self()) return
 
   handleResSendMsg({
     res: await sendMsg2RecvdApi(msg),

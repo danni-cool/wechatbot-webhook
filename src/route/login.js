@@ -46,7 +46,7 @@ module.exports = function registerLoginCheck({ app, bot }) {
         Utils.logger.error('上报 logout 事件给 RECVD_MSG_API 出错：', e)
       })
     })
-    .on('error', (error) => {
+    .on('error', async (error) => {
       // 登出后再多的error事件不上报
       if (logOutWhenError) return
 
@@ -54,14 +54,18 @@ module.exports = function registerLoginCheck({ app, bot }) {
       const logOutOffical = !bot.isLoggedIn
       // wechaty 未知的登出状态，处理异常错误后的登出上报
       const logOutUnofficial = [
+        "'400' == 400" /** 场景：https://github.com/danni-cool/wechatbot-webhook/issues/160 */,
+        "'1205' == 0" /** 场景：https://github.com/danni-cool/wechatbot-webhook/issues/160 */,
+        "'3' == 0" /** 场景：https://github.com/danni-cool/wechatbot-webhook/issues/160 */,
         "'1101' == 0" /** 场景：手动登出 */,
         "'1102' == 0" /** 场景：没法发消息了 */,
         '-1 == 0' /** 场景：没法发消息 */,
-        "'-1' == 0" /** 不确定，暂时两种都加上 */,
-        '连续5次同步失败，5s后尝试重启' /** 5次同步失败作为登出标识 */
+        "'-1' == 0" /** 不确定，暂时两种都加上 */
       ].some((item) => error.message.includes(item))
 
       if (logOutOffical || logOutUnofficial) {
+        logOutUnofficial && (await bot.logout())
+
         Service.sendMsg2RecvdApi(
           new SystemEvent({ event: 'logout', user: currentUser })
         ).catch((e) => {

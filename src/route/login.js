@@ -54,10 +54,12 @@ module.exports = function registerLoginCheck({ app, bot }) {
       const logOutOffical = !bot.isLoggedIn
       // wechaty 未知的登出状态，处理异常错误后的登出上报
       const logOutUnofficial = [
-        "'400' == 400" /** 场景：https://github.com/danni-cool/wechatbot-webhook/issues/160 */,
-        "'1205' == 0" /** 场景：https://github.com/danni-cool/wechatbot-webhook/issues/160 */,
-        "'3' == 0" /** 场景：https://github.com/danni-cool/wechatbot-webhook/issues/160 */,
-        "'1101' == 0" /** 场景：手动登出 */,
+        '400 == 400' /** 场景：微信服务器踢出登录 重建登录失败*/,
+        "'400' == 400" /** 场景：微信服务器踢出登录 重建登录失败*/,
+        '1205 == 0' /** 场景：微信服务器踢出登录 重建登录失败 */,
+        "'1205' == 0" /** 场景：微信服务器踢出登录 重建登录失败 */,
+        '3 == 0' /** 场景：微信服务器踢出登录，重建登录失败 */,
+        "'3' == 0" /** 场景：微信服务器踢出登录，重建登录失败 */,
         "'1102' == 0" /** 场景：没法发消息了 */,
         '-1 == 0' /** 场景：没法发消息 */,
         "'-1' == 0" /** 不确定，暂时两种都加上 */

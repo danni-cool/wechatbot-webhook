@@ -1,3 +1,8 @@
+const {
+  logOnlyOutputWhiteList,
+  logDontOutpuptBlackList
+} = require('../config/log4jsFilter')
+
 if (!process.env.homeEnvCfg) {
   const log4js = require('log4js')
 
@@ -52,10 +57,9 @@ if (!process.env.homeEnvCfg) {
     const whiteListConditionLog = (args) => {
       const arg0 = args?.[0]
 
-      return [
-        typeof arg0 === 'string' &&
-          arg0.startsWith('▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\n') /** 二维码扫码 */
-      ].some(Boolean)
+      return logOnlyOutputWhiteList
+        .map((str) => typeof arg0 === 'string' && arg0.includes(str))
+        .some(Boolean)
     }
 
     /**
@@ -66,10 +70,7 @@ if (!process.env.homeEnvCfg) {
     const blackListConditionError = (args) => {
       const arg0 = args?.[0]
 
-      return [
-        // form-data 提示的DepracationWarning，会被认为是错误提issue
-        '[https://github.com/node-fetch/node-fetch/issues/1167]'
-      ].some((str) => arg0.includes(str))
+      return logDontOutpuptBlackList.some((str) => arg0.includes(str))
     }
 
     console.log = function (...args) {

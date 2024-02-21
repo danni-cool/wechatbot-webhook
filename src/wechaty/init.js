@@ -1,3 +1,4 @@
+const { version } = require('../../package.json')
 const { WechatyBuilder } = require('wechaty')
 const Service = require('../service')
 const Utils = require('../utils/index')
@@ -14,6 +15,8 @@ const bot =
       })
 
 module.exports = function init() {
+  console.log(chalk.blue(`🤖 wechatbot-webhook v${version} 🤖`))
+
   // 启动 Wechaty 机器人
   bot
     // 扫码登陆事件

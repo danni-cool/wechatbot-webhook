@@ -2,7 +2,7 @@ version: '3.8'
 services:
   wxBotWebhook:
     image: dannicool/docker-wechatbot-webhook
-    container_name: wxBotWebhook
+    container_name: wxbot_app
     volumes:
       - ./wxBot_logs:/app/log
     ports:

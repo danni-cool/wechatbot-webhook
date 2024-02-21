@@ -65,9 +65,15 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 ## ⛰️ 部署 Deploy（推荐）
 
 
-#### 启动
+#### 1.使用 docker 部署
 
-##### 使用 docker
+##### 拉取最新镜像
+
+```
+docker pull dannicool/docker-wechatbot-webhook
+```
+
+##### docker 部署
 
 ```bash
 # 启动容器并映射日志目录，日志按天维度生成，e.g: app.2024-01-01.log
@@ -76,14 +82,13 @@ docker run -d --name wxBotWebhook -p 3001:3001 \
 dannicool/docker-wechatbot-webhook
 ```
 
-##### 使用 compose
+##### 使用 compose 部署 (可选)
 
 ```bash
-wget https://cdn.jsdelivr.net/gh/danni-cool/wechatbot-webhook@main/docker-compose.yml && docker-compose up
+wget -O docker-compose.yml https://cdn.jsdelivr.net/gh/danni-cool/wechatbot-webhook@main/docker-compose.yml && docker-compose down && docker-compose -p wx_bot_webhook up
 ```
 
-
-#### 登录
+#### 2.登录
 
 ```bash
 docker logs -f wxBotWebhook

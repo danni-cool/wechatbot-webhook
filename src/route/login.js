@@ -1,7 +1,4 @@
-const Service = require('../service')
-const Utils = require('../utils')
 const Middleware = require('../middleware')
-const { SystemEvent } = require('../utils/msg.js')
 
 /**
  * 注册login路由和处理上报逻辑
@@ -11,9 +8,6 @@ const { SystemEvent } = require('../utils/msg.js')
  */
 module.exports = function registerLoginCheck({ app, bot }) {
   let message = ''
-  /** @type {import('wechaty').ContactSelf | null} */
-  let currentUser = null
-  let logOutWhenError = false
   let success = false
 
   bot
@@ -22,70 +16,18 @@ module.exports = function registerLoginCheck({ app, bot }) {
       success = false
     })
     .on('login', async (user) => {
-      message = user.toString() + 'is already login'
+      message = user + 'is already login'
       success = true
-      currentUser = user
-      logOutWhenError = false
-
-      try {
-        await Service.sendMsg2RecvdApi(
-          new SystemEvent({ event: 'login', user })
-        )
-      } catch (e) {
-        Utils.logger.error('上报login事件给 RECVD_MSG_API 出错', e)
-      }
     })
-    .on('logout', (user) => {
+    .on('logout', () => {
       message = ''
-      currentUser = null
       success = false
-      // 登出时给接收消息api发送特殊文本
-      Service.sendMsg2RecvdApi(
-        new SystemEvent({ event: 'logout', user })
-      ).catch((e) => {
-        Utils.logger.error('上报 logout 事件给 RECVD_MSG_API 出错：', e)
-      })
     })
-    .on('error', async (error) => {
-      // 登出后再多的error事件不上报
-      if (logOutWhenError) return
-
-      // wechaty 仍定的登出状态，处理异常错误后的登出上报，每次登录成功后掉线只上报一次
-      const logOutOffical = !bot.isLoggedIn
-      // wechaty 未知的登出状态，处理异常错误后的登出上报
-      const logOutUnofficial = [
-        '400 != 400' /** 场景：微信服务器踢出登录 重建登录失败*/,
-        '1205 == 0' /** 场景：微信服务器踢出登录 重建登录失败 */,
-        '3 == 0' /** 场景：微信服务器踢出登录，重建登录失败 */,
-        "'1102' == 0" /** 场景：没法发消息了 */,
-        '-1 == 0' /** 场景：没法发消息 */,
-        "'-1' == 0" /** 不确定，暂时两种都加上 */
-      ].some((item) => error.message.includes(item))
-
-      if (logOutOffical || logOutUnofficial) {
-        logOutUnofficial && (await bot.logout())
-
-        Service.sendMsg2RecvdApi(
-          new SystemEvent({ event: 'logout', user: currentUser })
-        ).catch((e) => {
-          Utils.logger.error(
-            '上报 error 事件中的 logout 给 RECVD_MSG_API 出错：',
-            e
-          )
-        })
-
+    .on('error', async () => {
+      if (!bot.isLoggedIn) {
         success = false
         message = ''
-        logOutWhenError = true
-        currentUser = null
       }
-
-      // 发送error事件给接收消息api
-      Service.sendMsg2RecvdApi(
-        new SystemEvent({ event: 'error', error, user: currentUser })
-      ).catch((e) => {
-        Utils.logger.error('上报 error 事件给 RECVD_MSG_API 出错：', e)
-      })
     })
 
   app.get(

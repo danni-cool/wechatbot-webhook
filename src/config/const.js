@@ -1,3 +1,5 @@
+const path = require('path')
+
 const config = {
   /**
    * 上报消息的api群成员缓存多久(单位:ms)
@@ -5,6 +7,13 @@ const config = {
    */
   roomCachedTime: 1000 * 60 * 5
 }
+
+const { homeEnvCfg, homeMemoryCardPath } = process.env
+const isCliEnv = Boolean(homeEnvCfg)
+const memoryCardName = isCliEnv ? homeMemoryCardPath : 'loginSession'
+const memoryCardPath = isCliEnv
+  ? homeMemoryCardPath
+  : path.join(__dirname, '../../', 'loginSession.memory-card.json')
 
 /**
  * Enum for msg type
@@ -63,5 +72,7 @@ module.exports = {
   MSG_TYPE_ENUM,
   config,
   legacySystemMsgStrMap,
-  systemMsgEnumMap
+  systemMsgEnumMap,
+  memoryCardName,
+  memoryCardPath
 }

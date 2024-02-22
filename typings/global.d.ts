@@ -118,7 +118,7 @@ type standardV2Payload = {
 
 type systemEventPayload = {
   event: keyof typeof import('@src/config/const').legacySystemMsgStrMap
-  user?: import('wechaty').ContactSelf | null
+  user?: import('wechaty').Contact
   recvdApiReplyNotify?: {
     success: boolean
     task: msgV2taskType

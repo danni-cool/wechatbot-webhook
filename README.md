@@ -11,6 +11,9 @@
 
 开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人，当 http 调用和二次开发亦可，二次开发请fork
 
+> [!IMPORTANT] 
+> 当前版本基于web协议，除了bug修补和稳定性功能外，不再接收新的 feature request，后续精力会放到 windows 协议上
+
 ## ✨ Features
 
 - **推送消息** (发送文字 / 图片 / 文件)

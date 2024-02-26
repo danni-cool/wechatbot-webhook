@@ -20,6 +20,8 @@ const memoryCardPath = isCliEnv
  * @readonly
  * @enum {number} */
 const MSG_TYPE_ENUM = {
+  /** 未知 */
+  UNKNOWN: 0,
   /** 各种文件 */
   ATTACHMENT: 1,
   /** 语音 */

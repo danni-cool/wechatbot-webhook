@@ -149,6 +149,11 @@ async function sendMsg2RecvdApi(msg) {
       formData.append('content', msg.text())
       break
 
+    case MSG_TYPE_ENUM.UNKNOWN:
+      formData.append('type', 'unknown')
+      formData.append('content', msg.text())
+      break
+
     // 系统消息（用于上报状态）
     case MSG_TYPE_ENUM.SYSTEM_EVENT_LOGIN:
     case MSG_TYPE_ENUM.SYSTEM_EVENT_LOGOUT:

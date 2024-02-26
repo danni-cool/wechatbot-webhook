@@ -82,7 +82,7 @@ async function sendMsg2RecvdApi(msg) {
     from: msg.talker() ?? ''
   }
 
-  let passed = true
+  // let passed = true
   /** @type {import('form-data')} */
   const formData = new FormData()
 
@@ -149,11 +149,6 @@ async function sendMsg2RecvdApi(msg) {
       formData.append('content', msg.text())
       break
 
-    case MSG_TYPE_ENUM.UNKNOWN:
-      formData.append('type', 'unknown')
-      formData.append('content', msg.text())
-      break
-
     // 系统消息（用于上报状态）
     case MSG_TYPE_ENUM.SYSTEM_EVENT_LOGIN:
     case MSG_TYPE_ENUM.SYSTEM_EVENT_LOGOUT:
@@ -163,14 +158,16 @@ async function sendMsg2RecvdApi(msg) {
       formData.append('content', msg.text())
       break
 
-    // 其他统一暂不处理
+    // 其他统一当unknown处理
+    case MSG_TYPE_ENUM.UNKNOWN:
     case MSG_TYPE_ENUM.EMOTION: // 自定义表情
     default:
-      passed = false
+      formData.append('type', 'unknown')
+      formData.append('content', msg.text())
       break
   }
 
-  if (!passed) return
+  // if (!passed) return
 
   Utils.logger.info('starting fetching api: ' + webhookUrl)
   //@ts-expect-errors form-data 未定义的私有属性

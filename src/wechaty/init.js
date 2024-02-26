@@ -5,7 +5,7 @@ const Service = require('../service')
 const Utils = require('../utils/index')
 const chalk = require('chalk')
 const { PORT } = process.env
-const { memoryCardName } = require('../config/const')
+const { memoryCardName, logOutUnofficialCodeList } = require('../config/const')
 const token = Service.initLoginApiToken()
 const cacheTool = require('../service/cache')
 const bot =
@@ -131,16 +131,9 @@ module.exports = function init() {
       if (!bot.isLoggedIn) return
 
       // wechaty 未知的登出状态，处理异常错误后的登出上报
-      const logOutUnofficial = [
-        '400 != 400' /** 场景：微信服务器踢出登录 重建登录失败*/,
-        '1205 == 0' /** 场景：微信服务器踢出登录 重建登录失败 */,
-        '3 == 0' /** 场景：微信服务器踢出登录，重建登录失败 */,
-        "'1102' == 0" /** 场景：没法发消息了 */,
-        '-1 == 0' /** 场景：没法发消息 */,
-        "'-1' == 0" /** 不确定，暂时两种都加上 */
-      ].some((item) => error.message.includes(item))
-
-      if (logOutUnofficial) {
+      if (
+        logOutUnofficialCodeList.some((item) => error.message.includes(item))
+      ) {
         await bot.logout()
       }
 

@@ -70,11 +70,21 @@ const systemMsgEnumMap = {
   [MSG_TYPE_ENUM.SYSTEM_EVENT_PUSH_NOTIFY]: 'system_event_push_notify'
 }
 
+const logOutUnofficialCodeList = [
+  '400 != 400' /** 场景：微信服务器踢出登录 重建登录失败*/,
+  '1205 == 0' /** 场景：微信服务器踢出登录 重建登录失败 */,
+  '3 == 0' /** 场景：微信服务器踢出登录，重建登录失败 */,
+  "'1102' == 0" /** 场景：没法发消息了 */,
+  '-1 == 0' /** 场景：没法发消息 */,
+  "'-1' == 0" /** 不确定，暂时两种都加上 */
+]
+
 module.exports = {
   MSG_TYPE_ENUM,
   config,
   legacySystemMsgStrMap,
   systemMsgEnumMap,
   memoryCardName,
-  memoryCardPath
+  memoryCardPath,
+  logOutUnofficialCodeList
 }

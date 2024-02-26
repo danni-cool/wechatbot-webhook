@@ -1,18 +1,20 @@
 # RECVD_MSG_API JSON 示例
 
-## formData 请求体不同情况说明
+## 1. `formData.type` 不同情况说明
 
-### 文字消息 `formData.type === text`
+### 1.1 功能消息类型
+
+#### 文字消息 `text`
 
 - 是否支持快捷回复：✅
 - `formData.content`: `String`
 
-### 文件消息 `formData.type === file`
+#### 文件消息 `file`
 
 - 是否支持快捷回复：✅
 - `formData.content`: `binary`
 
-### 公众号推文 `formData.type === urlLink`
+#### 公众号推文 `urlLink`
 
 - 是否支持快捷回复：❌
 - `formData.content`：`json`
@@ -27,7 +29,7 @@
 }
 ```
 
-### 加好友请求 `formData.type === friendship`
+#### 加好友请求 `friendship`
 
 - 是否支持快捷回复：✅
 - `formData.content`：`json`
@@ -41,16 +43,19 @@
 
 > 通过好友请求，需要通过接口返回 `{ "success": true }` 字段
 
-### 4. 系统消息 `formData.isSystemEvent === '1'`
+### 1.2 系统通知消息类型
 
 - 是否支持快捷回复：❌
+
+#### 微信已登录/登出 `system_event_login` | `system_event_logout`
+
 - `formData.content`: `json`
-示例
+
 ```js
 {
-  "event": "login", // login | logout | error | notifyOfRecvdApiPushMsg
+  "event": "login", // login | logout
 
-  "user": { // 当前的用户信息，没有则为null
+  "user": { // 当前的用户信息
     "_events": {},
     "_eventsCount": 0,
     "id": "@xxxasdfsf",
@@ -65,11 +70,61 @@
       "star": false,
       "type": 1
     }
-
-    "error": ''// js 报错的错误栈信息
   }
+}
+```
 
-  //仅当 event: "notifyOfRecvdApiPushMsg" 快捷回复后触发才返回次结构， 如果有部分消息推送失败也在此结构能拿到所有信息, 结构同推消息的api结构
+#### 系统运行出错 `system_event_error`
+- `formData.content`: `json`
+```js
+{
+  "event": "error", //notifyOfRecvdApiPushMsg
+
+  "user": { // 当前的用户信息
+    "_events": {},
+    "_eventsCount": 0,
+    "id": "@xxxasdfsf",
+    "payload": {
+      "alias": "",
+      "avatar": "",
+      "friend": false,
+      "gender": 1,
+      "id": "@xxx",
+      "name": "somebody",
+      "phone": [],
+      "star": false,
+      "type": 1
+    }
+  },
+
+  "error": {} // 具体出错信息 js error stack
+}
+```
+
+#### 快捷回复后通知 `system_event_push_notify`
+- `formData.content`: `json`
+```js
+{
+  "event": "error", //notifyOfRecvdApiPushMsg
+
+  "user": { // 当前的用户信息
+    "_events": {},
+    "_eventsCount": 0,
+    "id": "@xxxasdfsf",
+    "payload": {
+      "alias": "",
+      "avatar": "",
+      "friend": false,
+      "gender": 1,
+      "id": "@xxx",
+      "name": "somebody",
+      "phone": [],
+      "star": false,
+      "type": 1
+    }
+  },
+
+  // 快捷回复后触发才返回此结构，如果有部分消息推送失败也在此结构能拿到所有信息, 结构同推消息的api结构
   "recvdApiReplyNotify": {
     "success": true,
     "message": "Message sent successfully",
@@ -86,7 +141,7 @@
 ```
 
 
-## formData.source `String`
+## 2. formData.source `String`
 
 ```js
   {
@@ -99,7 +154,7 @@
         "adminIdList": [],
         "avatar": "xxxx", // 相对路径，应该要配合解密
         "memberList": [
-          {id: '@xxxx', name:'昵称', alias: '备注名' }
+          {id: '@xxxx', name:'昵称', alias: '备注名'/** 个人备注名，非群备注名 */ }
         ]
       },
       //以下暂不清楚什么用途，如有兴趣，请查阅 wechaty 官网文档

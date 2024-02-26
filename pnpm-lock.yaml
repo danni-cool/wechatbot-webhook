@@ -8,6 +8,9 @@ patchedDependencies:
   wechat4u@0.7.14:
     hash: mmirz2kximouh53sl2jk76abxe
     path: patches/wechat4u@0.7.14.patch
+  wechaty-puppet-wechat4u@1.14.13:
+    hash: nq4vns7vah46g6vxziyzqg5jey
+    path: patches/wechaty-puppet-wechat4u@1.14.13.patch
 
 importers:
 
@@ -28,6 +31,9 @@ importers:
       form-data:
         specifier: ^4.0.0
         version: 4.0.0
+      gerror:
+        specifier: ^1.0.16
+        version: 1.0.16
       hono:
         specifier: ^3.11.11
         version: 3.11.11
@@ -3364,7 +3370,7 @@ packages:
       - wechaty
     dev: false
 
-  /wechaty-puppet-wechat4u@1.14.13(@swc/core@1.3.101)(wechaty-puppet@1.20.2):
+  /wechaty-puppet-wechat4u@1.14.13(patch_hash=nq4vns7vah46g6vxziyzqg5jey)(@swc/core@1.3.101)(wechaty-puppet@1.20.2):
     resolution: {integrity: sha512-aLm0Hp0VrmQB4POoFTzBKRQMmtdv4gMQUSUocfqL0JWAutsVwzWkm4Utbt8rnN7Jg2qxT5ooH4hkWDUlUKnKyw==}
     engines: {node: '>=16', npm: '>=7'}
     peerDependencies:
@@ -3381,6 +3387,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
+    patched: true
 
   /wechaty-puppet@1.20.2(rxjs@7.8.1):
     resolution: {integrity: sha512-IXcnUc9A3hGIT+9CEF8KLkbdld+AQPfVlWLeUXmmSvm3I9NbSbVfU43FZvKMjvLCexvN5DZq2+JZdASESohI5Q==}
@@ -3459,7 +3466,7 @@ packages:
       uuid: 8.3.2
       wechaty-puppet: 1.20.2(rxjs@7.8.1)
       wechaty-puppet-service: 1.19.9(brolog@1.14.2)(redux@4.2.1)(wechaty-puppet@1.20.2)(wechaty@1.20.2)
-      wechaty-puppet-wechat4u: 1.14.13(@swc/core@1.3.101)(wechaty-puppet@1.20.2)
+      wechaty-puppet-wechat4u: 1.14.13(patch_hash=nq4vns7vah46g6vxziyzqg5jey)(@swc/core@1.3.101)(wechaty-puppet@1.20.2)
       wechaty-token: 1.1.2
       ws: 8.15.1
     transitivePeerDependencies:

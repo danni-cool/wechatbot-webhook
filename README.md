@@ -65,9 +65,15 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 ## ⛰️ 部署 Deploy（推荐）
 
 
-#### 启动
+#### 1.使用 docker 部署
 
-##### 使用 docker
+##### 拉取最新镜像
+
+```
+docker pull dannicool/docker-wechatbot-webhook
+```
+
+##### docker 部署
 
 ```bash
 # 启动容器并映射日志目录，日志按天维度生成，e.g: app.2024-01-01.log
@@ -76,14 +82,13 @@ docker run -d --name wxBotWebhook -p 3001:3001 \
 dannicool/docker-wechatbot-webhook
 ```
 
-##### 使用 compose
+##### 使用 compose 部署 (可选)
 
 ```bash
-wget https://cdn.jsdelivr.net/gh/danni-cool/wechatbot-webhook@main/docker-compose.yml && docker-compose up
+wget -O docker-compose.yml https://cdn.jsdelivr.net/gh/danni-cool/wechatbot-webhook@main/docker-compose.yml && docker-compose down && docker-compose -p wx_bot_webhook up
 ```
 
-
-#### 登录
+#### 2.登录
 
 ```bash
 docker logs -f wxBotWebhook
@@ -97,11 +102,13 @@ docker logs -f wxBotWebhook
 
 > Tips：需要增加参数使用 -e，多行用 \ 隔开，例如 -e  RECVD_MSG_API="<https://example.com/your/url>" \
 
-| 功能 | 环境变量 | 案例 | 备注 |
-|--|--|--|--|
-|  收消息 |   RECVD_MSG_API  |   RECVD_MSG_API=<https://example.com/your/url>   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url，该行可以省略 |
-| 禁用自动登录 | DISABLE_AUTO_LOGIN | DISABLE_AUTO_LOGIN=true |  非微信踢下线账号，可以依靠session免登, 如果想每次都扫码登陆，则增加该条配置 |
-| 自定义登录 API token | LOGIN_API_TOKEN | LOGIN_API_TOKEN=abcdefg123 | 你也可以自定义一个自己的登录令牌，不配置的话，默认会生成一个 |
+| 功能  | 变量 | 备注 |
+|--|--|--|
+| 日志级别 | LOG_LEVEL=info | 日志级别，默认 info，只影响当前日志输出，详细输出考虑使用 debug。无论该值如何变化，日志文件总是记录debug级别的日志 |
+|  收消息 API |  RECVD_MSG_API=<https://example.com/your/url>   |  如果想自己处理收到消息的逻辑，比如根据消息联动，填上你的处理逻辑 url |
+| 收消息 API 接受自己发的消息 | ACCEPT_RECVD_MSG_MYSELF=false | RECVD_MSG_API 是否接收来自自己发的消息（设置为true，即接收, 默认false） |
+| 自定义登录 API token | LOGIN_API_TOKEN=abcdefg123 | 你也可以自定义一个自己的登录令牌，不配置的话，默认会生成一个 |
+| 禁用自动登录 | DISABLE_AUTO_LOGIN=true |  **非微信踢下线账号，可以依靠当前登录的session免登**, 如果想每次都扫码登陆，则增加该条配置 |
 
 ## 🛠️ API
 
@@ -281,11 +288,10 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 
 | formData      | 说明                                                                                                                                                                                                                                                                      | 数据类型          | 可选值                  | 示例                                             |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------- | ------------------------------------------------ |
-| type          | <div>支持的类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 添加好友邀请(friendship)</li></ul> refer: [wechaty类型支持列表](https://wechaty.js.org/docs/api/message#messagetype--messagetype) | `String`          | `text` `file` `urlLink` `friendship` | -                                                |
+| type          | <div>功能类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 添加好友邀请(friendship)</li></ul><div>系统类型</div><ul><li>✅ 登录(system_event_login)</li><li>✅ 登出(system_event_logout)</li><li>✅ 异常报错(system_event_error)</li><li>✅ 快捷回复后消息推送状态通知(system_event_push_notify)</li></ul> | `String`          | `text` `file` `urlLink` `friendship` `system_event_login` `system_event_logout` `system_event_error` `system_event_push_notify`| -                                                |
 | content       | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例                                                                                                                                                                                                                | `String` `Binary` |                         | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source        | 消息的相关发送方数据, JSON String                                                                                                                                                                                                                                         | `String`          |                         | [示例](docs/recvdApi.example.md#formdatasource)  |
 | isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
-| isSystemEvent | 是否是来自系统消息事件（上线，掉线、异常事件、快捷回复后的通知）                                                                                                                                                                                                                        | `String`          | `1` `0`                 | -                                                |
 
 **服务端处理 formData 一般需要对应的处理程序，假设你已经完成这一步，你将得到以下 request**
 
@@ -295,7 +301,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
     "content": "你好",
     "source": "{\"room\":\"\",\"to\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@f387910fa45\",\"payload\":{\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=1302335654&username=@f38bfd1e0567910fa45&skey=@crypaafc30\",\"friend\":false,\"gender\":1,\"id\":\"@f38bfd1e10fa45\",\"name\":\"ch.\",\"phone\":[],\"star\":false,\"type\":1}},\"from\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@6b5111dcc269b6901fbb58\",\"payload\":{\"address\":\"\",\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=123234564&username=@6b5dbb58&skey=@crypt_ec356afc30\",\"city\":\"Mars\",\"friend\":false,\"gender\":1,\"id\":\"@6b5dbd3facb58\",\"name\":\"Daniel\",\"phone\":[],\"province\":\"Earth\",\"signature\":\"\",\"star\":false,\"weixin\":\"\",\"type\":1}}}",
     "isMentioned": "0",
-    "isSystemEvent": "0"
+    "isSystemEvent": "0" // 考虑废弃，请使用type类型判断系统消息
   }
 ```
 
@@ -306,8 +312,7 @@ curl --location 'https://your.recvdapi.com' \
 --form 'type="file"' \
 --form 'content=@"/Users/Downloads/13482835.jpeg"' \
 --form 'source="{\\\"room\\\":\\\"\\\",\\\"to\\\":{\\\"_events\\\":{},\\\"_eventsCount\\\":0,\\\"id\\\":\\\"@f387910fa45\\\",\\\"payload\\\":{\\\"alias\\\":\\\"\\\",\\\"avatar\\\":\\\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=1302335654&username=@f38bfd1e0567910fa45&skey=@crypaafc30\\\",\\\"friend\\\":false,\\\"gender\\\":1,\\\"id\\\":\\\"@f38bfd1e10fa45\\\",\\\"name\\\":\\\"ch.\\\",\\\"phone\\\":[],\\\"star\\\":false,\\\"type\\\":1}},\\\"from\\\":{\\\"_events\\\":{},\\\"_eventsCount\\\":0,\\\"id\\\":\\\"@6b5111dcc269b6901fbb58\\\",\\\"payload\\\":{\\\"address\\\":\\\"\\\",\\\"alias\\\":\\\"\\\",\\\"avatar\\\":\\\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=123234564&username=@6b5dbb58&skey=@crypt_ec356afc30\\\",\\\"city\\\":\\\"Mars\\\",\\\"friend\\\":false,\\\"gender\\\":1,\\\"id\\\":\\\"@6b5dbd3facb58\\\",\\\"name\\\":\\\"Daniel\\\",\\\"phone\\\":[],\\\"province\\\":\\\"Earth\\\",\\\"signature\\\":\\\"\\\",\\\"star\\\":false,\\\"weixin\\\":\\\"\\\",\\\"type\\\":1}}}"' \
---form 'isMentioned="0"' \
---form 'isSystemEvent="0"'
+--form 'isMentioned="0"'
 ```
 
 
@@ -371,14 +376,18 @@ curl --location 'https://your.recvdapi.com' \
 - **query**: token
 
 **status**: `200`
-登录成功，返回 json 包含当前用户
+
+##### 登录成功
+
+返回 json 包含当前用户
 
 ```json
 {"success":true,"message":"Contact<TestUser>is already login"}
 ```
 
-**status**: `302`
-登录态掉了，跳转最新的登录二维码 
+##### 登录失败
+
+展示微信登录扫码页面
 
 #### `/healthz?token=YOUR_PERSONAL_TOKEN`
 

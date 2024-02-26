@@ -1,6 +1,6 @@
 const Utils = require('../utils/index')
 const fetch = require('node-fetch-commonjs')
-const { config } = require('../config/const')
+const { config, systemMsgEnumMap } = require('../config/const')
 const FormData = require('form-data')
 const { LOCAL_RECVD_MSG_API, RECVD_MSG_API } = process.env
 const { MSG_TYPE_ENUM } = require('../config/const')
@@ -148,11 +148,21 @@ async function sendMsg2RecvdApi(msg) {
       formData.append('type', 'friendship')
       formData.append('content', msg.text())
       break
-    // 暂时已知的有: 拍一拍消息
+
     case MSG_TYPE_ENUM.UNKNOWN:
       formData.append('type', 'unknown')
       formData.append('content', msg.text())
       break
+
+    // 系统消息（用于上报状态）
+    case MSG_TYPE_ENUM.SYSTEM_EVENT_LOGIN:
+    case MSG_TYPE_ENUM.SYSTEM_EVENT_LOGOUT:
+    case MSG_TYPE_ENUM.SYSTEM_EVENT_PUSH_NOTIFY:
+    case MSG_TYPE_ENUM.SYSTEM_EVENT_ERROR:
+      formData.append('type', systemMsgEnumMap[msg.type()])
+      formData.append('content', msg.text())
+      break
+
     // 其他统一暂不处理
     case MSG_TYPE_ENUM.EMOTION: // 自定义表情
     default:

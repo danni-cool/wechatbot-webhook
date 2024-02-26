@@ -1,7 +1,4 @@
-const Service = require('../service')
-const Utils = require('../utils')
 const Middleware = require('../middleware')
-const { TextMsg } = require('../utils/msg.js')
 
 /**
  * 注册login路由和处理上报逻辑
@@ -11,9 +8,6 @@ const { TextMsg } = require('../utils/msg.js')
  */
 module.exports = function registerLoginCheck({ app, bot }) {
   let message = ''
-  /** @type {import('wechaty').ContactSelf | null} */
-  let currentUser = null
-  let logOutWhenError = false
   let success = false
 
   bot
@@ -22,66 +16,17 @@ module.exports = function registerLoginCheck({ app, bot }) {
       success = false
     })
     .on('login', async (user) => {
-      message = user.toString() + 'is already login'
+      message = user + 'is already login'
       success = true
-      currentUser = user
-      logOutWhenError = false
-
-      try {
-        await Service.sendMsg2RecvdApi(
-          new TextMsg({
-            text: JSON.stringify({ event: 'login', user }),
-            isSystemEvent: true
-          })
-        )
-      } catch (e) {
-        Utils.logger.error('上报login事件给 RECVD_MSG_API 出错', e)
-      }
     })
-    .on('logout', (user) => {
+    .on('logout', () => {
       message = ''
-      currentUser = null
       success = false
-      // 登出时给接收消息api发送特殊文本
-      Service.sendMsg2RecvdApi(
-        new TextMsg({
-          text: JSON.stringify({ event: 'logout', user }),
-          isSystemEvent: true
-        })
-      ).catch((e) => {
-        Utils.logger.error('上报 logout 事件给 RECVD_MSG_API 出错：', e)
-      })
     })
-    .on('error', (error) => {
-      // 登出后的错误没有必要重复上报
-      !logOutWhenError &&
-        Service.sendMsg2RecvdApi(
-          new TextMsg({
-            text: JSON.stringify({ event: 'error', error, user: currentUser }),
-            isSystemEvent: true
-          })
-        ).catch((e) => {
-          Utils.logger.error('上报 error 事件给 RECVD_MSG_API 出错：', e)
-        })
-
-      // 处理异常错误后的登出上报，每次登录成功后掉线只上报一次
-      if (!logOutWhenError && !bot.isLoggedIn) {
-        Service.sendMsg2RecvdApi(
-          new TextMsg({
-            text: JSON.stringify({ event: 'logout', user: currentUser }),
-            isSystemEvent: true
-          })
-        ).catch((e) => {
-          Utils.logger.error(
-            '上报 error 事件中的 logout 给 RECVD_MSG_API 出错：',
-            e
-          )
-        })
-
+    .on('error', async () => {
+      if (!bot.isLoggedIn) {
         success = false
         message = ''
-        logOutWhenError = true
-        currentUser = null
       }
     })
 
@@ -98,7 +43,29 @@ module.exports = function registerLoginCheck({ app, bot }) {
           message
         })
       } else {
-        return c.redirect(message, 302)
+        // 构建带有iframe的HTML字符串
+        const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>扫码登录</title>
+          <style>
+            body, html { 
+              margin: 0; padding: 0; height: 100%; overflow: hidden; 
+            }
+            iframe { 
+              position:absolute; left:0; right:0; bottom:0; top:0; border:0; 
+            }
+          </style>
+        </head>
+        <body>
+          <iframe src="${message}" frameborder="0" style="height:100%;width:100%" allowfullscreen></iframe>
+        </body>
+        </html>
+      `
+        return c.html(html)
       }
     }
   )

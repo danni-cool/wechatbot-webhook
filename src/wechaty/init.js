@@ -1,19 +1,27 @@
+const { version } = require('../../package.json')
 const { WechatyBuilder } = require('wechaty')
+const { SystemEvent } = require('../utils/msg.js')
 const Service = require('../service')
 const Utils = require('../utils/index')
 const chalk = require('chalk')
-const { PORT, homeEnvCfg, homeMemoryCardPath } = process.env
-const isCliEnv = Boolean(homeEnvCfg)
+const { PORT } = process.env
+const { memoryCardName } = require('../config/const')
 const token = Service.initLoginApiToken()
 const cacheTool = require('../service/cache')
 const bot =
   process.env.DISABLE_AUTO_LOGIN === 'true'
     ? WechatyBuilder.build()
     : WechatyBuilder.build({
-        name: isCliEnv ? homeMemoryCardPath : 'loginSession'
+        name: memoryCardName
       })
 
 module.exports = function init() {
+  /** @type {import('wechaty').Contact} */
+  let currentUser
+  let botLoginSuccessLastTime = false
+
+  console.log(chalk.blue(`🤖 wechatbot-webhook v${version} 🤖`))
+
   // 启动 Wechaty 机器人
   bot
     // 扫码登陆事件
@@ -44,11 +52,41 @@ module.exports = function init() {
       }
 
       Utils.logger.info(`🌱 User ${user.toString()} logged in`)
+
+      currentUser = user
+      botLoginSuccessLastTime = true
+
+      Service.sendMsg2RecvdApi(new SystemEvent({ event: 'login', user })).catch(
+        (e) => {
+          Utils.logger.error('上报login事件给 RECVD_MSG_API 出错', e)
+        }
+      )
+
+      //TODO: test code
+      // setTimeout(function () {
+      //   bot.logout()
+      // }, 5000)
     })
 
     // 登出事件
     .on('logout', async (user) => {
+      Utils.deleteMemoryCard()
+
+      /** bugfix: 重置登录会触发多次logout，但是上报只需要登录成功后登出那一次 */
+      if (!botLoginSuccessLastTime) return
+
+      botLoginSuccessLastTime = false
+
       Utils.logger.info(chalk.red(`User ${user.toString()} logout`))
+
+      bot.reset()
+
+      // 登出时给接收消息api发送特殊文本
+      Service.sendMsg2RecvdApi(
+        new SystemEvent({ event: 'logout', user })
+      ).catch((e) => {
+        Utils.logger.error('上报 logout 事件给 RECVD_MSG_API 出错：', e)
+      })
     })
 
     .on('room-topic', async (room, topic, oldTopic, changer) => {
@@ -87,8 +125,31 @@ module.exports = function init() {
     })
 
     // 各种出错事件
-    .on('error', (error) => {
+    .on('error', async (error) => {
       Utils.logger.error(`\n${chalk.red(error)}\n`)
+
+      if (!bot.isLoggedIn) return
+
+      // wechaty 未知的登出状态，处理异常错误后的登出上报
+      const logOutUnofficial = [
+        '400 != 400' /** 场景：微信服务器踢出登录 重建登录失败*/,
+        '1205 == 0' /** 场景：微信服务器踢出登录 重建登录失败 */,
+        '3 == 0' /** 场景：微信服务器踢出登录，重建登录失败 */,
+        "'1102' == 0" /** 场景：没法发消息了 */,
+        '-1 == 0' /** 场景：没法发消息 */,
+        "'-1' == 0" /** 不确定，暂时两种都加上 */
+      ].some((item) => error.message.includes(item))
+
+      if (logOutUnofficial) {
+        await bot.logout()
+      }
+
+      // 发送error事件给接收消息api
+      Service.sendMsg2RecvdApi(
+        new SystemEvent({ event: 'error', error, user: currentUser })
+      ).catch((e) => {
+        Utils.logger.error('上报 error 事件给 RECVD_MSG_API 出错：', e)
+      })
     })
 
   bot.start().catch((e) => {

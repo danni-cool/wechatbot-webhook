@@ -1,3 +1,20 @@
+const path = require('path')
+
+const config = {
+  /**
+   * 上报消息的api群成员缓存多久(单位:ms)
+   * @type {number}
+   */
+  roomCachedTime: 1000 * 60 * 5
+}
+
+const { homeEnvCfg, homeMemoryCardPath } = process.env
+const isCliEnv = Boolean(homeEnvCfg)
+const memoryCardName = isCliEnv ? homeMemoryCardPath : 'loginSession'
+const memoryCardPath = isCliEnv
+  ? homeMemoryCardPath
+  : path.join(__dirname, '../../', 'loginSession.memory-card.json')
+
 /**
  * Enum for msg type
  * @readonly
@@ -20,15 +37,44 @@ const MSG_TYPE_ENUM = {
   /** 视频 */
   VIDEO: 15,
   /** 好友邀请 or 好友通过消息（自定义类型） */
-  CUSTOM_FRIENDSHIP: 99
+  CUSTOM_FRIENDSHIP: 99,
+  /** 系统消息类型 */
+  /** 登录事件 */
+  SYSTEM_EVENT_LOGIN: 1000,
+  /** 登出事件 */
+  SYSTEM_EVENT_LOGOUT: 1001,
+  /** 错误事件 */
+  SYSTEM_EVENT_ERROR: 1002,
+  /** 推送通知事件 */
+  SYSTEM_EVENT_PUSH_NOTIFY: 1003
 }
 
-const config = {
-  /**
-   * 上报消息的api群成员缓存多久(单位:ms)
-   * @type {number}
-   */
-  roomCachedTime: 1000 * 60 * 5
+/**
+ * Enum for system msg type (legacy)
+ * @readonly
+ * @enum {number} */
+const legacySystemMsgStrMap = {
+  login: MSG_TYPE_ENUM.SYSTEM_EVENT_LOGIN,
+  logout: MSG_TYPE_ENUM.SYSTEM_EVENT_LOGOUT,
+  error: MSG_TYPE_ENUM.SYSTEM_EVENT_ERROR,
+  notifyOfRecvdApiPushMsg: MSG_TYPE_ENUM.SYSTEM_EVENT_PUSH_NOTIFY
 }
 
-module.exports = { MSG_TYPE_ENUM, config }
+/**
+ * 系统消息类型映射表(外部)
+ * @enum {string} */
+const systemMsgEnumMap = {
+  [MSG_TYPE_ENUM.SYSTEM_EVENT_LOGIN]: 'system_event_login',
+  [MSG_TYPE_ENUM.SYSTEM_EVENT_LOGOUT]: 'system_event_logout',
+  [MSG_TYPE_ENUM.SYSTEM_EVENT_ERROR]: 'system_event_error',
+  [MSG_TYPE_ENUM.SYSTEM_EVENT_PUSH_NOTIFY]: 'system_event_push_notify'
+}
+
+module.exports = {
+  MSG_TYPE_ENUM,
+  config,
+  legacySystemMsgStrMap,
+  systemMsgEnumMap,
+  memoryCardName,
+  memoryCardPath
+}

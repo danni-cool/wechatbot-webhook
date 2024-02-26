@@ -22,6 +22,10 @@ ENV RECVD_MSG_API=
 ENV LOGIN_API_TOKEN=
 # 是否禁用默认登录
 ENV DISABLE_AUTO_LOGIN=
+# 运行时提示的消息等级（默认info，想有更详细的日志，可以指定为debug)
+ENV LOG_LEVEL=info
+# RECVD_MSG_API 是否接收来自自己发的消息（设置为true，即接收）
+ENV ACCEPT_RECVD_MSG_MYSELF=false
 
 # 暴露端口（你的 Express 应用程序监听的端口）
 EXPOSE 3001

@@ -115,3 +115,15 @@ type standardV2Payload = {
   data: pushMsgUnitTypeOpt | pushMsgUnitTypeOpt[]
   unValidParamsStr: string
 }
+
+type systemEventPayload = {
+  event: keyof typeof import('@src/config/const').legacySystemMsgStrMap
+  user?: import('wechaty').Contact
+  recvdApiReplyNotify?: {
+    success: boolean
+    task: msgV2taskType
+    message: string
+    status: number
+  }
+  error?: import('gerror').GError
+}

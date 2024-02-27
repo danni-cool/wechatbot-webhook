@@ -48,7 +48,7 @@ npx wechatbot-webhook
 
 ### 2. 扫码登录
 
-![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/Jietu20231224-170732.gif)
+![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-demo.gif)
 
 ### 3. 使用 http 请求给指定用户发消息
 

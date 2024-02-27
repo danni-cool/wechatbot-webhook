@@ -7,6 +7,13 @@
 * 🐛 修复friendship事件不上报recvdAPI的问题. close:[#155](https://github.com/danni-cool/wechatbot-webhook/issues/155) ([19b9148](https://github.com/danni-cool/wechatbot-webhook/commit/19b9148debf92115e57ea3239a86be2f1bf24c95))
 
   
+## [2.6.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.3...v2.6.0) (2024-02-27)
+
+
+### Features
+
+* 🎸 增加全局路由鉴权 close:[#166](https://github.com/danni-cool/wechatbot-webhook/issues/166) ([875dfb3](https://github.com/danni-cool/wechatbot-webhook/commit/875dfb340da79467538bc2fd2c1713f77121a751))
+
 ## [2.5.2](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.1...v2.5.2) (2024-01-14)
 
 

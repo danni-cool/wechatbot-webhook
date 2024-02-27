@@ -12,7 +12,8 @@
   "main": "main.js",
   "scripts": {
     "prestart": "node ./scripts/preStart",
-    "start": "node main"
+    "start": "node main",
+    "build:cli": "pnpm --filter wechatbot-webhook run build"
   },
   "engines": {
     "node": ">=18.14.1"

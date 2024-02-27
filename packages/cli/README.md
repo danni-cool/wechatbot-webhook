@@ -9,7 +9,7 @@
 [🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general) | [🧑‍💻 Github](https://github.com/danni-cool/wechatbot-webhook)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 </div>
 
-开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人
+开箱即用的微信webhook机器人，通过 http 接口调用即可实现微信消息的发送和接收
 
 ## ✨ Features
 
@@ -31,11 +31,15 @@
 
 ### 1. 安装
 
+> 目前使用 pnpm 管理包，以支持临时包修补（patches）和加速依赖安装，如果你还不了解 pnpm，可以先了解 [pnpm](https://pnpm.io/zh/motivation)
+
 ```bash
-npm i wechatbot-webhook -g
+pnpm i wechatbot-webhook -g
 ```
 
-### 2. 运行
+### 2. 运行 & 扫码
+
+![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-demo.gif)
 
 ```bash
 wxbot
@@ -51,16 +55,17 @@ Options:
   -h, --help     display help for command
 ```
 
-### 2. 扫码登录
 
-![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/Jietu20231224-170732.gif)
+### 3. 复制推消息 api
 
-### 3. 使用 http 请求给指定用户发消息
+从命令行中复制推消息api，例如 http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]
 
-新开个终端试试以下 curl，to字段值换成你要发送的昵称
+### 4. 使用以下结构发消息
+
+从命令行中复制推消息新开个终端试试以下 curl，to, token字段值换成你要值
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg/v2' \
+curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]' \
 --header 'Content-Type: application/json' \
 --data '{ "to": "测试昵称", data: { "content": "Hello World!" }}'
 ```

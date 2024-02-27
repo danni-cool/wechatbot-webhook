@@ -6,39 +6,54 @@
 <a href="https://discord.gg/qBF9VsBdc8"><img src="https://img.shields.io/discord/1165844612473172088?logo=Discord&link=https%3A%2F%2Fdiscord.gg%qBF9VsBdc8" /></a>
 
 
-[🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general)| [📦 NPM包](https://www.npmjs.com/package/wechatbot-webhook)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
+[🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general) | [📦 NPM包](https://www.npmjs.com/package/wechatbot-webhook)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 </div>
 
-开箱即用的 Wechaty 应用层项目，实现了一个支持消息收发的微信 webhook 机器人，当 http 调用和二次开发亦可，二次开发请fork
-
-> [!Caution] 
-> 当前版本基于web协议，除了bug修补和稳定性功能外，不再接收新的 feature request，后续精力会放到 windows 分支上，感兴趣的可以点个 watch 👀
+开箱即用的微信webhook机器人，通过 http 接口调用即可实现微信消息的发送和接收，二次开发请 fork
 
 ## ✨ Features
 
-- **推送消息** (发送文字 / 图片 / 文件)
-  - 💬 支持消息单条 / 多条 / 群发
-  - 🌃 消息 url 解析成文件发送
-  - 📁 支持读文件发送
+> [!Caution] 
+> 当前版本基于web协议，其支持的功能有限，也不完美，除了bug修补和稳定性功能外，不再接收新的 feature request，后续精力会放到 windows 分支上，感兴趣的可以点个 watch 👀
 
-- **接收消息**（文字 / 图片 / 语音 / 视频 / 文件 / 好友申请 / 公众号推文链接）
-  - 🚗 单 API 收发消息（依赖收消息API，被动回复无需公网IP）
-  - 🪧 登入掉线异常事件通知
+| **功能** | web协议 | windows协议 |
+| --- | --- | --- |
+| 目前可用性 | ✅ | ❌ |
+| 代码分支 | main | windows |
+| Docker Tag | latest | windows |
+| **<发送消息>** | ✅ 单条 / 多条 / 群发  | ✅ 单条 / 多条 / 群发 |
+| 发文字 | ✅ | ✅ |
+| 发图片 | ✅ 本地图片 / url图片解析 | ✅ 本地图片 / url图片解析 |
+| 发视频（mp4) | ✅ 本地视频 / url视频解析 |  |
+| 发文件 | ✅ 本地文件 / url文件解析 | ✅ 本地文件 / url文件解析 |
+| **<接收消息>** | |  |
+| 接收文字 | ✅ | ✅ |
+| 接收图片 | ✅ |  |
+| 接收视频 | ✅ |  |
+| 接收文件 | ✅ |  |
+| 接收好友申请 | ✅ |  |
+| 接收公众号推文链接 | ✅ |  |
+| 接收系统通知 | ✅ 上线通知 / 掉线通知 / 异常通知 |  |
+| [快捷回复](https://github.com/danni-cool/wechatbot-webhook?tab=readme-ov-file#2-%E6%94%B6%E6%B6%88%E6%81%AF-api) | ✅  | ✅ |
+| **<群管理>** |  |  |
+| **<好友管理>** |  |  |
+| **<其他功能>** |  |  |
+| 非掉线自动登录 | ✅ |  |
+| API 鉴权 | ✅ | ✅ |
+| [n8n](https://n8n.io/) 无缝接入 | ✅ |  |
+| 支持docker部署 | ✅ arm64 / amd64 | ✅ amd64  |
+| 日志文件导出 | ✅ | ✅  |
 
-- **其他功能**
-  - 🤖 支持 非掉线自动登录
-  - ✈️ 支持 带鉴权 api 接口获取登陆二维码
-  - 支持 [n8n](https://n8n.io/) 低码平台丝滑接入（webhook 节点）
-  - 🚢 支持 docker 部署，兼容 `arm64` 和 `amd64`
-  - ✍️ 支持 日志文件导出
- 
-- **❌ 不支持**
+### ⚠️ 特别说明：
+
+以上提到的功能 ✅ 为已实现，受限于微信协议限制，不同协议支持功能也是不同的，并不是所有功能都可以对接，例如：
+
   - 企业微信消息的收发 [#142](https://github.com/danni-cool/wechatbot-webhook/issues/142)
-  - 发送语音消息/分享音乐/公众号等未提到的功能
+  - 发送语音消息 / 分享音乐 / 公众号等在 features 中未提到的功能
 
 ## 🚀 一分钟 Demo
 
-### 1. 运行
+### 1. 运行 & 扫码
 
 ```bash
 npx wechatbot-webhook
@@ -46,16 +61,18 @@ npx wechatbot-webhook
 
 > 除非掉线，默认记住上次登录，换帐号请运行以下命令 `npx wechatbot-webhook -r`
 
-### 2. 扫码登录
+### 2. 复制推消息 api
 
-![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/Jietu20231224-170732.gif)
+从命令行中复制推消息api，例如 http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]
 
-### 3. 使用 http 请求给指定用户发消息
+![](https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-demo.gif)
 
-新开个终端试试以下 curl，to字段值换成你要发送的昵称
+### 3. 使用以下结构发消息
+
+从命令行中复制推消息新开个终端试试以下 curl，to, token字段值换成你要值
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg/v2' \
+curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]' \
 --header 'Content-Type: application/json' \
 --data '{ "to": "测试昵称", data: { "content": "Hello World!" }}'
 ```
@@ -99,7 +116,7 @@ docker logs -f wxBotWebhook
 
 找到二维码登录地址，图下 url 部分，浏览器访问，扫码登录wx
 
-<https://localhost:3001/login?token=YOUR_PERSONAL_TOKEN>
+<https://localhost:3001/login?token=[YOUR_PERSONAL_TOKEN]>
 
 #### 可选 env 参数
 
@@ -117,7 +134,7 @@ docker logs -f wxBotWebhook
 
 > v2版本接口增加了群发功能，v1 版本接口请移步 [legacy-api](./docs/legacy-api.md)
 
-- Url：<http://localhost:3001/webhook/msg/v2>
+- Url：<http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]>
 - Methods: `POST`
 - ContentType: `application/json`
 - Body: 格式见下面表格
@@ -144,7 +161,7 @@ docker logs -f wxBotWebhook
 ##### 发单条消息
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg/v2' \
+curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]' \
 --header 'Content-Type: application/json' \
 --data '{
     "to": "testUser",
@@ -155,7 +172,7 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 ##### 发给群消息
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg/v2' \
+curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]' \
 --header 'Content-Type: application/json' \
 --data '{
     "to": "testGroup",
@@ -167,7 +184,7 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 ##### 同一对象多条消息(群消息同理)
 
 ```bash
-curl --location 'http://localhost:3001/webhook/msg/v2' \
+curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]' \
 --header 'Content-Type: application/json' \
 --data '{
     "to": "testUser",
@@ -187,7 +204,7 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 ##### 群发消息
 
 ``` bash
-curl --location 'http://localhost:3001/webhook/msg/v2' \
+curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]' \
 --header 'Content-Type: application/json' \
 --data '[
     {
@@ -247,7 +264,7 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 
 > 读文件暂时只支持单条发送
 
-- Url：<http://localhost:3001/webhook/msg>
+- Url：<http://localhost:3001/webhook/msg?token=[YOUR_PERSONAL_TOKEN]>
 - Methods: `POST`
 - ContentType: `multipart/form-data`
 - FormData: 格式见下面表格
@@ -263,7 +280,7 @@ curl --location 'http://localhost:3001/webhook/msg/v2' \
 ##### Curl
 
 ```bash
-curl --location --request POST 'http://localhost:3001/webhook/msg' \
+curl --location --request POST 'http://localhost:3001/webhook/msg?token=[YOUR_PERSONAL_TOKEN]' \
 --form 'to=testGroup' \
 --form content=@"$HOME/demo.jpg" \
 --form 'isRoom=1'
@@ -372,7 +389,7 @@ curl --location 'https://your.recvdapi.com' \
 #### token 配置说明
 > 除了在 docker 启动时配置token，在默认缺省 token 的情况，会默认生成一个写入 `.env` 文件中
 
-#### `/login?token=YOUR_PERSONAL_TOKEN`
+#### `/login?token=[YOUR_PERSONAL_TOKEN]`
 
 - **描述**：获取登录二维码接口。
 - **methods**: `GET`
@@ -388,7 +405,7 @@ curl --location 'https://your.recvdapi.com' \
 **status**: `302`
 登录态掉了，跳转最新的登录二维码 
 
-#### `/healthz?token=YOUR_PERSONAL_TOKEN`
+#### `/healthz?token=[YOUR_PERSONAL_TOKEN]`
 
 - **描述**：健康检测接口。
 - **methods**: `GET`

@@ -2,7 +2,7 @@
 
 ## V1 版本
 
-- Url：<http://localhost:3001/webhook/msg>
+- Url：<http://localhost:3001/webhook/msg?token=[YOUR_PERSONAL_TOKEN]>
 - Methods: `POST`
 
 #### Case1. 发文字或文件(外链)
@@ -24,7 +24,7 @@
 ##### Curl (发文字)
 
 ```bash
-curl --location --request POST 'http://localhost:3001/webhook/msg' \
+curl --location --request POST 'http://localhost:3001/webhook/msg?token=[YOUR_PERSONAL_TOKEN]' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "to": "testUser",
@@ -36,7 +36,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 ##### Curl（发文件，解析url）
 
 ```bash
-curl --location --request POST 'http://localhost:3001/webhook/msg' \
+curl --location --request POST 'http://localhost:3001/webhook/msg?token=[YOUR_PERSONAL_TOKEN]' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "to": "testGroup",
@@ -60,7 +60,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg' \
 ##### Curl
 
 ```bash
-curl --location --request POST 'http://localhost:3001/webhook/msg' \
+curl --location --request POST 'http://localhost:3001/webhook/msg?token=[YOUR_PERSONAL_TOKEN]' \
 --form 'to=testGroup' \
 --form content=@"$HOME/demo.jpg" \
 --form 'isRoom=1'

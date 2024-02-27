@@ -1,5 +1,3 @@
-const Middleware = require('../middleware')
-
 /**
  * 注册login路由和处理上报逻辑
  * @param {Object} param
@@ -32,8 +30,6 @@ module.exports = function registerLoginCheck({ app, bot }) {
 
   app.get(
     '/login',
-    Middleware.verifyToken,
-
     /** @param {import('hono').Context} c */
     async (c) => {
       // 登录成功的话，返回登录信息
@@ -72,7 +68,6 @@ module.exports = function registerLoginCheck({ app, bot }) {
 
   app.get(
     '/healthz',
-    Middleware.verifyToken,
     /** @param {import('hono').Context} c */
     async (c) => {
       // 登录成功的话，返回登录信息

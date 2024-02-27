@@ -38,20 +38,19 @@ module.exports = function init() {
 
     // 登陆成功事件
     .on('login', async (user) => {
-      if (process.env.homeEnvCfg !== undefined) {
-        Utils.logger.info(
-          [
-            '🌱 ' + chalk.green(`User ${user.toString()} logged in`),
-            '📖 发送消息 HTTP API 请参考: ' +
-              `${chalk.cyan(
-                'https://github.com/danni-cool/wechatbot-webhook?tab=readme-ov-file#%EF%B8%8F-api'
-              )}`
-          ].join('\n')
-        )
-        return
-      }
-
-      Utils.logger.info(`🌱 User ${user.toString()} logged in`)
+      Utils.logger.info('🌱 ' + chalk.green(`User ${user} logged in`))
+      Utils.logger.info(
+        '💬 ' +
+          `你的推消息 api 为：${chalk.cyan(
+            `http://localhost:${PORT}/webhook/msg/v2?token=${token}`
+          )}`
+      )
+      Utils.logger.info(
+        '📖 发送消息结构 API 请参考: ' +
+          `${chalk.cyan(
+            'https://github.com/danni-cool/wechatbot-webhook?tab=readme-ov-file#%EF%B8%8F-api'
+          )}\n`
+      )
 
       currentUser = user
       botLoginSuccessLastTime = true

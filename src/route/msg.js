@@ -150,6 +150,8 @@ function registerPushHook({ app, bot }) {
 
     if (msgReceiver !== undefined) {
       const { success, error } = await Service.formatAndSendMsg({
+        isRoom,
+        bot,
         type,
         content,
         msgInstance: msgReceiver

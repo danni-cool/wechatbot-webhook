@@ -171,6 +171,17 @@ const sleep = async (ms) => {
   return await new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+/**
+ * 删除登录缓存文件
+ */
+// const deleteMemoryCard = () => {
+//   //@ts-expect-errors 必定是 pathlike
+//   if (fs.existsSync(memoryCardPath)) {
+//     //@ts-expect-errors 必定是 pathlike
+//     fs.unlinkSync(memoryCardPath)
+//   }
+// }
+
 module.exports = {
   ...require('./msg.js'),
   ...require('./nextTick.js'),

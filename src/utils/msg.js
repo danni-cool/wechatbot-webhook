@@ -1,13 +1,26 @@
-const { MSG_TYPE_ENUM } = require('../config/const')
+const { MSG_TYPE_ENUM, legacySystemMsgStrMap } = require('../config/const')
 class CommonMsg {
   /**
-   * @param {string} text
-   * @param {import("@src/config/const").MSG_TYPE_ENUM} type
-   * @param {boolean} [isSystemEvent]
+   * @param {commonMsgPayload} payload
    */
-  constructor(text, type, isSystemEvent = false) {
+  constructor({
+    text,
+    type,
+    isSystemEvent = false,
+    self = false,
+    room = '',
+    to,
+    from = '',
+    file = ''
+  }) {
     this.t = type
+    this.isSelf = self
+    this.toInfo = to
+    this.fromInfo = from
+    this.fileInfo = file
+    this.roomInfo = room
     this.payload = text
+    /** @deprecated 已经废弃，但保留其旧版本逻辑的兼容性 */
     this.isSystemEvent = isSystemEvent
   }
 
@@ -30,30 +43,51 @@ class CommonMsg {
   }
 
   self() {
-    return false
+    return this.isSelf
   }
 
   room() {
-    return ''
+    return this.roomInfo
+  }
+
+  content() {
+    return this.fileInfo
   }
 
   to() {
-    return ''
+    return this.toInfo
   }
 
   talker() {
-    return ''
+    return this.fromInfo
+  }
+}
+
+class ApiMsg extends CommonMsg {
+  /** @param {msgStructurePayload } payload*/
+  constructor({ from, to, room = '', content = '', type, self = false }) {
+    if (type === MSG_TYPE_ENUM.TEXT) {
+      super({
+        from,
+        to,
+        room,
+        // @ts-expect-error 此处一定是string
+        text: content,
+        type,
+        self
+      })
+    } else {
+      super({ from, to, room, type, file: content, self })
+    }
   }
 }
 
 class TextMsg extends CommonMsg {
   /**
-   * @param {Object} option
-   * @param {string} option.text
-   * @param {boolean} option.isSystemEvent
+   * @param {string} text
    */
-  constructor({ text, isSystemEvent = false }) {
-    super(text, MSG_TYPE_ENUM.TEXT, isSystemEvent)
+  constructor(text) {
+    super({ text, type: MSG_TYPE_ENUM.TEXT })
   }
 }
 
@@ -62,12 +96,30 @@ class FriendshipMsg extends CommonMsg {
    * @param {Record<string,any>} payload
    */
   constructor(payload) {
-    super(JSON.stringify(payload), MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP)
+    super({
+      text: JSON.stringify(payload),
+      type: MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP
+    })
+  }
+}
+
+class SystemEvent extends CommonMsg {
+  /**
+   * @param {systemEventPayload} payload
+   */
+  constructor(payload) {
+    super({
+      text: JSON.stringify(payload),
+      type: legacySystemMsgStrMap[payload.event],
+      isSystemEvent: true
+    })
   }
 }
 
 module.exports = {
   CommonMsg,
+  ApiMsg,
   TextMsg,
-  FriendshipMsg
+  FriendshipMsg,
+  SystemEvent
 }

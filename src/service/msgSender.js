@@ -1,4 +1,5 @@
 const Utils = require('../utils/index.js')
+const chalk = require('chalk')
 const { sendMsg2RecvdApi } = require('./msgUploader.js')
 const { MSG_TYPE_ENUM } = require('../config/const.js')
 const rules = require('../config/valid.js')
@@ -6,7 +7,7 @@ const rules = require('../config/valid.js')
 /**
  * 根据v2群发逻辑整合归并状态方便调用和处理回调
  * @param {*} body
- * @param {{bot?:import('wechaty/impls').WechatyInterface, skipReceiverCheck?:boolean, messageReceiver?:msgInstanceType}} bot
+ * @param {{bot:import('wechaty/impls').WechatyInterface, skipReceiverCheck?:boolean, messageReceiver?:msgInstanceType}} bot
  * */
 const handleSendV2Msg = async function (
   body,
@@ -64,7 +65,7 @@ const handleSendV2Msg = async function (
 /**
  * 处理v2版本推消息（群发or个人）,返回状态
  * @param {*} body
- * @param {{bot?:import('wechaty/impls').WechatyInterface, skipReceiverCheck?:boolean, messageReceiver?:msgInstanceType}} opt
+ * @param {{bot:import('wechaty/impls').WechatyInterface, skipReceiverCheck?:boolean, messageReceiver?:msgInstanceType}} opt
  * @returns {Promise<{state:'pass' | 'reject' | '', task:msgV2taskType}>}
  */
 const handleSendV2MsgCollectInfo = async function (
@@ -340,7 +341,7 @@ const hadnleMsgV2PreCheck = function (body, opt) {
 /**
  * 处理消息发给个人逻辑（单条/多条）（不校验参数）
  * @param {*} body
- * @param {{bot?:import('wechaty/impls').WechatyInterface, messageReceiver?:msgInstanceType }} opt
+ * @param {{bot:import('wechaty/impls').WechatyInterface, messageReceiver?:msgInstanceType }} opt
  * @returns {Promise<{status: msg2SingleStatus, notFoundObj: msg2SingleRejectReason | null, rejectReasonObj: msg2SingleRejectReason|null, sendingTaskObj: sendingTaskType | null}>}
  */
 const handleMsg2Single = async function (body, { bot, messageReceiver }) {
@@ -368,7 +369,7 @@ const handleMsg2Single = async function (body, { bot, messageReceiver }) {
   let msgReceiver = messageReceiver
 
   // msgReceiver 可以由外部提供
-  if (!msgReceiver && bot) {
+  if (!msgReceiver) {
     if (isRoom === true && typeof to === 'string') {
       msgReceiver = await bot.Room.find({ topic: to })
     } else {
@@ -379,12 +380,14 @@ const handleMsg2Single = async function (body, { bot, messageReceiver }) {
     }
   }
 
-  if (msgReceiver !== undefined) {
+  if (msgReceiver) {
     if (Array.isArray(payload.data) && payload.data.length) {
       /**@type {(pushMsgUnitTypeOpt & {success?:boolean, error?:string})[]} */
       let msgArr = payload.data
       for (let i = 0; i < msgArr.length; i++) {
         const { success, error } = await formatAndSendMsg({
+          bot,
+          isRoom,
           type: msgArr[i].type || 'text',
           // @ts-ignore
           content: msgArr[i].content,
@@ -416,6 +419,8 @@ const handleMsg2Single = async function (body, { bot, messageReceiver }) {
       }
     } else if (!Array.isArray(payload.data)) {
       const { success } = await formatAndSendMsg({
+        isRoom,
+        bot,
         type: payload.data.type ?? 'text',
         // @ts-ignore
         content: payload.data.content,
@@ -471,12 +476,37 @@ const getPushMsgUnitUnvalidStr = function ({ type, content }) {
 /**
  * 发送消息核心。这个处理程序将数据转换为标准格式，然后使用 wechaty 发送消息。
  * @type {{
- * (payload:{ type: 'text' | 'fileUrl'|'file', content: string| payloadFormFile, msgInstance: msgInstanceType }) : Promise<{success:boolean, error:any}>;
+ * (payload:{ isRoom?: boolean,bot:import('wechaty/impls').WechatyInterface, type: 'text' | 'fileUrl'|'file', content: string| payloadFormFile, msgInstance: msgInstanceType }) : Promise<{success:boolean, error:any}>;
  * }}
  */
-const formatAndSendMsg = async function ({ type, content, msgInstance }) {
+const formatAndSendMsg = async function ({
+  isRoom = false,
+  bot,
+  type,
+  content,
+  msgInstance
+}) {
   let success = false
   let error
+  /** @type {msgStructurePayload} */
+  const emitPayload = {
+    content: '',
+    type: {
+      text: MSG_TYPE_ENUM.TEXT,
+      fileUrl: MSG_TYPE_ENUM.ATTACHMENT,
+      file: MSG_TYPE_ENUM.ATTACHMENT
+    }[type],
+    type_display: {
+      text: '消息',
+      fileUrl: '文件',
+      file: '文件'
+    }[type],
+    self: true,
+    from: bot.currentUser,
+    to: msgInstance,
+    // @ts-ignore 此处一定是 roomInstance
+    room: isRoom ? msgInstance : ''
+  }
 
   try {
     switch (type) {
@@ -484,23 +514,33 @@ const formatAndSendMsg = async function ({ type, content, msgInstance }) {
       case 'text':
         //@ts-expect-errors 重载不是很好使，手动判断
         await msgInstance.say(content)
+        //@ts-expect-errors 重载不是很好使，手动判断
+        emitPayload.content = content
+        msgSenderCallback(emitPayload)
         break
 
       case 'fileUrl': {
         //@ts-expect-errors 重载不是很好使，手动判断
         const fileUrlArr = content.split(',')
+
         // 单文件
         if (fileUrlArr.length === 1) {
           //@ts-expect-errors 重载不是很好使，手动判断
           const file = await Utils.getMediaFromUrl(content)
+          //@ts-expect-errors 重载不是很好使，手动判断
+          emitPayload.content = file
           await msgInstance.say(file)
+          msgSenderCallback(emitPayload)
           break
         }
 
         // 多个文件的情况
         for (let i = 0; i < fileUrlArr.length; i++) {
           const file = await Utils.getMediaFromUrl(fileUrlArr[i])
+          //@ts-expect-errors 重载不是很好使，手动判断
+          emitPayload.content = file
           await msgInstance.say(file)
+          msgSenderCallback(emitPayload)
         }
         break
       }
@@ -508,7 +548,11 @@ const formatAndSendMsg = async function ({ type, content, msgInstance }) {
       case 'file':
         {
           //@ts-expect-errors 重载不是很好使，手动判断
-          await msgInstance.say(await Utils.getBufferFile(content))
+          const file = await Utils.getBufferFile(content)
+          await msgInstance.say(file)
+          //@ts-expect-errors 重载不是很好使，手动判断
+          emitPayload.content = file
+          msgSenderCallback(emitPayload)
         }
         break
       default:
@@ -523,15 +567,37 @@ const formatAndSendMsg = async function ({ type, content, msgInstance }) {
   return { success, error }
 }
 
+/** 推消息api发送后
+ * @param {msgStructurePayload} payload
+ */
+const msgSenderCallback = async (payload) => {
+  Utils.logger.info(
+    `调用 bot api 发送 ${payload.type_display} 给 ${chalk.blue(payload.to)}:`,
+    typeof payload.content === 'object'
+      ? payload.content._name ?? 'unknown file'
+      : payload.content
+  )
+
+  if (process.env.ACCEPT_RECVD_MSG_MYSELF !== 'true') return
+  sendMsg2RecvdApi(new Utils.ApiMsg(payload))
+}
+
 /**
  * 接受 Service.sendMsg2RecvdApi 的response 回调以便回复或作出其他动作
  * @param {Object} payload
  * @param {Response} [payload.res]
+ * @param {import('wechaty/impls').WechatyInterface} payload.bot
  * @param {import('@src/config/const.js').MSG_TYPE_ENUM} payload.type
  * @param {import('wechaty').Friendship} [payload.friendship]
  * @param {msgInstanceType} [payload.msgInstance]
  */
-const handleResSendMsg = async ({ res, type, friendship, msgInstance }) => {
+const handleResSendMsg = async ({
+  res,
+  bot,
+  type,
+  friendship,
+  msgInstance
+}) => {
   // to 的逻辑
   // 个人
   // msgInstance.payload.name
@@ -565,8 +631,12 @@ const handleResSendMsg = async ({ res, type, friendship, msgInstance }) => {
       // 同意且包含回复信息
       if (success === true && data !== undefined) {
         await Utils.sleep(1000)
-        //@ts-expect-errors 重载不是很好使，手动判断
-        recvdApiReplyHandler(data, { msgInstance: friendship.contact(), to })
+        recvdApiReplyHandler(data, {
+          //@ts-expect-errors 重载不是很好使，手动判断
+          msgInstance: friendship.contact(),
+          bot,
+          to
+        })
       }
 
       break
@@ -579,7 +649,7 @@ const handleResSendMsg = async ({ res, type, friendship, msgInstance }) => {
         isRoom = !!msgInstance.payload?.topic
         //@ts-ignore
         to = isRoom ? msgInstance.payload?.topic : msgInstance.payload.name
-        recvdApiReplyHandler(data, { msgInstance, to, isRoom })
+        recvdApiReplyHandler(data, { msgInstance, bot, to, isRoom })
       }
       break
   }
@@ -588,28 +658,25 @@ const handleResSendMsg = async ({ res, type, friendship, msgInstance }) => {
 /**
  * 处理消息回复api和加好友请求后的回复
  * @param {pushMsgUnitTypeOpt | pushMsgUnitTypeOpt[]} data
- * @param {{msgInstance:msgInstanceType, to:string, isRoom?:boolean}} opt
+ * @param {{msgInstance:msgInstanceType, to?:string, isRoom?:boolean, bot:import('wechaty/impls').WechatyInterface}} opt
  */
-const recvdApiReplyHandler = async (data, { msgInstance, to, isRoom }) => {
+const recvdApiReplyHandler = async (data, { msgInstance, bot, to, isRoom }) => {
   // 组装标准的请求结构
 
   const { success, task, message, status } = await handleSendV2Msg(
     { to, isRoom, data },
-    { skipReceiverCheck: true, messageReceiver: msgInstance }
+    { skipReceiverCheck: true, bot, messageReceiver: msgInstance }
   )
 
   sendMsg2RecvdApi(
-    new Utils.TextMsg({
-      text: JSON.stringify({
-        event: 'notifyOfRecvdApiPushMsg',
-        recvdApiReplyNotify: {
-          success,
-          task,
-          message,
-          status
-        }
-      }),
-      isSystemEvent: true
+    new Utils.SystemEvent({
+      event: 'notifyOfRecvdApiPushMsg',
+      recvdApiReplyNotify: {
+        success,
+        task,
+        message,
+        status
+      }
     })
   )
 }
@@ -617,13 +684,15 @@ const recvdApiReplyHandler = async (data, { msgInstance, to, isRoom }) => {
 /**
  * 收消息钩子
  * @param {import('wechaty').Message} msg
+ * @param {import('wechaty/impls').WechatyInterface} bot
  */
-const onRecvdMessage = async (msg) => {
+const onRecvdMessage = async (msg, bot) => {
   // 自己发的消息没有必要处理
-  if (msg.self()) return
+  if (process.env.ACCEPT_RECVD_MSG_MYSELF !== 'true' && msg.self()) return
 
   handleResSendMsg({
     res: await sendMsg2RecvdApi(msg),
+    bot,
     type: msg.type(),
     msgInstance: msg
   })

@@ -31,10 +31,8 @@
 
 ### 1. 安装
 
-> 目前使用 pnpm 管理包，以支持临时包修补（patches）和加速依赖安装，如果你还不了解 pnpm，可以先了解 [pnpm](https://pnpm.io/zh/motivation)
-
 ```bash
-pnpm i wechatbot-webhook -g
+npm i wechatbot-webhook -g
 ```
 
 ### 2. 运行 & 扫码

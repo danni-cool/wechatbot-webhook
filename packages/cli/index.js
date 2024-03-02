@@ -15,15 +15,6 @@ const memoryCardFile = (process.env.homeMemoryCardPath = path.join(
   './loginSession.memory-card.json'
 ))
 
-console.log(
-  [
-    '╔════════════════════════════╗',
-    '║      wechatbot-webhook     ║',
-    `║           v${version}           ║`,
-    `╚════════════════════════════╝`
-  ].join('\n')
-)
-
 program
   .name('wechatbot-webhook')
   .description(

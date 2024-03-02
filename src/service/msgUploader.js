@@ -1,6 +1,6 @@
 const Utils = require('../utils/index')
 const fetch = require('node-fetch-commonjs')
-const { config } = require('../config/const')
+const { config, systemMsgEnumMap } = require('../config/const')
 const FormData = require('form-data')
 const { LOCAL_RECVD_MSG_API, RECVD_MSG_API } = process.env
 const { MSG_TYPE_ENUM } = require('../config/const')
@@ -13,8 +13,6 @@ const cacheTool = require('../service/cache')
  * @returns {Promise<undefined|Response>} recvdApiReponse
  */
 async function sendMsg2RecvdApi(msg) {
-  // 自己发的消息没有必要转发（外部已经处理）
-  // if (msg.self()) return
   // 检测是否配置了webhookurl
   let webhookUrl
   /**
@@ -79,10 +77,11 @@ async function sendMsg2RecvdApi(msg) {
     /** room的话解析群成员信息，原始信息不会带 */
     room: roomInfo ?? '',
     to: msg.to() ?? '',
+    // @ts-ignore
     from: msg.talker() ?? ''
   }
 
-  let passed = true
+  // let passed = true
   /** @type {import('form-data')} */
   const formData = new FormData()
 
@@ -96,6 +95,9 @@ async function sendMsg2RecvdApi(msg) {
     (await msg.mentionSelf()) /** 原版@我，wechaty web版应该都是false */
   formData.append('isMentioned', someoneMentionMe ? '1' : '0')
 
+  // 判断是否是自己发送的消息
+  formData.append('isMsgFromSelf', msg.self() ? '1' : '0')
+
   switch (msg.type()) {
     case MSG_TYPE_ENUM.ATTACHMENT:
     case MSG_TYPE_ENUM.VOICE:
@@ -105,7 +107,7 @@ async function sendMsg2RecvdApi(msg) {
       formData.append('type', 'file')
       /**@type {import('file-box').FileBox} */
       //@ts-expect-errors 这里msg一定是wechaty的msg
-      const steamFile = await msg.toFileBox()
+      const steamFile = msg.toFileBox ? await msg.toFileBox() : msg.content()
 
       let fileInfo = {
         // @ts-ignore
@@ -148,14 +150,26 @@ async function sendMsg2RecvdApi(msg) {
       formData.append('type', 'friendship')
       formData.append('content', msg.text())
       break
-    // 其他统一暂不处理
+
+    // 系统消息（用于上报状态）
+    case MSG_TYPE_ENUM.SYSTEM_EVENT_LOGIN:
+    case MSG_TYPE_ENUM.SYSTEM_EVENT_LOGOUT:
+    case MSG_TYPE_ENUM.SYSTEM_EVENT_PUSH_NOTIFY:
+    case MSG_TYPE_ENUM.SYSTEM_EVENT_ERROR:
+      formData.append('type', systemMsgEnumMap[msg.type()])
+      formData.append('content', msg.text())
+      break
+
+    // 其他统一当unknown处理
+    case MSG_TYPE_ENUM.UNKNOWN:
     case MSG_TYPE_ENUM.EMOTION: // 自定义表情
     default:
-      passed = false
+      formData.append('type', 'unknown')
+      formData.append('content', msg.text())
       break
   }
 
-  if (!passed) return
+  // if (!passed) return
 
   Utils.logger.info('starting fetching api: ' + webhookUrl)
   //@ts-expect-errors form-data 未定义的私有属性

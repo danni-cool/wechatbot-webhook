@@ -6,6 +6,13 @@
 * 🎸 增加全局路由鉴权 close:[#166](https://github.com/danni-cool/wechatbot-webhook/issues/166) ([875dfb3](https://github.com/danni-cool/wechatbot-webhook/commit/875dfb340da79467538bc2fd2c1713f77121a751))
 
 
+## [2.6.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.6.0...v2.6.1) (2024-03-02)
+
+
+### Bug Fixes
+
+* 🐛 修复登出状态会上报多次logout事件 ([4fd2e7c](https://github.com/danni-cool/wechatbot-webhook/commit/4fd2e7ca3367f7dc46f300113dd17e731b6686a4))
+
 ## [2.5.3](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.2...v2.5.3) (2024-02-06)
 
 

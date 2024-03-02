@@ -5,10 +5,10 @@ const { FriendshipMsg } = require('../utils/msg.js')
 const { MSG_TYPE_ENUM } = require('../config/const')
 /**
  * @param {import('wechaty').Friendship} friendship
- * @param {import('wechaty/impls').WechatyInterface} botInstance
+ * @param {import('wechaty/impls').WechatyInterface} bot
  */
-const onRecvdFriendship = async (friendship, botInstance) => {
-  const { Friendship } = botInstance
+const onRecvdFriendship = async (friendship, bot) => {
+  const { Friendship } = bot
 
   let logMsg = 'received `friend` event from ' + friendship.contact().name()
 
@@ -28,6 +28,7 @@ const onRecvdFriendship = async (friendship, botInstance) => {
         await handleResSendMsg({
           res,
           type: MSG_TYPE_ENUM.CUSTOM_FRIENDSHIP,
+          bot,
           friendship
         })
       } catch (error) {

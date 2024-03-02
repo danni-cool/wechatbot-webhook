@@ -104,7 +104,7 @@ module.exports = function init() {
     // 收到消息事件
     .on('message', async (message) => {
       Utils.logger.info(`Message: ${message.toString()}`)
-      Service.onRecvdMessage(message).catch((e) => {
+      Service.onRecvdMessage(message, bot).catch((e) => {
         Utils.logger.error('向 RECVD_MSG_API 上报 message 事件出错：', e)
       })
     })

@@ -314,7 +314,8 @@ curl --location --request POST 'http://localhost:3001/webhook/msg?token=[YOUR_PE
 | type          | <div>功能类型</div><ul><li>✅ 文字(text)</li><li>✅ 链接卡片(urlLink)</li><li>✅ 图片(file)</li><li>✅ 视频(file)</li><li>✅ 附件(file)</li> <li>✅ 语音(file)</li><li>✅ 添加好友邀请(friendship)</li></ul><div>其他类型</div><ul><li>未实现的消息类型(unknown)</li></ul><div>系统类型</div><ul><li>✅ 登录(system_event_login)</li><li>✅ 登出(system_event_logout)</li><li>✅ 异常报错(system_event_error)</li><li>✅ 快捷回复后消息推送状态通知(system_event_push_notify)</li></ul> | `String`          | `text` `file` `urlLink` `friendship` `unknown` `system_event_login` `system_event_logout` `system_event_error` `system_event_push_notify`| -                                                |
 | content       | 传输的内容, 文本或传输的文件共用这个字段，结构映射请看示例                                                                                                                                                                                                                | `String` `Binary` |                         | [示例](docs/recvdApi.example.md#formdatacontent) |
 | source        | 消息的相关发送方数据, JSON String                                                                                                                                                                                                                                         | `String`          |                         | [示例](docs/recvdApi.example.md#formdatasource)  |
-| isMentioned   | 该消息是@我的消息[#38](https://github.com/danni-cool/wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
+| isMentioned   | 该消息是@我的消息 [#38](https://github.com/danni-cool/wechatbot-webhook/issues/38)                                                                                                                                                                                  | `String`          | `1` `0`                 | -                                                |
+| isMsgFromSelf | 是否是来自自己的消息 [#159](https://github.com/danni-cool/wechatbot-webhook/issues/159) | `String`          | `1` `0`                 | -                                                |
 
 **服务端处理 formData 一般需要对应的处理程序，假设你已经完成这一步，你将得到以下 request**
 
@@ -324,6 +325,7 @@ curl --location --request POST 'http://localhost:3001/webhook/msg?token=[YOUR_PE
     "content": "你好",
     "source": "{\"room\":\"\",\"to\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@f387910fa45\",\"payload\":{\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=1302335654&username=@f38bfd1e0567910fa45&skey=@crypaafc30\",\"friend\":false,\"gender\":1,\"id\":\"@f38bfd1e10fa45\",\"name\":\"ch.\",\"phone\":[],\"star\":false,\"type\":1}},\"from\":{\"_events\":{},\"_eventsCount\":0,\"id\":\"@6b5111dcc269b6901fbb58\",\"payload\":{\"address\":\"\",\"alias\":\"\",\"avatar\":\"/cgi-bin/mmwebwx-bin/webwxgeticon?seq=123234564&username=@6b5dbb58&skey=@crypt_ec356afc30\",\"city\":\"Mars\",\"friend\":false,\"gender\":1,\"id\":\"@6b5dbd3facb58\",\"name\":\"Daniel\",\"phone\":[],\"province\":\"Earth\",\"signature\":\"\",\"star\":false,\"weixin\":\"\",\"type\":1}}}",
     "isMentioned": "0",
+    "isMsgFromSelf": "0",
     "isSystemEvent": "0" // 考虑废弃，请使用type类型判断系统消息
   }
 ```

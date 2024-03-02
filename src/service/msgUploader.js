@@ -13,8 +13,6 @@ const cacheTool = require('../service/cache')
  * @returns {Promise<undefined|Response>} recvdApiReponse
  */
 async function sendMsg2RecvdApi(msg) {
-  // 自己发的消息没有必要转发（外部已经处理）
-  // if (msg.self()) return
   // 检测是否配置了webhookurl
   let webhookUrl
   /**
@@ -80,7 +78,7 @@ async function sendMsg2RecvdApi(msg) {
     room: roomInfo ?? '',
     to: msg.to() ?? '',
     // @ts-ignore
-    from: msg.talker() ? { ...msg.talker(), isMsgFromSelf: msg.self() } : ''
+    from: msg.talker() ?? ''
   }
 
   // let passed = true
@@ -97,6 +95,9 @@ async function sendMsg2RecvdApi(msg) {
     (await msg.mentionSelf()) /** 原版@我，wechaty web版应该都是false */
   formData.append('isMentioned', someoneMentionMe ? '1' : '0')
 
+  // 判断是否是自己发送的消息
+  formData.append('isMsgFromSelf', msg.self() ? '1' : '0')
+
   switch (msg.type()) {
     case MSG_TYPE_ENUM.ATTACHMENT:
     case MSG_TYPE_ENUM.VOICE:
@@ -106,7 +107,7 @@ async function sendMsg2RecvdApi(msg) {
       formData.append('type', 'file')
       /**@type {import('file-box').FileBox} */
       //@ts-expect-errors 这里msg一定是wechaty的msg
-      const steamFile = await msg.toFileBox()
+      const steamFile = msg.toFileBox ? await msg.toFileBox() : msg.content()
 
       let fileInfo = {
         // @ts-ignore

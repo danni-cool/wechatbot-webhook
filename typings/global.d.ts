@@ -127,3 +127,26 @@ type systemEventPayload = {
   }
   error?: import('gerror').GError
 }
+
+type msgStructurePayload = {
+  content: string | (import('file-box').FileBoxInterface & { _name: string })
+  type: number
+  type_display: string
+  isSystemEvent?: boolean
+  self: boolean
+  from: import('wechaty').Contact | ''
+  to: msgInstanceType
+  room: import('wechaty').Room | ''
+  file?: '' | File
+}
+
+type commonMsgPayload = {
+  text?: string
+  type: import('@src/config/const').MSG_TYPE_ENUM
+  isSystemEvent?: boolean
+  self?: boolean
+  from?: import('wechaty').Contact | ''
+  to?: msgInstanceType
+  room?: import('wechaty').Room | ''
+  file?: string | (import('file-box').FileBoxInterface & { _name: string })
+}

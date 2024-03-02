@@ -19,8 +19,15 @@ jobs:
         with:
           username: dannicool
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
       - name: Build and Push Docker Image
-        run: |
-          docker build . -t dannicool/docker-wechatbot-webhook:nightly
-          docker push dannicool/docker-wechatbot-webhook:nightly
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: dannicool/docker-wechatbot-webhook:nightly
+          platforms: linux/amd64,linux/arm64

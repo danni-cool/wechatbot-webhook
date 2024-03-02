@@ -79,7 +79,8 @@ async function sendMsg2RecvdApi(msg) {
     /** room的话解析群成员信息，原始信息不会带 */
     room: roomInfo ?? '',
     to: msg.to() ?? '',
-    from: msg.talker() ?? ''
+    // @ts-ignore
+    from: msg.talker() ? { ...msg.talker(), isMsgFromSelf: msg.self() } : ''
   }
 
   // let passed = true

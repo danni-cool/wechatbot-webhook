@@ -200,6 +200,8 @@
     "from": {
       "id": "@xxx",
 
+      "isMsgFromSelf": false, // 是否是自己发的消息,由于web协议只能通过昵称区分自己，当开启接受自己消息时，可以通过该字段区分自己发的消息
+
       "payload": {
         "alias": "",
         "avatar": "xxx",

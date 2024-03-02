@@ -1,3 +1,13 @@
+## [2.6.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.6.0...v2.6.1) (2024-03-02)
+
+
+### Features
+
+* 🎸 收消息API支持配置接受自己发的消息 close:[#159](https://github.com/danni-cool/wechatbot-webhook/issues/159)
+* 🎸 增加 收消息API 对 unKnown类型消息的支持 [#165](https://github.com/danni-cool/wechatbot-webhook/issues/165)
+* 🎸 增加服务稳定性，针对web协议连续登录和登出场景优化，登出后报错至多上报一次 recvd_api, 登出消息通知更加及时。错误类型单独定义 [#140](https://github.com/danni-cool/wechatbot-webhook/issues/140), [#160](https://github.com/danni-cool/wechatbot-webhook/issues/160)
+
+
 ## [2.6.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.3...v2.6.0) (2024-02-27)
 
 

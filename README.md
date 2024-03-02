@@ -72,7 +72,7 @@ npx wechatbot-webhook
 
 ### 3. 使用以下结构发消息
 
-从命令行中复制推消息新开个终端试试以下 curl，to, token字段值换成你要值
+新开个终端试试以下 curl，to、token 字段值换成你要值
 
 ```bash
 curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]' \

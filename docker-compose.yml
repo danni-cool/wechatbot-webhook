@@ -10,6 +10,7 @@ services:
     environment:
       - LOG_LEVEL=info # 调整容器输出级别（不影响日志文件输出等级）运行时提示的消息等级（默认info，debug级别会输出详细的日志)
       # - DISABLE_AUTO_LOGIN=true # 如果不希望登录一次后就记住当前账号，想每次都扫码登陆，填 true
-      # - LOCAL_RECVD_MSG_API= # 如果想自己处理收到消息的逻辑，在下面填上你的API地址, 默认为空
-      # - LOCAL_LOGIN_API_TOKEN= # 登录地址Token访问地址： http://localhost:3001/login?token=[LOCAL_LOGIN_API_TOKEN]
+      # - ACCEPT_RECVD_MSG_MYSELF=true # 如果希望机器人可以自己接收消息，填 true
+      # - RECVD_MSG_API= # 如果想自己处理收到消息的逻辑，在下面填上你的API地址, 默认为空
+      # - LOGIN_API_TOKEN= # 登录地址Token访问地址： http://localhost:3001/login?token=[LOCAL_LOGIN_API_TOKEN]
     restart: unless-stopped

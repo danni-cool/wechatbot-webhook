@@ -1,0 +1,13 @@
+diff --git a/dist/cjs/src/mixins/login-mixin.js b/dist/cjs/src/mixins/login-mixin.js
+index 01c9a9caea23816ebdd36398bb2cd1f4f0e85559..d273c203e0d41262559cc3c85543485b4affb4ea 100644
+--- a/dist/cjs/src/mixins/login-mixin.js
++++ b/dist/cjs/src/mixins/login-mixin.js
+@@ -110,6 +110,8 @@ const loginMixin = (mixinBase) => {
+                 this.__currentUserId = undefined;
+                 resolve();
+             }));
++             // bugfix: 修复wechat4u并未真正登出的问题
++             this.wechat4u?.emit('logout');
+         }
+         /**
+          * @deprecated use `currentUserId` instead. (will be removed in v2.0)

@@ -60,25 +60,16 @@ module.exports = function init() {
           Utils.logger.error('上报login事件给 RECVD_MSG_API 出错', e)
         }
       )
-
-      //TODO: test code
-      // setTimeout(function () {
-      //   bot.logout()
-      // }, 5000)
     })
 
     // 登出事件
     .on('logout', async (user) => {
-      Utils.deleteMemoryCard()
-
       /** bugfix: 重置登录会触发多次logout，但是上报只需要登录成功后登出那一次 */
       if (!botLoginSuccessLastTime) return
 
       botLoginSuccessLastTime = false
 
       Utils.logger.info(chalk.red(`User ${user.toString()} logout`))
-
-      bot.reset()
 
       // 登出时给接收消息api发送特殊文本
       Service.sendMsg2RecvdApi(

@@ -428,6 +428,10 @@ curl --location 'https://your.recvdapi.com' \
 
 [![Star History Chart](https://api.star-history.com/svg?repos=danni-cool/wechatbot-webhook&type=Date)](https://star-history.com/#danni-cool/wechatbot-webhook&Date)
 
+## Contributors
+
+![](https://contrib.rocks/image?repo=danni-cool/wechatbot-webhook)
+
 ## ⏫ 更新日志
 
 更新内容参见 [CHANGELOG](https://github.com/danni-cool/docker-wechat-roomBot/blob/main/CHANGELOG.md)

@@ -160,6 +160,8 @@ docker logs -f wxBotWebhook
 | -- | -- | -- | -- | -- | -- |
 | type | **消息类型**, 字段留空解析为纯文本 | `String`  `text` | - | Y | `text`  `fileUrl` | 支持 **文字** 和 **文件**，  |
 | content | **消息内容**，如果希望发多个Url并解析，type 指定为 fileUrl 同时，content 里填 url 以英文逗号分隔 | `String` | - | N | - |
+| customFileName | **自定义文件名**，仅在 type 为 fileUrl 时有效，用于自定义发送的文件的文件名 | `String` | - | Y | - |
+
 
 #### Example（curl）
 
@@ -182,7 +184,11 @@ curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN
 --data '{
     "to": "testGroup",
     "isRoom": true,
-    "data": { "type": "fileUrl" , "content": "https://download.samplelib.com/jpeg/sample-clouds-400x300.jpg" },
+    "data": {
+        "type": "fileUrl" ,
+        "content": "https://download.samplelib.com/jpeg/sample-clouds-400x300.jpg",
+        "customFileName": "cloud.jpg"
+    }
 }'
 ```
 

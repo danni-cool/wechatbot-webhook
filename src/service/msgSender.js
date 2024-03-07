@@ -360,7 +360,7 @@ const handleMsg2Single = async function (body, { bot, messageReceiver }) {
     /** @type {boolean| undefined} */
     isRoom: body.isRoom,
     /** @type {pushMsgUnitTypeOpt | pushMsgUnitTypeOpt[]} */
-    data: body.data /** { "type": "", content: "" } */,
+    data: body.data /** { "type": "", content: "", customFileName: "" } */,
     unValidParamsStr: ''
   }
 
@@ -391,6 +391,7 @@ const handleMsg2Single = async function (body, { bot, messageReceiver }) {
           type: msgArr[i].type || 'text',
           // @ts-ignore
           content: msgArr[i].content,
+          customFileName: msgArr[i].customFileName || '',
           msgInstance: msgReceiver
         })
         msgArr[i].success = success
@@ -424,6 +425,7 @@ const handleMsg2Single = async function (body, { bot, messageReceiver }) {
         type: payload.data.type ?? 'text',
         // @ts-ignore
         content: payload.data.content,
+        customFileName: payload.data.customFileName || '',
         msgInstance: msgReceiver
       })
 
@@ -476,7 +478,7 @@ const getPushMsgUnitUnvalidStr = function ({ type, content }) {
 /**
  * 发送消息核心。这个处理程序将数据转换为标准格式，然后使用 wechaty 发送消息。
  * @type {{
- * (payload:{ isRoom?: boolean,bot:import('wechaty/impls').WechatyInterface, type: 'text' | 'fileUrl'|'file', content: string| payloadFormFile, msgInstance: msgInstanceType }) : Promise<{success:boolean, error:any}>;
+ * (payload:{ isRoom?: boolean,bot:import('wechaty/impls').WechatyInterface, type: 'text' | 'fileUrl'|'file', content: string| payloadFormFile, customFileName: string, msgInstance: msgInstanceType }) : Promise<{success:boolean, error:any}>;
  * }}
  */
 const formatAndSendMsg = async function ({
@@ -484,6 +486,7 @@ const formatAndSendMsg = async function ({
   bot,
   type,
   content,
+  customFileName,
   msgInstance
 }) {
   let success = false
@@ -526,7 +529,7 @@ const formatAndSendMsg = async function ({
         // 单文件
         if (fileUrlArr.length === 1) {
           //@ts-expect-errors 重载不是很好使，手动判断
-          const file = await Utils.getMediaFromUrl(content)
+          const file = await Utils.getMediaFromUrl(content, customFileName)
           //@ts-expect-errors 重载不是很好使，手动判断
           emitPayload.content = file
           await msgInstance.say(file)
@@ -536,7 +539,7 @@ const formatAndSendMsg = async function ({
 
         // 多个文件的情况
         for (let i = 0; i < fileUrlArr.length; i++) {
-          const file = await Utils.getMediaFromUrl(fileUrlArr[i])
+          const file = await Utils.getMediaFromUrl(fileUrlArr[i], customFileName)
           //@ts-expect-errors 重载不是很好使，手动判断
           emitPayload.content = file
           await msgInstance.say(file)

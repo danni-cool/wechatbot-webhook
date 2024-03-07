@@ -13,11 +13,11 @@ const downloadFile = async (fileUrl,customFileName) => {
 
     if (response.ok) {
       const buffer = Buffer.from(await response.arrayBuffer())
+      // 使用自定义文件名，解决URL无文件后缀名时，文件被微信解析成不正确的后缀问题
       let fileName = customFileName || getFileNameFromUrl(fileUrl)
 
       // deal with unValid Url format like https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU
       if (fileName === '') {
-        // 有些资源文件链接是不会返回文件后缀的 例如  https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU  其实是一张图片
         //@ts-expect-errors 不考虑无content-type的情况
         const extName = MIME.getExtension(response.headers.get('content-type'))
         fileName = `${Date.now()}.${extName}`

@@ -4,15 +4,16 @@ const { logger } = require('./log')
 /**
  * 下载媒体文件转化为Buffer
  * @param {string} fileUrl
+ * @param {string} customFileName
  * @returns {Promise<{buffer?: Buffer, fileName?: string}>}
  */
-const downloadFile = async (fileUrl) => {
+const downloadFile = async (fileUrl,customFileName) => {
   try {
     const response = await fetch(fileUrl)
 
     if (response.ok) {
       const buffer = Buffer.from(await response.arrayBuffer())
-      let fileName = getFileNameFromUrl(fileUrl)
+      let fileName = customFileName || getFileNameFromUrl(fileUrl)
 
       // deal with unValid Url format like https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU
       if (fileName === '') {
@@ -60,10 +61,11 @@ const getFileNameFromUrl = (url) => {
 /**
  * 根据url下载文件并转化成FileBox的标准格式
  * @param {string} url
+ * @param {string} customFileName
  * @returns {Promise<import('file-box').FileBoxInterface>}
  */
-const getMediaFromUrl = async (url) => {
-  const { buffer, fileName } = await downloadFile(url)
+const getMediaFromUrl = async (url, customFileName) => {
+  const { buffer, fileName } = await downloadFile(url, customFileName)
   //@ts-expect-errors buffer 解析是吧的情况
   return FileBox.fromBuffer(buffer, fileName)
 }

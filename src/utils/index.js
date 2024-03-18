@@ -1,10 +1,11 @@
 const { FileBox } = require('file-box')
 const MIME = require('mime')
 const { logger } = require('./log')
+const { URL } = require('url')
 /**
  * 下载媒体文件转化为Buffer
  * @param {string} fileUrl
- * @returns {Promise<{buffer?: Buffer, fileName?: string}>}
+ * @returns {Promise<{buffer?: Buffer, fileName?: string, fileNameAlias?: string}>}
  */
 const downloadFile = async (fileUrl) => {
   try {
@@ -12,7 +13,8 @@ const downloadFile = async (fileUrl) => {
 
     if (response.ok) {
       const buffer = Buffer.from(await response.arrayBuffer())
-      let fileName = getFileNameFromUrl(fileUrl)
+      // 使用自定义文件名，解决URL无文件后缀名时，文件被微信解析成不正确的后缀问题
+      let { fileName, query } = getFileInfoFromUrl(fileUrl)
 
       // deal with unValid Url format like https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU
       if (fileName === '') {
@@ -24,7 +26,8 @@ const downloadFile = async (fileUrl) => {
 
       return {
         buffer,
-        fileName
+        fileName,
+        fileNameAlias: query?.$alias
       }
     }
 
@@ -36,25 +39,29 @@ const downloadFile = async (fileUrl) => {
 }
 
 /**
+ * @typedef {{fileName: string, query: null | Record<string, string>} } fileInfoObj
  * 从url中提取文件名
  * @param {string} url
- * @returns {string}
+ * @returns {fileInfoObj}
  * @example 参数 url 示例
  * valid: "http://www.baidu.com/image.png?a=1 => image.png"
  * notValid: "https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU => ''"
  */
-const getFileNameFromUrl = (url) => {
-  const matchRes = url.match(/.*\/([^/?]*)/)?.[1]
-
-  if (matchRes === undefined) return ''
-
-  const checkMathDotPosition = matchRes.indexOf('.')
-  // fileName has string.string is Valid filename
-  if (checkMathDotPosition > -1) {
-    return matchRes
-  } else {
-    return ''
+const getFileInfoFromUrl = (url) => {
+  /** @type {fileInfoObj} */
+  let matchRes = {
+    fileName: url.match(/.*\/([^/?]*)/)?.[1] || '', // fileName has string.string is Valid filename
+    query: null
   }
+
+  try {
+    const urlObj = new URL(url)
+    matchRes.query = Object.fromEntries(urlObj.searchParams)
+  } catch (e) {
+    // make ts happy
+  }
+
+  return matchRes
 }
 
 /**
@@ -63,9 +70,9 @@ const getFileNameFromUrl = (url) => {
  * @returns {Promise<import('file-box').FileBoxInterface>}
  */
 const getMediaFromUrl = async (url) => {
-  const { buffer, fileName } = await downloadFile(url)
+  const { buffer, fileName, fileNameAlias } = await downloadFile(url)
   //@ts-expect-errors buffer 解析是吧的情况
-  return FileBox.fromBuffer(buffer, fileName)
+  return FileBox.fromBuffer(buffer, fileNameAlias || fileName)
 }
 
 /**
@@ -187,7 +194,6 @@ module.exports = {
   ...require('./nextTick.js'),
   ...require('./paramsValid.js'),
   ...require('./log.js'),
-  getFileNameFromUrl,
   getMediaFromUrl,
   getBufferFile,
   generateToken,

@@ -154,7 +154,6 @@ function registerPushHook({ app, bot }) {
         bot,
         type,
         content,
-        customFileName: "",
         msgInstance: msgReceiver
       })
 

@@ -1,3 +1,10 @@
+## [2.7.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.6.1...v2.7.0) (2024-03-18)
+
+
+### Features
+
+* 🎸 发送文件url支持别名场景优化 ([#179](https://github.com/danni-cool/wechatbot-webhook/issues/179)) ([57307f2](https://github.com/danni-cool/wechatbot-webhook/commit/57307f2c6b4b9c233ce63acfccad5c9f6d4265e5)) close: [#186](https://github.com/danni-cool/wechatbot-webhook/issues/186) ([3ac950c](https://github.com/danni-cool/wechatbot-webhook/commit/3ac950cb06acc5dd57d57e35f72928ed3c5c8d51)) Thanks: @Cassius0924 
+
 ## [2.6.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.6.0...v2.6.1) (2024-03-02)
 
 
@@ -7,15 +14,6 @@
 * 🎸 增加 收消息API 对 unKnown类型消息的支持 [#165](https://github.com/danni-cool/wechatbot-webhook/issues/165)
 * 🎸 增加服务稳定性，针对web协议连续登录和登出场景优化，登出后报错至多上报一次 recvd_api, 登出消息通知更加及时。错误类型单独定义 [#140](https://github.com/danni-cool/wechatbot-webhook/issues/140), [#160](https://github.com/danni-cool/wechatbot-webhook/issues/160)
 
-
-## [2.7.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.6.1...v2.7.0) (2024-03-18)
-
-
-### Features
-
-* 🎸 发送url文件支持自定义文件名 ([cebf0e2](https://github.com/danni-cool/wechatbot-webhook/commit/cebf0e2de26d456452370f768e72544a77093149))
-* 🎸 发送url文件支持自定义文件名 ([#179](https://github.com/danni-cool/wechatbot-webhook/issues/179)) ([57307f2](https://github.com/danni-cool/wechatbot-webhook/commit/57307f2c6b4b9c233ce63acfccad5c9f6d4265e5))
-* 🎸 发送文件url支持别名场景优化 close: [#186](https://github.com/danni-cool/wechatbot-webhook/issues/186) ([3ac950c](https://github.com/danni-cool/wechatbot-webhook/commit/3ac950cb06acc5dd57d57e35f72928ed3c5c8d51))
 
 ## [2.6.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.5.3...v2.6.0) (2024-02-27)
 

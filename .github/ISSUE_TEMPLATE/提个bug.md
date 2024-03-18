@@ -1,8 +1,8 @@
 ---
-name: 提个bug
+name: 寻求帮助
 about: Create a report to help us improve
 title: ''
-labels: bug
+labels: 
 assignees: ''
 
 ---

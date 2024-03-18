@@ -174,6 +174,22 @@ curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN
 }'
 ```
 
+##### 发文件 url 同时支持修改成目标文件名
+
+> 有些情况下，直接发送 url 文件名可能不是我们想要的，给 url 拼接 query 参数 `$alias` 可用于指定发送给目标的文件名（注意：别名不做文件转换）
+
+```bash
+curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]' \
+--header 'Content-Type: application/json' \
+--data '{
+    "to": "testUser",
+    "data": { 
+      "type": "fileUrl" , 
+      "content": "https://download.samplelib.com/jpeg/sample-clouds-400x300.jpg?$alias=cloud.jpg" 
+    }
+}'
+```
+
 ##### 发给群消息
 
 ```bash

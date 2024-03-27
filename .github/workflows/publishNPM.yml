@@ -21,10 +21,6 @@ jobs:
     # 安装 pnpm
     - name: Install pnpm
       run: npm install -g pnpm
-  
-    # 构建包必要文件
-    - name: Build package files
-      run: pnpm run build:cli
 
     # 安装依赖
     - name: Install Dependencies

@@ -1,7 +1,7 @@
 const { downloadFile } = require('../utils/index')
 const middleware = require('../middleware')
 /**
- * 注册login路由和处理上报逻辑
+ * 通过该接口代理获取微信静态资源
  * @param {Object} param
  * @param {import('hono').Hono} param.app
  * @param {import('wechaty').Wechaty} param.bot

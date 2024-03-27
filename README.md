@@ -37,7 +37,7 @@
 | 接收公众号推文链接 | ✅ |  |
 | 接收系统通知 | ✅ 上线通知 / 掉线通知 / 异常通知 |  |
 | [头像获取](#33-获取静态资源接口) | ✅ |  |
-| [快捷回复](#2-%E6%94%B6%E6%B6%88%E6%81%AF-api) | ✅  | ✅ |
+| [快捷回复](#返回值-response-结构可选) | ✅  | ✅ |
 | **<群管理>** |  |  |
 | **<好友管理>** |  |  |
 | 接收好友申请 | ✅ |  |
@@ -360,7 +360,7 @@ curl --location 'https://your.recvdapi.com' \
 
 #### 返回值 `response` 结构（可选）
 
-> 如果期望用 `RECVD_MSG_API` 收消息后立即回复，请按以下结构返回返回值，无返回值则不会回复消息
+> 如果期望用 `RECVD_MSG_API` 收消息后立即回复(**快捷回复**)，请按以下结构返回返回值，无返回值则不会回复消息
 
 - ContentType: `json`
 
@@ -415,8 +415,8 @@ curl --location 'https://your.recvdapi.com' \
 - **地址**：`/login`
 - **methods**: `GET`
 - **query**: token
+- **status**: `200`
 - **example**: http://localhost:3001/login?token=[YOUR_PERSONAL_TOKEN]
-**status**: `200`
 
 ##### 登录成功
 

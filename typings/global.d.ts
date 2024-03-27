@@ -150,3 +150,9 @@ type commonMsgPayload = {
   room?: import('wechaty').Room | ''
   file?: string | (import('file-box').FileBoxInterface & { _name: string })
 }
+
+type roomInfoForUpload = import('wechaty/impls').RoomInterface & {
+  payload: {
+    memberList: { id: string; name: string; alias: string | undefined }[]
+  }
+}

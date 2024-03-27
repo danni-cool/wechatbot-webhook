@@ -1,11 +1,14 @@
 const path = require('path')
+const { PORT } = process.env
 
 const config = {
   /**
    * 上报消息的api群成员缓存多久(单位:ms)
    * @type {number}
    */
-  roomCachedTime: 1000 * 60 * 5
+  roomCachedTime: 1000 * 60 * 5,
+  /** 服务启动地址 */
+  localUrl: `http://localhost:${PORT}`
 }
 
 const { homeEnvCfg, homeMemoryCardPath } = process.env

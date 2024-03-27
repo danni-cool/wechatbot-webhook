@@ -4,8 +4,11 @@ const { SystemEvent } = require('../utils/msg.js')
 const Service = require('../service')
 const Utils = require('../utils/index')
 const chalk = require('chalk')
-const { PORT } = process.env
-const { memoryCardName, logOutUnofficialCodeList } = require('../config/const')
+const {
+  memoryCardName,
+  logOutUnofficialCodeList,
+  config: { localUrl }
+} = require('../config/const')
 const token = Service.initLoginApiToken()
 const cacheTool = require('../service/cache')
 const bot =
@@ -31,7 +34,7 @@ module.exports = function init() {
       Utils.logger.info(
         [
           'Or Access the URL to login: ' +
-            chalk.cyan(`http://localhost:${PORT}/login?token=${token}`)
+            chalk.cyan(`${localUrl}/login?token=${token}`)
         ].join('\n')
       )
     })
@@ -42,7 +45,7 @@ module.exports = function init() {
       Utils.logger.info(
         '💬 ' +
           `你的推消息 api 为：${chalk.cyan(
-            `http://localhost:${PORT}/webhook/msg/v2?token=${token}`
+            `${localUrl}/webhook/msg/v2?token=${token}`
           )}`
       )
       Utils.logger.info(

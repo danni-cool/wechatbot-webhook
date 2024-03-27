@@ -1,4 +1,6 @@
 const { MSG_TYPE_ENUM, legacySystemMsgStrMap } = require('../config/const')
+const { getAssetsAgentUrl } = require('./res')
+const cloneDeep = require('lodash.cloneDeep')
 class CommonMsg {
   /**
    * @param {commonMsgPayload} payload
@@ -108,8 +110,15 @@ class SystemEvent extends CommonMsg {
    * @param {systemEventPayload} payload
    */
   constructor(payload) {
+    const payloadClone = cloneDeep(payload)
+    if (payloadClone.user?.payload) {
+      payloadClone.user.payload.avatar = getAssetsAgentUrl(
+        payloadClone.user.payload.avatar
+      )
+    }
+
     super({
-      text: JSON.stringify(payload),
+      text: JSON.stringify(payloadClone),
       type: legacySystemMsgStrMap[payload.event],
       isSystemEvent: true
     })

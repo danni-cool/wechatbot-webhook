@@ -21,4 +21,5 @@ module.exports = function registerRoute({ app, bot }) {
 
   require('./msg')({ app, bot })
   require('./login')({ app, bot })
+  require('./resouces')({ app, bot })
 }

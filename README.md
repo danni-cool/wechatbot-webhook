@@ -34,6 +34,7 @@
 | 接收文件 | ✅ |  |
 | 接收公众号推文链接 | ✅ |  |
 | 接收系统通知 | ✅ 上线通知 / 掉线通知 / 异常通知 |  |
+| [头像获取](https://github.com/danni-cool/wechatbot-webhook?tab=readme-ov-file#1-%E5%A4%B4%E5%83%8F%E8%8E%B7%E5%8F%96-api) | ✅ |  |
 | [快捷回复](https://github.com/danni-cool/wechatbot-webhook?tab=readme-ov-file#2-%E6%94%B6%E6%B6%88%E6%81%AF-api) | ✅  | ✅ |
 | **<群管理>** |  |  |
 | **<好友管理>** |  |  |
@@ -410,12 +411,11 @@ curl --location 'https://your.recvdapi.com' \
 #### token 配置说明
 > 除了在 docker 启动时配置token，在默认缺省 token 的情况，会默认生成一个写入 `.env` 文件中
 
-#### `/login?token=[YOUR_PERSONAL_TOKEN]`
-
-- **描述**：获取登录二维码接口。
+#### 3.1 获取登录二维码接口
+- **地址**：`/login`
 - **methods**: `GET`
 - **query**: token
-
+- **example**: http://localhost:3001/login?token=[YOUR_PERSONAL_TOKEN]
 **status**: `200`
 
 ##### 登录成功
@@ -430,14 +430,54 @@ curl --location 'https://your.recvdapi.com' \
 
 展示微信登录扫码页面
 
-#### `/healthz?token=[YOUR_PERSONAL_TOKEN]`
+#### 3.2 健康检测接口
 
-- **描述**：健康检测接口。
+可以主动轮询该接口，检查服务是否正常运行
+
+- **地址**：`/healthz`
 - **methods**: `GET`
 - **query**: token
 - **status**: `200`
+- **example**: http://localhost:3001/healthz?token=[YOUR_PERSONAL_TOKEN]
 
 微信已登录, 返回纯文本 `healthy`，否则返回 `unHealthy`
+
+#### 3.3 获取静态资源接口
+
+从 2.8.0 版本开始，可以通过本接口访问到头像等静态资源，具体见 [recvd_api 数据结构示例的 avatar 字段](docs/recvdApi.example.md#formdatasource)
+
+注意所有上报 recvd_api 的静态资源地址不会默认带上 token, 需要自己拼接，否则会返回 401 错误, 另外，**请确保自己微信已登录，需要通过登录态去获取资源**
+
+- **地址**：`/resouces`
+- **methods**: `GET`
+- **query**: 
+  - token: 登录token
+  - media: encode过的相对路径，比如 `/avatar/1234567890.jpg` encode为 `avatar%2F1234567890.jpg`
+- **status**: `200` `404` `401`
+
+- **example**：http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bin%2Fwebwxgetheadimg%3Fseq%3D83460%26username%3D%40%4086815a%26skey%3D&token=[YOUR_PERSONAL_TOKEN]
+
+##### status: `200`
+
+成功获取资源, 返回静态资源文件
+
+##### status: `404`
+
+获取资源失败
+
+##### status: `401` 未携带登录token
+
+```json
+{"success":false, "message":"Unauthorized: Access is denied due to invalid credentials."}
+```
+
+##### status: `401` 微信登录态已过期
+
+```json
+{
+   "success": false, "message": "you must login first"
+}
+```
 
 
 ## 🌟 Star History

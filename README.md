@@ -34,8 +34,8 @@
 | 接收文件 | ✅ |  |
 | 接收公众号推文链接 | ✅ |  |
 | 接收系统通知 | ✅ 上线通知 / 掉线通知 / 异常通知 |  |
-| [头像获取](/docs/recvdApi.example.md#2-formdatasource-string) | ✅ |  |
-| [快捷回复](https://github.com/danni-cool/wechatbot-webhook?tab=readme-ov-file#2-%E6%94%B6%E6%B6%88%E6%81%AF-api) | ✅  | ✅ |
+| [头像获取](#33-获取静态资源接口) | ✅ |  |
+| [快捷回复](#2-%E6%94%B6%E6%B6%88%E6%81%AF-api) | ✅  | ✅ |
 | **<群管理>** |  |  |
 | **<好友管理>** |  |  |
 | 接收好友申请 | ✅ |  |
@@ -444,9 +444,9 @@ curl --location 'https://your.recvdapi.com' \
 
 #### 3.3 获取静态资源接口
 
-从 2.8.0 版本开始，可以通过本接口访问到头像等静态资源，具体见 [recvd_api 数据结构示例的 avatar 字段](docs/recvdApi.example.md#formdatasource)
+从 2.8.0 版本开始，可以通过本接口访问到头像等静态资源，具体见 [recvd_api 数据结构示例的 avatar 字段](/docs/recvdApi.example.md#2-formdatasource-string)
 
-注意所有上报 recvd_api 的静态资源地址不会默认带上 token, 需要自己拼接，否则会返回 401 错误, 另外，**请确保自己微信已登录，需要通过登录态去获取资源**
+注意所有上报 recvd_api 的静态资源地址不会默认带上 token, 需要自己拼接，否则会返回 401 错误, 请确保自己微信已登录，需要通过登录态去获取资源
 
 - **地址**：`/resouces`
 - **methods**: `GET`

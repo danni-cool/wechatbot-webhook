@@ -485,7 +485,9 @@ curl --location 'https://your.recvdapi.com' \
 [![Star History Chart](https://api.star-history.com/svg?repos=danni-cool/wechatbot-webhook&type=Date)](https://star-history.com/#danni-cool/wechatbot-webhook&Date)
 
 ## Contributors
+
 **Thanks to all our contributors!**
+
 <a href="https://github.com/danni-cool/wechatbot-webhook/graphs/contributors">
 ![](https://contrib.rocks/image?repo=danni-cool/wechatbot-webhook)
 </a>

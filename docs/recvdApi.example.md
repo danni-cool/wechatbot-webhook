@@ -73,7 +73,7 @@
     "id": "@xxxasdfsf",
     "payload": {
       "alias": "",
-      "avatar": "",
+      "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
       "friend": false,
       "gender": 1,
       "id": "@xxx",
@@ -98,7 +98,7 @@
     "id": "@xxxasdfsf",
     "payload": {
       "alias": "",
-      "avatar": "",
+      "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
       "friend": false,
       "gender": 1,
       "id": "@xxx",
@@ -125,7 +125,7 @@
     "id": "@xxxasdfsf",
     "payload": {
       "alias": "",
-      "avatar": "",
+      "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
       "friend": false,
       "gender": 1,
       "id": "@xxx",
@@ -166,7 +166,11 @@
         "adminIdList": [],
         "avatar": "xxxx", // 相对路径，应该要配合解密
         "memberList": [
-          {id: '@xxxx', name:'昵称', alias: '备注名'/** 个人备注名，非群备注名 */ }
+          {
+            id: '@xxxx', 
+            avatar: "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
+            name:'昵称', 
+            alias: '备注名'/** 个人备注名，非群备注名 */ }
         ]
       },
       //以下暂不清楚什么用途，如有兴趣，请查阅 wechaty 官网文档
@@ -181,7 +185,7 @@
 
         "payload": {
             "alias": "", //备注名
-            "avatar": "xxx",
+            "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
             "friend": false,
             "gender": 1,
             "id": "@xxx",
@@ -202,7 +206,7 @@
 
       "payload": {
         "alias": "",
-        "avatar": "xxx",
+        "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
         "city": "北京",
         "friend": true,
         "gender": 1,

@@ -8,7 +8,7 @@ module.exports.loginCheck = async (c, next) => {
     c.status(401)
     return c.json({
       success: false,
-      message: 'you must login first before sending messages'
+      message: 'you must login first'
     })
   }
 

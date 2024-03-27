@@ -5,7 +5,7 @@ const FormData = require('form-data')
 const { LOCAL_RECVD_MSG_API, RECVD_MSG_API } = process.env
 const { MSG_TYPE_ENUM } = require('../config/const')
 const cacheTool = require('../service/cache')
-
+const cloneDeep = require('lodash.clonedeep')
 /**
  * 收到消息上报接受url
  * @typedef {{type:'text'|'fileUrl'}} baseMsgInterface
@@ -39,7 +39,7 @@ async function sendMsg2RecvdApi(msg) {
 
   // 有webhookurl才发送
   if (!webhookUrl) return
-  /** @type {import('wechaty/impls').RoomInterface & {payload: { memberList: {id:string,name:string,alias:string|undefined}[]}}} */
+  /** @type {roomInfoForUpload} */
   //@ts-expect-errors 强制as配合 ts-expect-errors 实用更佳
   const roomInfo = msg.room()
 
@@ -60,6 +60,8 @@ async function sendMsg2RecvdApi(msg) {
     }
     roomInfo.payload.memberList = roomMemberInfo.map((item) => ({
       // @ts-expect-error wechaty定义问题，数据在payload里
+      avatar: Utils.getAssetsAgentUrl(item.payload.avatar),
+      // @ts-expect-error wechaty定义问题，数据在payload里
       id: item.payload.id,
       // @ts-expect-error wechaty定义问题，数据在payload里
       name: item.payload.name,
@@ -74,11 +76,32 @@ async function sendMsg2RecvdApi(msg) {
   }
 
   const source = {
-    /** room的话解析群成员信息，原始信息不会带 */
-    room: roomInfo ?? '',
-    to: msg.to() ?? '',
+    room: cloneDeep(roomInfo || {}),
+    /** @type { import('wechaty').Message['to'] } */
     // @ts-ignore
-    from: msg.talker() ?? ''
+    to: cloneDeep(msg.to() || {}),
+    from: cloneDeep(msg.talker() || {})
+  }
+
+  // @ts-ignore
+  if (source.to && source.to.payload?.avatar) {
+    // @ts-ignore
+    source.to.payload.avatar = Utils.getAssetsAgentUrl(source.to.payload.avatar)
+  }
+
+  // @ts-ignore
+  if (source.from.payload?.avatar) {
+    // @ts-ignore
+    source.from.payload.avatar = Utils.getAssetsAgentUrl(
+      // @ts-ignore
+      source.from.payload.avatar
+    )
+  }
+
+  if (source.room.payload?.avatar) {
+    source.room.payload.avatar = Utils.getAssetsAgentUrl(
+      source.room.payload.avatar
+    )
   }
 
   // let passed = true

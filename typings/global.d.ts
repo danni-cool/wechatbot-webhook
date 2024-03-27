@@ -153,6 +153,11 @@ type commonMsgPayload = {
 
 type roomInfoForUpload = import('wechaty/impls').RoomInterface & {
   payload: {
-    memberList: { id: string; name: string; alias: string | undefined }[]
+    memberList: {
+      id: string
+      name: string
+      alias: string | undefined
+      avatar: string
+    }[]
   }
 }

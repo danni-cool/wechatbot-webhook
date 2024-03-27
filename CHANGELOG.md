@@ -1,9 +1,17 @@
+## [2.8.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.7.0...v2.8.0) (2024-03-27)
+
+
+### Features
+
+* 🎸 增加静态资源获取接口，recvd_api 增加头像url地址 ([b85f7ba](https://github.com/danni-cool/wechatbot-webhook/commit/b85f7ba316df2fd64780da3f315c2c30a07c70e1))
+
 ## [2.7.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.6.1...v2.7.0) (2024-03-18)
 
 
 ### Features
 
 * 🎸 发送文件url支持别名场景优化 ([#179](https://github.com/danni-cool/wechatbot-webhook/issues/179)) ([57307f2](https://github.com/danni-cool/wechatbot-webhook/commit/57307f2c6b4b9c233ce63acfccad5c9f6d4265e5)) close: [#186](https://github.com/danni-cool/wechatbot-webhook/issues/186) ([3ac950c](https://github.com/danni-cool/wechatbot-webhook/commit/3ac950cb06acc5dd57d57e35f72928ed3c5c8d51)) Thanks: @Cassius0924 
+
 
 ## [2.6.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.6.0...v2.6.1) (2024-03-02)
 

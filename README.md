@@ -9,7 +9,7 @@
 [🚢 Docker 镜像](https://hub.docker.com/repository/docker/dannicool/docker-wechatbot-webhook/general) | [📦 NPM包](https://www.npmjs.com/package/wechatbot-webhook)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 </div>
 
-开箱即用的微信webhook机器人，通过 http 接口调用即可实现微信消息的发送和接收，作为基于 wechaty 的消息机器人服务在稳定性上做了较多优化。
+一个小小的微信机器人webhook，帮你抹平了很多自己开发的障碍，基于用 http 请求
 
 ## ✨ Features
 

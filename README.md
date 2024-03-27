@@ -34,7 +34,7 @@
 | 接收文件 | ✅ |  |
 | 接收公众号推文链接 | ✅ |  |
 | 接收系统通知 | ✅ 上线通知 / 掉线通知 / 异常通知 |  |
-| [头像获取](https://github.com/danni-cool/wechatbot-webhook?tab=readme-ov-file#1-%E5%A4%B4%E5%83%8F%E8%8E%B7%E5%8F%96-api) | ✅ |  |
+| [头像获取](/docs/recvdApi.example.md#2-formdatasource-string) | ✅ |  |
 | [快捷回复](https://github.com/danni-cool/wechatbot-webhook?tab=readme-ov-file#2-%E6%94%B6%E6%B6%88%E6%81%AF-api) | ✅  | ✅ |
 | **<群管理>** |  |  |
 | **<好友管理>** |  |  |

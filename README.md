@@ -486,11 +486,9 @@ curl --location 'https://your.recvdapi.com' \
 
 ## Contributors
 
-**Thanks to all our contributors!**
+Thanks to all our contributors!
 
-<a href="https://github.com/danni-cool/wechatbot-webhook/graphs/contributors">
-![](https://contrib.rocks/image?repo=danni-cool/wechatbot-webhook)
-</a>
+<a href="https://github.com/danni-cool/wechatbot-webhook/graphs/contributors">![](https://contrib.rocks/image?repo=danni-cool/wechatbot-webhook)</a>
 
 ## ⏫ 更新日志
 

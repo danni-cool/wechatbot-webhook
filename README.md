@@ -321,8 +321,6 @@ curl --location --request POST 'http://localhost:3001/webhook/msg?token=[YOUR_PE
 
 ### 2. 收消息 API
 
-> 收消息API现在支持通过返回值实现**快捷回复**，无需再发起 post 请求，一个 API 搞定接收消息后回复
-
 #### `payload` 结构
   - Methods: `POST`
   - ContentType: `multipart/form-data`

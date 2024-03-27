@@ -1,6 +1,6 @@
 const { MSG_TYPE_ENUM, legacySystemMsgStrMap } = require('../config/const')
 const { getAssetsAgentUrl } = require('./res')
-const cloneDeep = require('lodash.cloneDeep')
+const cloneDeep = require('lodash.clonedeep')
 class CommonMsg {
   /**
    * @param {commonMsgPayload} payload

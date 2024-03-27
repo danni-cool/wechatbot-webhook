@@ -5,7 +5,7 @@ const FormData = require('form-data')
 const { LOCAL_RECVD_MSG_API, RECVD_MSG_API } = process.env
 const { MSG_TYPE_ENUM } = require('../config/const')
 const cacheTool = require('../service/cache')
-const cloneDeep = require('lodash.cloneDeep')
+const cloneDeep = require('lodash.clonedeep')
 /**
  * 收到消息上报接受url
  * @typedef {{type:'text'|'fileUrl'}} baseMsgInterface

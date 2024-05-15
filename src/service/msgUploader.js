@@ -122,7 +122,40 @@ async function sendMsg2RecvdApi(msg) {
   formData.append('isMsgFromSelf', msg.self() ? '1' : '0')
 
   switch (msg.type()) {
-    case MSG_TYPE_ENUM.ATTACHMENT:
+    case MSG_TYPE_ENUM.ATTACHMENT: {
+      try {
+        /**@type {import('file-box').FileBox} */
+        //@ts-expect-errors 这里msg一定是wechaty的msg
+        const steamFile = msg.toFileBox ? await msg.toFileBox() : msg.content()
+        formData.append('type', 'file')
+        let fileInfo = {
+          // @ts-ignore
+          ext: steamFile._name.split('.').pop() ?? '',
+          // @ts-ignore
+          mime: steamFile._mediaType ?? 'Unknown',
+          // @ts-ignore
+          filename: steamFile._name ?? 'UnknownFile'
+        }
+
+        formData.append(
+          'content',
+          //@ts-expect-errors 需要用到私有属性
+          steamFile.buffer /** 发送一个文件 */ ??
+            //@ts-expect-errors 需要用到私有属性
+            steamFile.stream /** 同一个文件转发 */,
+          {
+            filename: fileInfo.filename,
+            contentType: fileInfo.mime
+          }
+        )
+      } catch (e) {
+        /** 如果 const steamFile = msg.toFileBox ? await msg.toFileBox() : msg.content() 这里执行抛出错误 */
+        /** 则很有可能是合并消息转发 */
+        formData.append('type', 'combineforward')
+        formData.append('content', msg.text())
+      }
+      break
+    }
     case MSG_TYPE_ENUM.VOICE:
     case MSG_TYPE_ENUM.PIC:
     case MSG_TYPE_ENUM.VIDEO: {

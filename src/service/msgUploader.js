@@ -123,68 +123,20 @@ async function sendMsg2RecvdApi(msg) {
 
   switch (msg.type()) {
     case MSG_TYPE_ENUM.ATTACHMENT: {
+      // hack, 如果附件类型消息
       try {
-        /**@type {import('file-box').FileBox} */
-        //@ts-expect-errors 这里msg一定是wechaty的msg
-        const steamFile = msg.toFileBox ? await msg.toFileBox() : msg.content()
-        formData.append('type', 'file')
-        let fileInfo = {
-          // @ts-ignore
-          ext: steamFile._name.split('.').pop() ?? '',
-          // @ts-ignore
-          mime: steamFile._mediaType ?? 'Unknown',
-          // @ts-ignore
-          filename: steamFile._name ?? 'UnknownFile'
-        }
-
-        formData.append(
-          'content',
-          //@ts-expect-errors 需要用到私有属性
-          steamFile.buffer /** 发送一个文件 */ ??
-            //@ts-expect-errors 需要用到私有属性
-            steamFile.stream /** 同一个文件转发 */,
-          {
-            filename: fileInfo.filename,
-            contentType: fileInfo.mime
-          }
-        )
+        dealWithFileMsg(formData, msg)
       } catch (e) {
-        /** 如果 const steamFile = msg.toFileBox ? await msg.toFileBox() : msg.content() 这里执行抛出错误 */
-        /** 则很有可能是合并消息转发 */
-        formData.append('type', 'combineforward')
-        formData.append('content', msg.text())
+        /** 已知场景转发会进入这个逻辑，但好像还是没法显示转发内容，当unknown处理 */
+        formData.append('type', 'unknown')
+        formData.append('content', msg.text()) /** 当前不支持该消息展示 */
       }
       break
     }
     case MSG_TYPE_ENUM.VOICE:
     case MSG_TYPE_ENUM.PIC:
     case MSG_TYPE_ENUM.VIDEO: {
-      // 视频
-      formData.append('type', 'file')
-      /**@type {import('file-box').FileBox} */
-      //@ts-expect-errors 这里msg一定是wechaty的msg
-      const steamFile = msg.toFileBox ? await msg.toFileBox() : msg.content()
-
-      let fileInfo = {
-        // @ts-ignore
-        ext: steamFile._name.split('.').pop() ?? '',
-        // @ts-ignore
-        mime: steamFile._mediaType ?? 'Unknown',
-        // @ts-ignore
-        filename: steamFile._name ?? 'UnknownFile'
-      }
-
-      formData.append(
-        'content',
-        //@ts-expect-errors 需要用到私有属性
-        steamFile.buffer /** 发送一个文件 */ ??
-          //@ts-expect-errors 需要用到私有属性
-          steamFile.stream /** 同一个文件转发 */,
-        {
-          filename: fileInfo.filename,
-          contentType: fileInfo.mime
-        }
-      )
+      dealWithFileMsg(formData, msg)
       break
     }
     // 分享的Url
@@ -251,6 +203,40 @@ async function sendMsg2RecvdApi(msg) {
 
   //@ts-expect-errors 提前使用没问题
   return response
+}
+
+/**
+ * 抽离附件上传公共逻辑
+ * @param {import('form-data')} formData
+ * @param {extendedMsg} msg
+ */
+async function dealWithFileMsg(formData, msg) {
+  // 视频
+  formData.append('type', 'file')
+  /**@type {import('file-box').FileBox} */
+  //@ts-expect-errors 这里msg一定是wechaty的msg
+  const steamFile = msg.toFileBox ? await msg.toFileBox() : msg.content()
+
+  let fileInfo = {
+    // @ts-ignore
+    ext: steamFile._name.split('.').pop() ?? '',
+    // @ts-ignore
+    mime: steamFile._mediaType ?? 'Unknown',
+    // @ts-ignore
+    filename: steamFile._name ?? 'UnknownFile'
+  }
+
+  formData.append(
+    'content',
+    //@ts-expect-errors 需要用到私有属性
+    steamFile.buffer /** 发送一个文件 */ ??
+      //@ts-expect-errors 需要用到私有属性
+      steamFile.stream /** 同一个文件转发 */,
+    {
+      filename: fileInfo.filename,
+      contentType: fileInfo.mime
+    }
+  )
 }
 
 module.exports = {

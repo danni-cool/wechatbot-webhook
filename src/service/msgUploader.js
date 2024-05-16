@@ -211,11 +211,11 @@ async function sendMsg2RecvdApi(msg) {
  * @param {extendedMsg} msg
  */
 async function dealWithFileMsg(formData, msg) {
-  // 视频
-  formData.append('type', 'file')
   /**@type {import('file-box').FileBox} */
   //@ts-expect-errors 这里msg一定是wechaty的msg
   const steamFile = msg.toFileBox ? await msg.toFileBox() : msg.content()
+  // 上面尝试转化文件报错就不会进入以下逻辑
+  formData.append('type', 'file')
 
   let fileInfo = {
     // @ts-ignore

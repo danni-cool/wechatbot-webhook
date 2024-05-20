@@ -521,27 +521,11 @@ const formatAndSendMsg = async function ({
 
       case 'fileUrl': {
         //@ts-expect-errors 重载不是很好使，手动判断
-        const fileUrlArr = content.split(',')
-
-        // 单文件
-        if (fileUrlArr.length === 1) {
-          //@ts-expect-errors 重载不是很好使，手动判断
-          const file = await Utils.getMediaFromUrl(content)
-          //@ts-expect-errors 重载不是很好使，手动判断
-          emitPayload.content = file
-          await msgInstance.say(file)
-          msgSenderCallback(emitPayload)
-          break
-        }
-
-        // 多个文件的情况
-        for (let i = 0; i < fileUrlArr.length; i++) {
-          const file = await Utils.getMediaFromUrl(fileUrlArr[i])
-          //@ts-expect-errors 重载不是很好使，手动判断
-          emitPayload.content = file
-          await msgInstance.say(file)
-          msgSenderCallback(emitPayload)
-        }
+        const file = await Utils.getMediaFromUrl(content)
+        //@ts-expect-errors 重载不是很好使，手动判断
+        emitPayload.content = file
+        await msgInstance.say(file)
+        msgSenderCallback(emitPayload)
         break
       }
       // 文件

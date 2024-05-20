@@ -89,7 +89,7 @@ curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN
 
 # 📖  部署 / API
 
-[wechatbot‐webhook 文档](https://github.com/danni-cool/wechatbot-webhook/wiki/wechatbot%E2%80%90webhook-%E6%96%87%E6%A1%A3)
+[wechatbot‐webhook API 文档](https://github.com/danni-cool/wechatbot-webhook/wiki/wechatbot%E2%80%90webhook-%E6%96%87%E6%A1%A3)
 
 
 

@@ -238,15 +238,31 @@ const sleep = async (ms) => {
 }
 
 /**
- * 删除登录缓存文件
+ * 过滤有价值的发送消息报错信息
+ * @param {*} error
  */
-// const deleteMemoryCard = () => {
-//   //@ts-expect-errors 必定是 pathlike
-//   if (fs.existsSync(memoryCardPath)) {
-//     //@ts-expect-errors 必定是 pathlike
-//     fs.unlinkSync(memoryCardPath)
-//   }
-// }
+const filterUseFulHttpError = (error) => {
+  let newErrorObj = {}
+
+  if (error.tips) {
+    newErrorObj.tips = error.tips
+    newErrorObj.code = error.code
+    newErrorObj.stack = error.stack
+
+    if (error.response) {
+      newErrorObj.response = {}
+      newErrorObj.response.status = error.response.status
+      newErrorObj.response.statusText = error.response.statusText
+      newErrorObj.response.url = error.response.url
+      newErrorObj.response.method = error.response.method
+      newErrorObj.response.method = error.response.method
+      newErrorObj.response.data = error.response.data
+    }
+    return newErrorObj
+  } else {
+    return error
+  }
+}
 
 module.exports = {
   ...require('./msg.js'),
@@ -262,5 +278,6 @@ module.exports = {
   parseJsonLikeStr,
   tryConvertCnCharToUtf8Char,
   sleep,
-  Defer
+  Defer,
+  filterUseFulHttpError
 }

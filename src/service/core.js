@@ -93,7 +93,7 @@ module.exports.formatAndSendMsg = async function ({
     }
     success = true
   } catch (/** @type {any} */ e) {
-    error = e
+    error = Utils.filterUseFulHttpError(e)
     Utils.logger.error(e)
   }
 

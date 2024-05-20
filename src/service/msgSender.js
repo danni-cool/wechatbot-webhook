@@ -396,7 +396,7 @@ const handleMsg2Single = async function (body, { bot, messageReceiver }) {
         })
         msgArr[i].success = success
         if (!success) {
-          msgArr[i].error = error.toString()
+          msgArr[i].error = error
         }
       }
 
@@ -419,7 +419,7 @@ const handleMsg2Single = async function (body, { bot, messageReceiver }) {
           : null
       }
     } else if (!Array.isArray(payload.data)) {
-      const { success } = await formatAndSendMsg({
+      const { success, error } = await formatAndSendMsg({
         isRoom,
         bot,
         msgData: payload.data,
@@ -435,7 +435,7 @@ const handleMsg2Single = async function (body, { bot, messageReceiver }) {
           : {
               to,
               ...(isRoom !== undefined ? { isRoom } : {}),
-              data: [payload.data]
+              data: [{ ...payload.data, error }]
             }
       }
     }

@@ -66,6 +66,8 @@ npx wechatbot-webhook
 
 > 除非掉线，默认记住上次登录，换帐号请运行以下命令 `npx wechatbot-webhook -r`
 
+> 如遇安装报错，请确保自己的node版本 >= 18.14.1 [#227](https://github.com/danni-cool/wechatbot-webhook/issues/227)
+
 ### 2. 复制推消息 api
 
 从命令行中复制推消息api，例如 http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN]

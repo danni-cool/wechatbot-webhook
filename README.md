@@ -15,7 +15,7 @@
 ## ✨ Features
 
 > [!Caution] 
-> 当前版本基于web协议，其支持的功能有限，也不完美，除了bug修补和稳定性功能外，不再接收新的 feature request，后续精力会放到 windows 分支上，感兴趣的可以点个 watch 👀
+> 目前在使用python重构整个wechatbot-webhook项目，除了提供稳定不掉线能力以外，还会支持更多api调用，有兴趣的可以一起来贡献源码 https://github.com/danni-cool/wechatbotKit-py-http
 
 | **功能** | web协议 | windows协议 |
 | --- | --- | --- |

@@ -15,7 +15,7 @@
 ## ✨ Features
 
 > [!Caution] 
-> 目前在使用python重构整个wechatbot-webhook项目，除了提供稳定不掉线能力以外，还会支持更多api调用，有兴趣的可以一起来贡献源码 https://github.com/danni-cool/wechatbotKit-py-http
+> 项目目前基于web微信，其本身就有被限制风险，另外大概两天一掉线，除了正常功能修补，不接新的 feature request。 windows 协议正在WIP，近期应该会和大家见面！
 
 | **功能** | web协议 | windows协议 |
 | --- | --- | --- |

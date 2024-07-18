@@ -1,4 +1,5 @@
 const Service = require('../service')
+const { formatAndSendMsg } = require('../service/core')
 const Utils = require('../utils/index.js')
 const rules = require('../config/valid')
 const middleware = require('../middleware')
@@ -12,7 +13,9 @@ function registerPushHook({ app, bot }) {
   // 处理 POST 请求 V2 支持多发模式
   app.post('/webhook/msg/v2', middleware.loginCheck, async (c) => {
     let body
+    // 如果是formData
 
+    //如果是json
     try {
       body = await c.req.json()
     } catch (e) {
@@ -149,11 +152,13 @@ function registerPushHook({ app, bot }) {
           )
 
     if (msgReceiver !== undefined) {
-      const { success, error } = await Service.formatAndSendMsg({
+      const { success, error } = await formatAndSendMsg({
         isRoom,
         bot,
-        type,
-        content,
+        msgData: {
+          type,
+          content
+        },
         msgInstance: msgReceiver
       })
 

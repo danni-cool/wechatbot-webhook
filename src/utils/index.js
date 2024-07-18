@@ -4,9 +4,52 @@ const { logger } = require('./log')
 const { URL } = require('url')
 
 /**
+ * 转化base64为buffer, 并尝试获取文件类型content-type
+ * @param {string} base64
+ * @returns {Promise<{buffer?: Buffer, fileName?: string}>}
+ */
+const base64ToBuffer = async (base64) => {
+  let mimeType = null
+
+  /***
+   * 提取并解析 MIME 类型（如果存在）
+   * @param {string} base64
+   */
+  const getMimeTypeFromUri = (base64) => {
+    const matches = base64.match(/^data:(.*?);base64,/)
+    if (matches) {
+      return matches[1]
+    }
+    return null
+  }
+
+  // 检查是否包含 Data URI scheme
+  mimeType = getMimeTypeFromUri(base64)
+
+  // 如果没有 Data URI scheme，处理纯 Base64 字符串
+  const base64StringWithoutPrefix = base64.replace(/^data:.*?;base64,/, '')
+  const buffer = Buffer.from(base64StringWithoutPrefix, 'base64')
+  // commonjs require esm module
+  const { fileTypeFromBuffer } = await import('file-type')
+
+  if (!mimeType) {
+    const fileType = await fileTypeFromBuffer(buffer)
+    mimeType = fileType ? fileType.mime : 'unknown'
+  }
+
+  const extName = MIME.getExtension(mimeType)
+
+  return {
+    buffer,
+    fileName: `${Date.now()}.${extName}`
+  }
+}
+
+/**
  * 下载媒体文件转化为Buffer
  * @param {string} fileUrl
- * @returns {Promise<{buffer?: Buffer, fileName?: string, fileNameAlias?: string, contentType?: null | string}>}
+ * @param {*} headers
+ * @returns {Promise<{buffer?: Buffer, fileName?: string, contentType?: null | string}>}
  */
 const downloadFile = async (fileUrl, headers = {}) => {
   try {
@@ -15,7 +58,7 @@ const downloadFile = async (fileUrl, headers = {}) => {
     if (response.ok) {
       const buffer = Buffer.from(await response.arrayBuffer())
       // 使用自定义文件名，解决URL无文件后缀名时，文件被微信解析成不正确的后缀问题
-      let { fileName, query } = getFileInfoFromUrl(fileUrl)
+      let { fileName } = getFileInfoFromUrl(fileUrl)
       let contentType = response.headers.get('content-type')
 
       // deal with unValid Url format like https://pangji-home.com/Fi5DimeGHBLQ3KcELn3DolvENjVU
@@ -29,8 +72,7 @@ const downloadFile = async (fileUrl, headers = {}) => {
       return {
         buffer,
         fileName,
-        contentType,
-        fileNameAlias: query?.$alias
+        contentType
       }
     }
 
@@ -70,10 +112,24 @@ const getFileInfoFromUrl = (url) => {
 /**
  * 根据url下载文件并转化成FileBox的标准格式
  * @param {string} url
+ * @param {string} fileNameAlias
  * @returns {Promise<import('file-box').FileBoxInterface>}
  */
-const getMediaFromUrl = async (url) => {
-  const { buffer, fileName, fileNameAlias } = await downloadFile(url)
+const getMediaFromUrl = async (url, fileNameAlias) => {
+  const { buffer, fileName } = await downloadFile(url)
+  //@ts-expect-errors buffer 解析是吧的情况
+  return FileBox.fromBuffer(buffer, fileNameAlias || fileName)
+}
+
+/**
+ * 传入base64 返回文件 buffer
+ * @param {*} base64Str
+ * @param {*} fileNameAlias
+ * @returns
+ */
+const getMediaFromBase64 = async (base64Str, fileNameAlias) => {
+  const { buffer, fileName } = await base64ToBuffer(base64Str)
+
   //@ts-expect-errors buffer 解析是吧的情况
   return FileBox.fromBuffer(buffer, fileNameAlias || fileName)
 }
@@ -182,15 +238,31 @@ const sleep = async (ms) => {
 }
 
 /**
- * 删除登录缓存文件
+ * 过滤有价值的发送消息报错信息
+ * @param {*} error
  */
-// const deleteMemoryCard = () => {
-//   //@ts-expect-errors 必定是 pathlike
-//   if (fs.existsSync(memoryCardPath)) {
-//     //@ts-expect-errors 必定是 pathlike
-//     fs.unlinkSync(memoryCardPath)
-//   }
-// }
+const filterUseFulHttpError = (error) => {
+  let newErrorObj = {}
+
+  if (error.tips) {
+    newErrorObj.tips = error.tips
+    newErrorObj.code = error.code
+    newErrorObj.stack = error.stack
+
+    if (error.response) {
+      newErrorObj.response = {}
+      newErrorObj.response.status = error.response.status
+      newErrorObj.response.statusText = error.response.statusText
+      newErrorObj.response.url = error.response.url
+      newErrorObj.response.method = error.response.method
+      newErrorObj.response.method = error.response.method
+      newErrorObj.response.data = error.response.data
+    }
+    return newErrorObj
+  } else {
+    return error
+  }
+}
 
 module.exports = {
   ...require('./msg.js'),
@@ -199,11 +271,13 @@ module.exports = {
   ...require('./log.js'),
   ...require('./res'),
   downloadFile,
+  getMediaFromBase64,
   getMediaFromUrl,
   getBufferFile,
   generateToken,
   parseJsonLikeStr,
   tryConvertCnCharToUtf8Char,
   sleep,
-  Defer
+  Defer,
+  filterUseFulHttpError
 }

@@ -38,7 +38,7 @@ module.exports = {
       val: type,
       required: false,
       type: 'string',
-      enum: ['text', 'fileUrl'],
+      enum: ['text', 'fileUrl', 'base64'],
       unValidReason: ''
     },
     {

@@ -25,9 +25,22 @@ type pushMsgValidPayload = {
 
 type payloadFormFile = File & { convertName: string }
 
-type pushMsgUnitPayload = { type: 'text' | 'fileUrl'; content: string }
+type pushMsgUnitPayload = {
+  type: 'text' | 'fileUrl' | 'file' | 'base64'
+  content: string
+  fileAlias?: string
+}
 
-type pushMsgUnitTypeOpt = { type?: 'text' | 'fileUrl'; content?: string }
+type pushMsgUnitTypeOpt = {
+  type?: 'text' | 'fileUrl' | 'file' | 'base64'
+  content?: string
+  fileAlias?: string
+}
+
+type msgData = {
+  success?: boolean
+  error?: never
+} & pushMsgUnitTypeOpt
 
 type toType = string | { alias: string }
 
@@ -91,7 +104,10 @@ type msg2SingleRejectReason = {
 type failedTaskType = {
   to: toType
   isRoom?: boolean
-  data: pushMsgUnitTypeOpt | pushMsgUnitTypeOpt[] | []
+  data:
+    | (pushMsgUnitTypeOpt & { error?: never })
+    | (pushMsgUnitTypeOpt & { error?: never })[]
+    | []
 }
 
 type sendingTaskType = {

@@ -3,3 +3,9 @@ export type RequireOne<T, Keys extends keyof T = keyof T> = Omit<T, Keys> &
   {
     [K in Keys]: Required<Pick<T, K>> & Partial<Record<Exclude<Keys, K>, never>>
   }[Keys]
+
+export type ToPlainType<
+  T extends {
+    toObject: () => unknown
+  }
+> = Required<ReturnType<T['toObject']>>

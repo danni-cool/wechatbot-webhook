@@ -16,7 +16,7 @@ export type contactType = {
   /** 手机号 */
   phone: string
   /** 地区 */
-  country: string
+  home: string
   /** 年龄 */
   age: number
   /** 头像 （需要用户自己获取）*/

@@ -1,7 +1,7 @@
-import { WechatyInterface } from 'wechaty/impls'
+import { wxProviderInterface } from '@/utils/types'
 
 declare module 'hono' {
   interface Context {
-    bot: WechatyInterface
+    wxProvider: wxProviderInterface
   }
 }

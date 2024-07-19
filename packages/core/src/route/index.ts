@@ -1,17 +1,16 @@
-const Middleware = require('../middleware/index')
-/**
- * 注册路由
- * @param {Object} param
- * @param {import('hono').Hono} param.app
- * @param {import('wechaty').Wechaty} param.bot
- */
-module.exports = function registerRoute({ app, bot }) {
-  /**
-   * @param {import('hono').Context} ctx
-   * @param {import('hono').Next} next
-   */
-  const attachData = (ctx, next) => {
-    ctx.bot = bot
+import { type Hono, type Context, type Next } from 'hono'
+import Middleware from '../middleware/index'
+import { wxProviderInterface } from '@/utils/types'
+
+export function registerRoute({
+  app,
+  wxProvider = {} as wxProviderInterface
+}: {
+  app: Hono
+  wxProvider: wxProviderInterface
+}) {
+  const attachData = (ctx: Context, next: Next) => {
+    ctx.wxProvider = wxProvider
     return next()
   }
   // 挂载wecahty实例到全局路由

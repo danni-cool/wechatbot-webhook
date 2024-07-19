@@ -1,6 +1,7 @@
 import { RequireOne } from './utils'
 
 type msgTextBase = {
+  uuid: string
   /** 需要艾特人的集合,群聊时可用，数组里必须填 wxid */
   atList?: string[]
   /** 要发送的文字 */

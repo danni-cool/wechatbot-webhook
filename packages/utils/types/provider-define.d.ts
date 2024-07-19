@@ -9,9 +9,12 @@ export default interface wxProviderInterface {
   get isLogin(): boolean
   /** 是否初始化完成（比如windows协议是否连上rpc） */
   get isInitd(): boolean
-  setSelfInfo(data: any): void
-  /** 启动应用 */
+  /** 启动应用, 连接服务，返回sdk初始化状态 */
   run(): boolean
+  /** 重启应用, 重新登录或者更新所有联系人列表 */
+  restart(): void
+  /** 销毁应用，解绑事件等，断开连接，登出 */
+  destroy(): void
   /** 发送文字消息 */
   sendTextMsg(data: msgText): Promise<undefined | boolean>
   /** 发送文件 */

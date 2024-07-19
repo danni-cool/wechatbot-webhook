@@ -1,9 +1,6 @@
-/**
- * middleware of token verification
- * @param {import('hono').Context} c
- * @param {import('hono').Next} next
- */
-module.exports.verifyToken = async (c, next) => {
+import { type Context, type Next } from 'hono'
+
+export const verifyToken = async (c: Context, next: Next) => {
   const { token } = c.req.query()
 
   if (token !== process.env.globalLoginToken) {

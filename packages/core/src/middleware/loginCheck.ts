@@ -1,9 +1,6 @@
-/**
- * middleware of login Check
- * @param {import('hono').Context} c
- * @param {import('hono').Next} next
- */
-module.exports.loginCheck = async (c, next) => {
+import { type Context, type Next } from 'hono'
+
+export const loginCheck = async (c: Context, next: Next) => {
   if (!c.bot.isLoggedIn) {
     c.status(401)
     return c.json({

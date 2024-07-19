@@ -1,4 +1,7 @@
-module.exports = {
-  ...require('./verifyToken.js'),
-  ...require('./loginCheck.js')
+import { loginCheck } from './loginCheck'
+import { verifyToken } from './verifyToken'
+
+export default {
+  loginCheck,
+  verifyToken
 }

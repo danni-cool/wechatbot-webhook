@@ -1,0 +1,8 @@
+{
+  "name": "@wechatbot-webhook/windows",
+  "dependencies": {
+    "@wcferry/core": "^0.1.6",
+    "@wechatbot-webhook/core": "workspace:^",
+    "@wechatbot-webhook/utils": "workspace:^"
+  }
+}

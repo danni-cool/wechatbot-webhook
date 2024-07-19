@@ -1,7 +1,18 @@
 {
   "name": "wechatbot-webhook",
   "version": "2.8.0",
-  "description": "一个小小的微信机器人webhook，帮你抹平了很多自己开发的障碍，基于 http 请求",
+  "description": "微信机器人webhook，帮你抹平了很多自己开发的障碍，基于 http 请求",
+  "main": "index.js",
+  "scripts": {
+    "watch": "tsc -w",
+    "lint": "npx oxlint && npx eslint",
+    "build": "tsc && swc src -d dist/esm",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danni-cool/wechatbot-webhook.git"
+  },
   "keywords": [
     "wechat",
     "bot",
@@ -9,75 +20,32 @@
     "wechaty",
     "http-service"
   ],
-  "main": "main.js",
-  "scripts": {
-    "prestart": "node ./scripts/preStart",
-    "start": "node main",
-    "build:cli": "pnpm --filter wechatbot-webhook run build"
-  },
-  "engines": {
-    "node": ">=18.14.1"
-  },
-  "author": {
-    "name": "danni-cool",
-    "email": "contact@danni.cool"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/danni-cool/wechatbot-webhook.git"
-  },
-  "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "./scripts/tsc-lint.sh",
-      "eslint --fix",
-      "prettier --write"
-    ]
-  },
+  "author": "",
+  "license": "MIT",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
-  "license": "MIT",
-  "dependencies": {
-    "@hono/node-server": "^1.3.3",
-    "chalk": "^4.1.2",
-    "dotenv": "^16.3.1",
-    "file-box": "1.4.15",
-    "file-type": "^19.0.0",
-    "form-data": "^4.0.0",
-    "gerror": "^1.0.16",
-    "hono": "^3.11.11",
-    "lodash.clonedeep": "^4.5.0",
-    "log4js": "^6.9.1",
-    "mime": "^3.0.0",
-    "node-fetch-commonjs": "^3.3.2",
-    "qrcode-terminal": "^0.12.0",
-    "wechaty": "^1.20.2"
+  "lint-staged": {
+    "**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}": [
+      "oxlint",
+      "prettier --write"
+    ]
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^18.1.0",
-    "@types/eslint": "^8.56.0",
-    "@types/mime": "^3.0.4",
-    "@types/qrcode-terminal": "^0.12.2",
-    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@swc/cli": "^0.3.10",
+    "@swc/core": "^1.4.11",
+    "@types/node": "^20.11.30",
     "@typescript-eslint/parser": "^6.16.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.2",
-    "husky": "^8.0.3",
-    "i": "^0.3.7",
-    "npm": "^10.5.0",
-    "prettier": "^3.1.1",
-    "tsc-files": "^1.1.4",
-    "typescript": "^5.3.3",
-    "wechaty-puppet-mock": "^1.18.2"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "wechat4u@0.7.14": "patches/wechat4u@0.7.14.patch",
-      "wechaty-puppet-wechat4u@1.14.13": "patches/wechaty-puppet-wechat4u@1.14.13.patch",
-      "wechaty-puppet@1.20.2": "patches/wechaty-puppet@1.20.2.patch"
-    }
+    "eslint-plugin-oxlint": "^0.2.9",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.1",
+    "oxlint": "^0.2.18",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.3"
   }
 }

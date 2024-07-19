@@ -1,6 +1,6 @@
 const { FileBox } = require('file-box')
 const MIME = require('mime')
-const { logger } = require('./log')
+const { logger } = require('./log.js')
 const { URL } = require('url')
 
 /**
@@ -269,7 +269,7 @@ module.exports = {
   ...require('./nextTick.js'),
   ...require('./paramsValid.js'),
   ...require('./log.js'),
-  ...require('./res'),
+  ...require('./res.js'),
   downloadFile,
   getMediaFromBase64,
   getMediaFromUrl,

@@ -4,7 +4,7 @@ const { config, systemMsgEnumMap } = require('../config/const')
 const FormData = require('form-data')
 const { LOCAL_RECVD_MSG_API, RECVD_MSG_API } = process.env
 const { MSG_TYPE_ENUM } = require('../config/const')
-const cacheTool = require('../service/cache')
+const cacheTool = require('./cache')
 const cloneDeep = require('lodash.clonedeep')
 /**
  * 收到消息上报接受url

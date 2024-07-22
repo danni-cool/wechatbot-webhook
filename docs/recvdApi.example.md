@@ -73,7 +73,7 @@
     "id": "@xxxasdfsf",
     "payload": {
       "alias": "",
-      "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
+      "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //拼接参数 token=[YOUR_PERSONAL_TOKEN] 访问
       "friend": false,
       "gender": 1,
       "id": "@xxx",
@@ -98,7 +98,7 @@
     "id": "@xxxasdfsf",
     "payload": {
       "alias": "",
-      "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
+      "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //拼接参数 token=[YOUR_PERSONAL_TOKEN] 访问
       "friend": false,
       "gender": 1,
       "id": "@xxx",
@@ -125,7 +125,7 @@
     "id": "@xxxasdfsf",
     "payload": {
       "alias": "",
-      "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
+      "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //拼接参数 token=[YOUR_PERSONAL_TOKEN] 访问
       "friend": false,
       "gender": 1,
       "id": "@xxx",
@@ -168,7 +168,7 @@
         "memberList": [
           {
             id: '@xxxx', 
-            avatar: "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
+            avatar: "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //拼接参数 token=[YOUR_PERSONAL_TOKEN] 访问
             name:'昵称', 
             alias: '备注名'/** 个人备注名，非群备注名 */ }
         ]
@@ -185,7 +185,7 @@
 
         "payload": {
             "alias": "", //备注名
-            "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
+            "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //拼接参数 token=[YOUR_PERSONAL_TOKEN] 访问
             "friend": false,
             "gender": 1,
             "id": "@xxx",
@@ -206,7 +206,7 @@
 
       "payload": {
         "alias": "",
-        "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //请配合 token=[YOUR_PERSONAL_TOKEN] 解密
+        "avatar": "http://localhost:3001/resouces?media=%2Fcgi-bin%2Fmmwebwx-bixxx", //拼接参数 token=[YOUR_PERSONAL_TOKEN] 访问
         "city": "北京",
         "friend": true,
         "gender": 1,

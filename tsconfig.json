@@ -1,17 +1,17 @@
 {
   "include": ["**/*"],
-  "exclude": ["packages/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts","dist/**/*"],
   "compilerOptions": {
-    "baseUrl": ".",
+    "outDir": "dist/esm",
     "paths": {
-      "@src/*": ["src/*"]
+      "@/*": ["./packages/*"]
     },
-    "rootDir": "./",
+    "lib": [
+      "esnext",
+    ],
     "target": "ESNext",                                 
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "allowJs": true,
-    "checkJs": true,                                                  
+    "module": "ESNext",
+    "moduleResolution": "node",                                              
     "forceConsistentCasingInFileNames": true,            
     "strict": true,                                      
     "skipLibCheck": true,

@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://cdn.jsdelivr.net/gh/danni-cool/danni-cool@cdn/image/wechatbot-webhook.png" width="500" height="251"/>
+<img src="https://raw.githubusercontent.com/danni-cool/wechatbot-webhook/main/docs/Jietu20240506-220141%402x.jpg" width="500" height="251"/>
 
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/danni-cool/wechatbot-webhook/release.yml) ![npm dowloads](https://img.shields.io/npm/dm/wechatbot-webhook?label=npm/downloads)
  ![Docker Pulls](https://img.shields.io/docker/pulls/dannicool/docker-wechatbot-webhook) ![GitHub release (with filter)](https://img.shields.io/github/v/release/danni-cool/wechatbot-webhook)
@@ -70,7 +70,7 @@ curl --location 'http://localhost:3001/webhook/msg/v2?token=[YOUR_PERSONAL_TOKEN
 
 ## 🛠️ API
 
-[API Reference](https://github.com/danni-cool/docker-wechatbot-webhook#%EF%B8%8F-api)
+[API Reference](https://github.com/danni-cool/wechatbot-webhook/wiki)
 
 
 ## ⏫ 更新日志

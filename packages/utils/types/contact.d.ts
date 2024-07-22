@@ -1,7 +1,3 @@
-export type contactCoreType = {
-  uuid: string
-} & Record<string, any>
-
 export type contactType = {
   /** 唯一动态id，为了避免两个人同一个昵称的情况，但是不要过于依赖该字段，每次启动程序都会变，是属于方便程序找到当前环境唯一用户增加 */
   uuid: string

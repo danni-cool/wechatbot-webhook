@@ -48,21 +48,42 @@ export enum msgType {
   /** 未知 */
   UNKNOWN = 0,
   /** 各种文件 */
-  ATTACHMENT = 1,
+  ATTACHMENT = 1, //共享实时位置、文件、转账、链接 wcferry 3
   /** 语音 */
-  VOICE = 2,
+  VOICE = 2, // 语音 wcferry 9999
   /** 表情包 */
-  EMOTION = 5,
+  EMOTION = 5, // wcferry 62,
   /** 图片 */
-  PIC = 6,
+  PIC = 6, // wcferry 34
   /** 文本 */
   TEXT = 7,
   /** 公众号链接 */
   MEDIA_URL = 14,
   /** 视频 */
   VIDEO = 15,
+  /** 红包、系统的信息 */
+  WECHAT_SYSTEM = 37,
+  /** 撤回消息 */
+  MSG_RECALL = 40,
+  /** 位置 */
+  POSITION = 42,
+  /** 小视频 */
+  MINI_VIDEO = 43,
+  /** 石头剪刀布 */
+  ROCK_PAPER_SCISSORS = 47,
+  /** 好友确认 */
+  FRIENDSHIP_CONFIRM = 48,
+  /** 名片 */
+  CALLING_CARD = 49,
+  /** 系统提示 */
+  SYSNOTICE = 52,
+  /** 网络电话通知 */
+  VOIPNOTIFY = 51,
   /** 好友邀请 or 好友通过消息（自定义类型） */
-  CUSTOM_FRIENDSHIP = 99,
+  // CUSTOM_FRIENDSHIP = 99,
+  /** 可能是朋友的消息 */
+  POSSIBLEFRIEND_MSG = 10000,
+
   /** 系统消息类型 */
   /** 登录事件 */
   SYSTEM_EVENT_LOGIN = 1000,

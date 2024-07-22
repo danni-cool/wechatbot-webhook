@@ -20,5 +20,5 @@ export default interface wxProviderInterface {
   /** 发送文件 */
   sendFile(data: msgFile): Promise<undefined | boolean>
   /** 监听消息 */
-  on(event: 'message', callback: (data: msgRes) => void): void
+  on(event: 'message', callback: (data: msgRes) => void): this
 }

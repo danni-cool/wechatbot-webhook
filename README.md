@@ -8,7 +8,7 @@
 
 [🚢 Docker 镜像](https://hub.docker.com/r/dannicool/docker-wechatbot-webhook/tags) | [📦 NPM包](https://www.npmjs.com/package/wechatbot-webhook)｜[🔍 FAQ](https://github.com/danni-cool/wechatbot-webhook/issues/72)
 
-一个小小的微信机器人webhook，帮你抹平了很多自己开发的障碍，基于 http 请求
+一个小小的微信机器人webhook，帮你抹平了很多自己开发的障碍，基于 http 请求，与hooks微信不同，因为基于web api，所以优势在于可以部署到arm架构等设备上
 </div>
 
 

@@ -7,6 +7,24 @@ fs.copyFileSync(
   path.join(__dirname, '../.env.example')
 )
 
+function copyDirSync(src, dest) {
+  fs.mkdirSync(dest, { recursive: true });
+  fs.readdirSync(src).forEach(file => {
+    const srcPath = path.join(src, file);
+    const destPath = path.join(dest, file);
+    if (fs.lstatSync(srcPath).isDirectory()) {
+      copyDirSync(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  });
+}
+
+copyDirSync(
+  path.join(__dirname, '../../../static'),
+  path.join(__dirname, '../static')
+)
+
 esbuild
   .build({
     entryPoints: ['../../main.js'], // 入口文件

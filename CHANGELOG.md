@@ -1,17 +1,18 @@
-## [2.8.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.8.0...v2.8.1) (2024-11-29)
-
-
-### Bug Fixes
-
-* 🐛 修复登陆二维码依赖第三方网站被墙的问题 ([#269](https://github.com/danni-cool/wechatbot-webhook/issues/269)) ([2fe96d2](https://github.com/danni-cool/wechatbot-webhook/commit/2fe96d2b1199d78fda4c62f0da7e6aaf95c00f27))
 
 ## [2.8.2](https://github.com/danni-cool/wechatbot-webhook/compare/v2.8.1...v2.8.2) (2024-11-29)
 
 
 ### Bug Fixes
 
-* 🐛 npm 包访问登陆网页空白 ([33d4697](https://github.com/danni-cool/wechatbot-webhook/commit/33d4697fb4f2f1f04fc88f8dfcfa9b8530067e75))
 * 🐛 npm 包访问登陆网页空白 ([#272](https://github.com/danni-cool/wechatbot-webhook/issues/272)) ([2b3644f](https://github.com/danni-cool/wechatbot-webhook/commit/2b3644f742122b4292211cb4fa3e8e28a23cf628))
+
+
+## [2.8.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.8.0...v2.8.1) (2024-11-29)
+
+
+### Bug Fixes
+
+* 🐛 修复登陆二维码依赖第三方网站被墙的问题 ([#269](https://github.com/danni-cool/wechatbot-webhook/issues/269)) ([2fe96d2](https://github.com/danni-cool/wechatbot-webhook/commit/2fe96d2b1199d78fda4c62f0da7e6aaf95c00f27))
 
 ## [2.8.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.7.0...v2.8.0) (2024-03-27)
 

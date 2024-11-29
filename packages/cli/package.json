@@ -1,6 +1,6 @@
 {
   "name": "wechatbot-webhook",
-  "version": "2.8.1-beta.0",
+  "version": "2.8.1-beta.1",
   "description": "给微信里加个 webhook 机器人，支持docker部署",
   "keywords": [
     "wechat",
@@ -11,7 +11,10 @@
   ],
   "main": "index.js",
   "files": [
-    "static"
+    "static",
+    "lib/bot.js",
+    "preStart.js",
+    ".env.example"
   ],
   "scripts": {
     "build": "node scripts/build.js"

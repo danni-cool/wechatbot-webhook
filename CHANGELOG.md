@@ -1,3 +1,10 @@
+## [2.8.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.8.0...v2.8.1) (2024-11-29)
+
+
+### Bug Fixes
+
+* 🐛 修复登陆二维码依赖第三方网站被墙的问题 ([#269](https://github.com/danni-cool/wechatbot-webhook/issues/269)) ([2fe96d2](https://github.com/danni-cool/wechatbot-webhook/commit/2fe96d2b1199d78fda4c62f0da7e6aaf95c00f27))
+
 ## [2.8.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.7.0...v2.8.0) (2024-03-27)
 
 
@@ -5,13 +12,6 @@
 
 * 🎸 增加静态资源获取接口，recvd_api 增加头像url地址 ([b85f7ba](https://github.com/danni-cool/wechatbot-webhook/commit/b85f7ba316df2fd64780da3f315c2c30a07c70e1))
 
-## [2.8.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.8.0...v2.8.1) (2024-11-29)
-
-
-### Bug Fixes
-
-* 🐛 修复登陆二维码依赖第三方网站被墙的问题 ([4d70b0f](https://github.com/danni-cool/wechatbot-webhook/commit/4d70b0f81f4f235e5e2ab1d2bcc67924e3eb5251))
-* 🐛 修复登陆二维码依赖第三方网站被墙的问题 ([#269](https://github.com/danni-cool/wechatbot-webhook/issues/269)) ([2fe96d2](https://github.com/danni-cool/wechatbot-webhook/commit/2fe96d2b1199d78fda4c62f0da7e6aaf95c00f27))
 
 ## [2.7.0](https://github.com/danni-cool/wechatbot-webhook/compare/v2.6.1...v2.7.0) (2024-03-18)
 

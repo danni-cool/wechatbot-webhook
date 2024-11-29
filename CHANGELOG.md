@@ -1,3 +1,12 @@
+
+## [2.8.2](https://github.com/danni-cool/wechatbot-webhook/compare/v2.8.1...v2.8.2) (2024-11-29)
+
+
+### Bug Fixes
+
+* 🐛 npm 包访问登陆网页空白 ([#272](https://github.com/danni-cool/wechatbot-webhook/issues/272)) ([2b3644f](https://github.com/danni-cool/wechatbot-webhook/commit/2b3644f742122b4292211cb4fa3e8e28a23cf628))
+
+
 ## [2.8.1](https://github.com/danni-cool/wechatbot-webhook/compare/v2.8.0...v2.8.1) (2024-11-29)
 
 

@@ -1,5 +1,5 @@
 {
-  "include": ["**/*"],
+  "include": ["**/*", "lib/qrcode.min.js"],
   "exclude": ["packages/**/*"],
   "compilerOptions": {
     "baseUrl": ".",

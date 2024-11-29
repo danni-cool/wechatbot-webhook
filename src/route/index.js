@@ -1,4 +1,5 @@
 const Middleware = require('../middleware/index')
+const { serveStatic } = require('@hono/node-server/serve-static')
 /**
  * 注册路由
  * @param {Object} param
@@ -18,6 +19,7 @@ module.exports = function registerRoute({ app, bot }) {
   app.use('*', attachData)
   // 全局鉴权
   app.use(Middleware.verifyToken)
+  app.get('/static/*', serveStatic({ root: './' }))
 
   require('./msg')({ app, bot })
   require('./login')({ app, bot })

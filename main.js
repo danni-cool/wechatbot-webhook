@@ -13,6 +13,7 @@ const app = new Hono()
 registerRoute({ app, bot })
 
 serve({
+  hostname: '0.0.0.0',
   fetch: app.fetch,
   port: Number(PORT)
 })

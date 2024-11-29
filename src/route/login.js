@@ -1,16 +1,19 @@
+const { streamSSE } = require('hono/streaming');
+
 /**
  * 注册login路由和处理上报逻辑
  * @param {Object} param
  * @param {import('hono').Hono} param.app
  * @param {import('wechaty').Wechaty} param.bot
  */
+
 module.exports = function registerLoginCheck({ app, bot }) {
   let message = ''
   let success = false
 
   bot
     .on('scan', (qrcode) => {
-      message = 'https://wechaty.js.org/qrcode/' + encodeURIComponent(qrcode)
+      message = qrcode
       success = false
     })
     .on('login', async (user) => {
@@ -47,17 +50,31 @@ module.exports = function registerLoginCheck({ app, bot }) {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>扫码登录</title>
+          <script src="/static/qrcode.min.js"></script>
           <style>
             body, html { 
               margin: 0; padding: 0; height: 100%; overflow: hidden; 
             }
-            iframe { 
-              position:absolute; left:0; right:0; bottom:0; top:0; border:0; 
-            }
           </style>
         </head>
         <body>
-          <iframe src="${message}" frameborder="0" style="height:100%;width:100%" allowfullscreen></iframe>
+          <div id="qrcode"></div>
+          <script>
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+              width : 300,
+              height : 300
+            });
+            qrcode.makeCode("${message}");
+
+            const eventSource = new EventSource("/sse");
+            eventSource.addEventListener ("qrcode", (event) => {
+              qrcode.makeCode(event.data);
+            })
+
+            eventSource.addEventListener ("login", (event) => {
+             window.location.reload()
+            })
+          </script>
         </body>
         </html>
       `
@@ -65,6 +82,26 @@ module.exports = function registerLoginCheck({ app, bot }) {
       }
     }
   )
+
+  let id = 0
+  app.get('/sse', async (c) => {
+    const { readable, writable } = new TransformStream();
+    
+    id++
+
+    return streamSSE(c, async (stream) => {
+
+
+      // c.bot.on('scan', async (qrcode) => {
+      //   console.log({qrcode})
+      // })
+
+      await stream.writeSSE({
+        event: !success ? 'qrcode' : 'login',
+        data: message
+      })
+    })
+  })
 
   app.get(
     '/healthz',

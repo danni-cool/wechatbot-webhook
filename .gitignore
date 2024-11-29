@@ -6,3 +6,4 @@ log
 tsconfig.tmp.json
 packages/cli/lib/bot.js
 packages/cli/static
+**/*/.DS_store

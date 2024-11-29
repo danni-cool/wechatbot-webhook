@@ -1,4 +1,4 @@
-const { streamSSE } = require('hono/streaming');
+const { streamSSE } = require('hono/streaming')
 
 /**
  * 注册login路由和处理上报逻辑
@@ -72,7 +72,8 @@ module.exports = function registerLoginCheck({ app, bot }) {
             })
 
             eventSource.addEventListener ("login", (event) => {
-             window.location.reload()
+              eventSource.close()
+              window.location.reload()
             })
           </script>
         </body>
@@ -83,23 +84,15 @@ module.exports = function registerLoginCheck({ app, bot }) {
     }
   )
 
-  let id = 0
   app.get('/sse', async (c) => {
-    const { readable, writable } = new TransformStream();
-    
-    id++
-
     return streamSSE(c, async (stream) => {
-
-
-      // c.bot.on('scan', async (qrcode) => {
-      //   console.log({qrcode})
-      // })
-
-      await stream.writeSSE({
-        event: !success ? 'qrcode' : 'login',
-        data: message
-      })
+      while (true) {
+        await stream.writeSSE({
+          event: !success ? 'qrcode' : 'login',
+          data: message
+        })
+        await stream.sleep(1000)
+      }
     })
   })
 

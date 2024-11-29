@@ -8,20 +8,37 @@ fs.copyFileSync(
 )
 
 function copyDirSync(src, dest) {
-  fs.mkdirSync(dest, { recursive: true });
-  fs.readdirSync(src).forEach(file => {
-    const srcPath = path.join(src, file);
-    const destPath = path.join(dest, file);
-    if (fs.lstatSync(srcPath).isDirectory()) {
-      copyDirSync(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
+  if (!src) {
+    throw new Error('src is null or undefined');
+  }
+
+  try {
+    // 如果目标目录存在，先清空它
+    if (fs.existsSync(dest)) {
+      fs.rmSync(dest, { recursive: true, force: true });
     }
-  });
+    
+    // 创建新的目标目录
+    fs.mkdirSync(dest, { recursive: true });
+
+    // 复制文件
+    fs.readdirSync(src).forEach(file => {
+      const srcPath = path.join(src, file);
+      const destPath = path.join(dest, file);
+      if (fs.lstatSync(srcPath).isDirectory()) {
+        copyDirSync(srcPath, destPath);
+      } else {
+        fs.copyFileSync(srcPath, destPath);
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 copyDirSync(
-  path.join(__dirname, '../../../static'),
+  path.join(__dirname, '../../../src/static'),
   path.join(__dirname, '../static')
 )
 

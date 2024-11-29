@@ -1,6 +1,6 @@
 {
   "name": "wechatbot-webhook",
-  "version": "2.8.1-beta.0",
+  "version": "2.8.1",
   "description": "一个小小的微信机器人webhook，帮你抹平了很多自己开发的障碍，基于 http 请求",
   "keywords": [
     "wechat",
@@ -10,9 +10,6 @@
     "http-service"
   ],
   "main": "main.js",
-  "files": [
-    "static"
-  ],
   "scripts": {
     "prestart": "node ./scripts/preStart",
     "start": "node main",

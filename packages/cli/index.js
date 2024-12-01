@@ -47,14 +47,14 @@ if (options.reload) {
 
 if (options.edit) {
   // 在 Windows 上，可以使用 'start' 命令; 在 macOS 上，使用 'open'; 在 Linux 上，使用 'xdg-open'
-  const command =
-    process.platform === 'win32'
-      ? 'start'
-      : process.platform === 'darwin'
-        ? 'open'
-        : 'xdg-open'
+  const isWindows = process.platform === 'win32'
+  const command = isWindows
+    ? `explorer "${envFilePath}"`
+    : `open "${envFilePath}" || xdg-open "${envFilePath}"`
 
-  exec(`${command} ${envFilePath}`, (err) => {
+  console.log(`执行命令: ${command}`)
+
+  exec(command, (err) => {
     if (err) {
       console.error(`执行出错: ${err}`)
       return
